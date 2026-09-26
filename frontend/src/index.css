@@ -113,3 +113,8 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
+@media (max-width: 767px) {
+  .app-sidebar { width: 64px !important; }
+  .app-sidebar span { display: none; }
+  .app-sidebar nav { padding-left: 6px; padding-right: 6px; }
+}

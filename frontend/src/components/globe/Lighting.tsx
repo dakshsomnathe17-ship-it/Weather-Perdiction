@@ -1,9 +1,10 @@
 import React from 'react';
+import { SUN_DIRECTION } from './textures';
 
 const Lighting: React.FC = () => {
   return (
     <>
-      <directionalLight position={[10, 5, 10]} intensity={2.0} color="#ffffff" />
+      <directionalLight position={SUN_DIRECTION.clone().multiplyScalar(10)} intensity={2.2} color="#ffffff" />
       <ambientLight intensity={0.06} color="#404060" />
       <hemisphereLight args={['#1e40af', '#020617', 0.1]} />
     </>

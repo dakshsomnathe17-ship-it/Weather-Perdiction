@@ -1,0 +1,29 @@
+{
+  "earth_day": {
+    "url": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/bmng/bmng-base/august/world.200408.3x5400x2700.jpg",
+    "sourceSha256": "2048023ccc62250c677c0f4b03d4362f997b130eb0154a6cad00aa1b27c390b9",
+    "sha256": "9efbbe7f9386715eeb38c8f3bf7d9f93fd42f06360fb429e47c8f9082baeb2f4",
+    "width": 4096,
+    "height": 2048
+  },
+  "earth_night": {
+    "url": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/144000/144897/BlackMarble_2016_01deg_gray.jpg",
+    "sourceSha256": "4d2158f59123dadf0696a1cf8909c45018a1de8d0daab40da04122a5aa7f27c6",
+    "sha256": "15e7dca91de09414ed54c475c61ad97dfd254588456901af1535aba4f202c5cf",
+    "width": 2048,
+    "height": 1024
+  },
+  "earth_clouds": {
+    "url": "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg",
+    "sourceSha256": "daddaad84d7a33bbbc86cdda3f591099f57cee8607b7bcf3b67eb7e4f7a1c793",
+    "sha256": "77b43aedf1f466a0ddcf22e0e1110608e0c42c91ef7acfce0b76c729929a21ba",
+    "width": 2048,
+    "height": 1024
+  },
+  "earth_water": {
+    "derivedFrom": "earth_day",
+    "sha256": "b6d02f55f2dc29228aa25907b261464f0bc32d2bc781e821d1f5a4956bd5710f",
+    "width": 2048,
+    "height": 1024
+  }
+}

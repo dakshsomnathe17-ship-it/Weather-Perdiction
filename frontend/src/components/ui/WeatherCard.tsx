@@ -34,7 +34,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({ current, location }) =
         <div className="flex items-center justify-between mt-4">
           <div className="flex flex-col">
             <div className="text-6xl font-bold text-white flex items-start">
-              <AnimatedNumber value={current.temperature} />
+              <AnimatedNumber value={isMetric ? current.temperature : current.temperature * 9 / 5 + 32} />
               <span className="text-3xl mt-1 text-surface-200">{isMetric ? '°C' : '°F'}</span>
             </div>
             <p className="text-surface-300 mt-1 capitalize text-lg">
@@ -58,7 +58,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({ current, location }) =
             <Wind className="w-4 h-4 text-accent-emerald" />
             <div className="flex flex-col">
               <span className="text-xs text-surface-400">Wind</span>
-              <span className="text-sm font-semibold">{current.wind_speed} {isMetric ? 'km/h' : 'mph'}</span>
+              <span className="text-sm font-semibold">{Math.round(isMetric ? current.wind_speed : current.wind_speed / 1.609)} {isMetric ? 'km/h' : 'mph'}</span>
             </div>
           </div>
         </div>

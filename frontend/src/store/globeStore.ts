@@ -15,6 +15,9 @@ interface GlobeState {
   setLayerOpacity: (id: string, opacity: number) => void;
   setSelectedPoint: (point: [number, number] | null) => void;
   toggleRotation: () => void;
+  setRotating: (rotating: boolean) => void;
+  toggleClouds: () => void;
+  toggleAtmosphere: () => void;
 }
 
 const defaultLayers: WeatherLayer[] = [
@@ -45,5 +48,8 @@ export const useGlobeStore = create<GlobeState>((set) => ({
     activeLayers: state.activeLayers.map(l => l.id === id ? { ...l, opacity } : l)
   })),
   setSelectedPoint: (point) => set({ selectedPoint: point }),
-  toggleRotation: () => set((state) => ({ isRotating: !state.isRotating }))
+  toggleRotation: () => set((state) => ({ isRotating: !state.isRotating })),
+  setRotating: (isRotating) => set({ isRotating }),
+  toggleClouds: () => set((state) => ({ showClouds: !state.showClouds })),
+  toggleAtmosphere: () => set((state) => ({ showAtmosphere: !state.showAtmosphere })),
 }));

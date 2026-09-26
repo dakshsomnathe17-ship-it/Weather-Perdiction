@@ -1,73 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useWeatherStore } from '@/store/weatherStore';
 import { SearchBar, WeatherCard, ForecastCards, WeatherStats, LayerControl } from '@/components/ui';
 import { Globe } from '@/components/globe';
-
-const demoData = {
-  location: { name: 'San Francisco', country: 'United States', latitude: 37.7749, longitude: -122.4194 },
-  current: { temperature: 18, feels_like: 16, humidity: 72, pressure: 1013, wind_speed: 15, wind_direction: 270, cloud_cover: 45, visibility: 10000, uv_index: 5, precipitation: 0, weather_code: 2, weather_description: 'Partly Cloudy', sunrise: '06:15', sunset: '20:30', is_day: true },
-  forecast: Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    return {
-      date: d.toISOString(),
-      temp_max: 20 + Math.random() * 5,
-      temp_min: 12 + Math.random() * 3,
-      weather_code: Math.floor(Math.random() * 99),
-      weather_description: 'Varied',
-      precipitation_sum: 0,
-      wind_speed_max: 20,
-      sunrise: '06:00',
-      sunset: '20:00',
-      uv_index_max: 6
-    };
-  })
-};
+import { useCurrentWeather, useForecast } from '@/hooks/useWeather';
+import { formatCoordinates } from '@/utils/geo';
 
 export const Dashboard: React.FC = () => {
-  const { selectedLocation, currentWeather, forecast, setLocation, setWeather, setForecast } = useWeatherStore();
-
-  useEffect(() => {
-    if (!selectedLocation) {
-      setLocation(demoData.location);
-    }
-    if (!currentWeather) {
-      setWeather(demoData.current);
-      setForecast(demoData.forecast, []);
-    }
-  }, []);
-
+  const { selectedLocation, setLocation, setWeather, setForecast } = useWeatherStore();
+  const lat = selectedLocation?.latitude ?? NaN;
+  const lon = selectedLocation?.longitude ?? NaN;
+  const current = useCurrentWeather(lat, lon);
+  const forecast = useForecast(lat, lon);
+  useEffect(() => { if (current.data) setWeather(current.data); }, [current.data, setWeather]);
+  useEffect(() => { if (forecast.data) setForecast(forecast.data.forecast, forecast.data.hourly); }, [forecast.data, setForecast]);
+  const select = useCallback((latitude: number, longitude: number) => {
+    setLocation({ name: formatCoordinates(latitude, longitude), country: 'Selected on globe', latitude, longitude });
+  }, [setLocation]);
   return (
-    <div className="flex flex-col lg:flex-row h-full gap-6 relative">
-      {/* Globe Container */}
-      <div className="w-full lg:w-3/5 h-[50vh] lg:h-full relative rounded-2xl overflow-hidden glass z-10">
+    <div className="flex flex-col lg:flex-row min-h-full lg:h-full gap-6 relative">
+      <div className="w-full lg:w-3/5 min-h-[360px] h-[55vh] lg:h-full relative rounded-2xl overflow-hidden glass z-10 shrink-0 lg:shrink">
         <LayerControl />
-        <React.Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white">Loading Globe...</div>}>
-          <Globe />
-        </React.Suspense>
+        <Globe onLocationSelect={select} location={selectedLocation} />
       </div>
-
-      {/* Info Panel */}
-      <div className="w-full lg:w-2/5 flex flex-col gap-6 overflow-y-auto pr-2 scrollbar-hide z-20">
-        <div className="sticky top-0 z-30 pt-1 pb-4 bg-surface-950/80 backdrop-blur-sm">
-          <SearchBar />
-        </div>
-        
-        {currentWeather && selectedLocation && (
-          <div className="flex flex-col gap-6 pb-20 lg:pb-0">
-            <WeatherCard current={currentWeather} location={selectedLocation} />
-            
-            <div className="flex flex-col gap-3">
-              <h3 className="text-white font-semibold text-lg">7-Day Forecast</h3>
-              <ForecastCards forecast={forecast} />
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <h3 className="text-white font-semibold text-lg">Current Conditions</h3>
-              <WeatherStats current={currentWeather} />
-            </div>
-          </div>
-        )}
+      <div className="w-full lg:w-2/5 min-w-0 flex flex-col gap-6 lg:overflow-y-auto lg:pr-2 scrollbar-hide z-20 [&>*]:shrink-0">
+        <div className="sticky top-0 z-30 pt-1 pb-4 bg-surface-950/80 backdrop-blur-sm"><SearchBar /></div>
+        {selectedLocation && <p className="text-sm text-surface-300" data-testid="selected-location">{selectedLocation.name}{selectedLocation.name !== formatCoordinates(lat, lon) && ` · ${formatCoordinates(lat, lon)}`}</p>}
+        {current.isLoading && <p role="status" className="text-surface-300">Loading weather for this location…</p>}
+        {current.isError && <div role="alert" className="text-surface-300">Weather is unavailable for this location. Check that the weather service is running. <button className="text-primary-400 underline" onClick={() => current.refetch()}>Retry weather</button></div>}
+        {current.data && selectedLocation && <>
+          <WeatherCard current={current.data} location={selectedLocation} />
+          <h3 className="text-white font-semibold text-lg">Current Conditions</h3>
+          <WeatherStats current={current.data} />
+        </>}
+        {forecast.isLoading && <p role="status" className="text-surface-300">Loading forecast…</p>}
+        {forecast.isError && <p role="alert" className="text-surface-300">Forecast unavailable. <button className="text-primary-400 underline" onClick={() => forecast.refetch()}>Retry forecast</button></p>}
+        {forecast.data && <div className="flex flex-col gap-3 pb-8">
+          <h3 className="text-white font-semibold text-lg">7-Day Forecast</h3>
+          <ForecastCards forecast={forecast.data.forecast} />
+        </div>}
       </div>
     </div>
   );

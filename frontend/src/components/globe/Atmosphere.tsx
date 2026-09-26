@@ -3,19 +3,20 @@ import * as THREE from 'three';
 import { useGlobeStore } from '@/store/globeStore';
 import atmosphereVert from './shaders/atmosphere.vert?raw';
 import atmosphereFrag from './shaders/atmosphere.frag?raw';
+import { SUN_DIRECTION, noRaycast } from './textures';
 
 const Atmosphere: React.FC = () => {
-  const showAtmosphere = useGlobeStore((state: any) => state.showAtmosphere);
+  const showAtmosphere = useGlobeStore((state) => state.showAtmosphere);
 
   const uniforms = useMemo(() => ({
-    uSunDirection: { value: new THREE.Vector3(10, 5, 10).normalize() },
+    uSunDirection: { value: SUN_DIRECTION },
   }), []);
 
   if (!showAtmosphere) return null;
 
   return (
-    <mesh name="atmosphere">
-      <sphereGeometry args={[1.02, 64, 64]} />
+    <mesh name="atmosphere" raycast={noRaycast} renderOrder={3}>
+      <sphereGeometry args={[1.035, 64, 48]} />
       <shaderMaterial
         vertexShader={atmosphereVert}
         fragmentShader={atmosphereFrag}

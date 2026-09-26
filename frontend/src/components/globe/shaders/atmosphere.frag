@@ -12,8 +12,10 @@ void main() {
   float intensity = pow(fresnel, 3.2);
   
   // Sunlight orientation modulation
-  float sunDot = max(0.15, dot(normal, normalize(uSunDirection)));
+  float sunDot = smoothstep(-0.3, 0.8, dot(normal, normalize(uSunDirection)));
   vec3 atmosphereColor = mix(vec3(0.15, 0.45, 0.95), vec3(0.4, 0.8, 1.0), sunDot);
   
-  gl_FragColor = vec4(atmosphereColor, intensity * 0.65);
+  gl_FragColor = vec4(atmosphereColor, intensity * (0.08 + sunDot * 0.55));
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
 }

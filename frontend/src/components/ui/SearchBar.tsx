@@ -3,6 +3,7 @@ import { useLocationSearch } from '@/hooks/useSearch';
 import { useWeatherStore } from '@/store/weatherStore';
 import { Search, MapPin, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { SearchResult } from '@/types';
 
 export const SearchBar: React.FC = () => {
   const [query, setQuery] = React.useState('');
@@ -10,7 +11,7 @@ export const SearchBar: React.FC = () => {
   const { data: results, isLoading } = useLocationSearch(query);
   const { setLocation, addRecentSearch } = useWeatherStore();
 
-  const handleSelect = (location: any) => {
+  const handleSelect = (location: SearchResult) => {
     setLocation(location);
     addRecentSearch(location);
     setQuery('');

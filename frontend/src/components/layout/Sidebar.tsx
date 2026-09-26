@@ -32,7 +32,7 @@ export const Sidebar: React.FC = () => {
   return (
     <motion.aside
       animate={{ width: sidebarCollapsed ? 80 : 280 }}
-      className="h-full glass-strong border-r border-surface-700/50 flex flex-col relative z-40 shrink-0"
+      className="app-sidebar h-full glass-strong border-r border-surface-700/50 flex flex-col relative z-40 shrink-0"
     >
       <div className="h-20 flex items-center justify-center border-b border-surface-700/50 px-4">
         <CloudSun className="w-8 h-8 text-primary-400 shrink-0" />
@@ -53,6 +53,7 @@ export const Sidebar: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
+              aria-label={item.label}
               className={`flex items-center px-3 py-3 rounded-xl transition-all duration-300 ${
                 isActive 
                   ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30 glow' 
@@ -70,6 +71,7 @@ export const Sidebar: React.FC = () => {
         <div className="mt-auto flex flex-col gap-2">
           <button
             onClick={toggleChat}
+            aria-label="AI Assistant"
             className="flex items-center px-3 py-3 rounded-xl text-surface-400 hover:text-white hover:bg-surface-800/50 border border-transparent transition-all"
           >
             <MessageSquare className="w-6 h-6 shrink-0" />
@@ -77,6 +79,7 @@ export const Sidebar: React.FC = () => {
           </button>
           <Link
             to="/settings"
+            aria-label="Settings"
             className={`flex items-center px-3 py-3 rounded-xl transition-all ${
               location.pathname === '/settings'
                 ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30 glow' 
@@ -91,6 +94,7 @@ export const Sidebar: React.FC = () => {
 
       <button
         onClick={collapseSidebar}
+        aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         className="h-14 border-t border-surface-700/50 flex items-center justify-center text-surface-400 hover:text-white transition-colors"
       >
         {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}

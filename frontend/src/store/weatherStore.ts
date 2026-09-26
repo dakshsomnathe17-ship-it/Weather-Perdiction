@@ -28,7 +28,7 @@ export const useWeatherStore = create<WeatherState>((set) => ({
   error: null,
   setWeather: (current) => set({ currentWeather: current }),
   setForecast: (forecast, hourly) => set({ forecast, hourly }),
-  setLocation: (location) => set({ selectedLocation: location }),
+  setLocation: (location) => set({ selectedLocation: location, currentWeather: null, forecast: [], hourly: [], error: null }),
   addRecentSearch: (search) => set((state) => {
     const exists = state.recentSearches.some(s => s.name === search.name && s.latitude === search.latitude);
     if (exists) return state;

@@ -36,8 +36,8 @@ An intelligent weather platform combining real-time API integrations, machine le
 ### Local Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/example/weather-ai.git
-   cd weather-ai
+   git clone https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction.git
+   cd Weather-Perdiction
    ```
 
 2. Run the setup script:
@@ -45,7 +45,7 @@ An intelligent weather platform combining real-time API integrations, machine le
    bash scripts/setup.sh
    ```
 
-3. Download 3D map textures:
+3. Earth textures are bundled with attribution. To optionally regenerate them:
    ```bash
    bash scripts/download_textures.sh
    ```
@@ -54,6 +54,11 @@ An intelligent weather platform combining real-time API integrations, machine le
    ```bash
    bash scripts/dev.sh
    ```
+
+For frontend-only setup, Windows-friendly commands, globe controls and tests, see
+[Interactive Earth](docs/interactive-earth.md). From `frontend`, run `npm ci` then
+`npm run dev`. The globe needs no imagery API key. Weather/search require the backend;
+global weather overlays display “Awaiting data” while the existing map API returns no points.
 
 ## 🐳 Docker Deployment
 To deploy using Docker Compose:

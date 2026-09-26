@@ -1,30 +1,29 @@
 import React, { useMemo } from 'react';
-import * as THREE from 'three';
+import { Quaternion, Vector3 } from 'three';
 import { useGlobeStore } from '@/store/globeStore';
 import { latLonToVector3 } from '@/utils/geo';
+import { noRaycast } from './textures';
 
 const LocationMarker: React.FC = () => {
-  const selectedPoint = useGlobeStore((state: any) => state.selectedPoint);
-  
-  const position = useMemo(() => {
-    if (!selectedPoint) return new THREE.Vector3();
-    return latLonToVector3(selectedPoint.lat, selectedPoint.lon, 1.0);
-  }, [selectedPoint]);
-
-  if (!selectedPoint) return null;
-
+  const point = useGlobeStore((state) => state.selectedPoint);
+  const { position, orientation } = useMemo(() => {
+    const position = point ? latLonToVector3(point[0], point[1], 1.018) : new Vector3(0, 0, 1);
+    return { position, orientation: new Quaternion().setFromUnitVectors(
+      new Vector3(0, 0, 1), position.clone().normalize(),
+    ) };
+  }, [point]);
+  if (!point) return null;
   return (
-    <group position={position} lookAt={(new THREE.Vector3()).copy(position).multiplyScalar(2)}>
-      <mesh position={[0, 0, 0.05]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.005, 0.01, 0.1, 16]} />
-        <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={0.5} />
+    <group position={position} quaternion={orientation} name="location-marker">
+      <mesh raycast={noRaycast}>
+        <ringGeometry args={[0.018, 0.025, 32]} />
+        <meshBasicMaterial color="#67e8f9" toneMapped={false} />
       </mesh>
-      <mesh position={[0, 0, 0.1]}>
-        <sphereGeometry args={[0.02, 16, 16]} />
-        <meshStandardMaterial color="#00ffff" emissive="#00ffff" emissiveIntensity={1} />
+      <mesh position={[0, 0, 0.02]} raycast={noRaycast}>
+        <sphereGeometry args={[0.012, 16, 12]} />
+        <meshBasicMaterial color="white" toneMapped={false} />
       </mesh>
     </group>
   );
 };
-
 export default React.memo(LocationMarker);
