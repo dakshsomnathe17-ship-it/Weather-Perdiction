@@ -19,8 +19,7 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="flex flex-col lg:flex-row min-h-full lg:h-full gap-6 relative">
       <div className="w-full lg:w-3/5 min-h-[360px] h-[55vh] lg:h-full relative rounded-2xl overflow-hidden glass z-10 shrink-0 lg:shrink">
-        <LayerControl />
-        <Globe onLocationSelect={select} location={selectedLocation} />
+        <Globe onLocationSelect={select} location={selectedLocation}><LayerControl /></Globe>
       </div>
       <div className="w-full lg:w-2/5 min-w-0 flex flex-col gap-6 lg:overflow-y-auto lg:pr-2 scrollbar-hide z-20 [&>*]:shrink-0">
         <div className="sticky top-0 z-30 pt-1 pb-4 bg-surface-950/80 backdrop-blur-sm"><SearchBar /></div>

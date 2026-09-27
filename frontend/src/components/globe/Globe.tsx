@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Focus, Map, Minus, Plus, RotateCcw, Ruler, Tags, X } from 'lucide-react';
+import { Focus, Globe2, Map, Maximize, Minimize, Minus, Plus, Ruler, Tags, X } from 'lucide-react';
 import CanvasEarth from './CanvasEarth';
 import type { GlobeHandle } from './types';
 import type { Location } from '@/types';
@@ -13,10 +13,13 @@ class GlobeBoundary extends React.Component<{ children: React.ReactNode; onFailu
   componentDidCatch() { this.props.onFailure(); }
   render() { return this.state.failed ? null : this.props.children; }
 }
-interface GlobeProps { onLocationSelect?: (lat: number, lon: number) => void; location?: Location | null; className?: string; style?: React.CSSProperties; }
+interface GlobeProps { onLocationSelect?: (lat: number, lon: number) => void; location?: Location | null; className?: string; style?: React.CSSProperties; children?: React.ReactNode; }
 
-export default function Globe({ onLocationSelect, location = null, className = '', style }: GlobeProps) {
+export default function Globe({ onLocationSelect, location = null, className = '', style, children }: GlobeProps) {
+  const root = useRef<HTMLDivElement>(null);
   const renderer = useRef<GlobeHandle>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [viewStatus, setViewStatus] = useState('');
   const [fallback, setFallback] = useState(false);
   const [ready, setReady] = useState(false);
   const [hover, setHover] = useState<Coordinate | null>(null);
@@ -49,6 +52,19 @@ export default function Globe({ onLocationSelect, location = null, className = '
   }, [measuring, onLocationSelect]);
 
   useEffect(() => {
+    const changed = () => setFullscreen(document.fullscreenElement === root.current);
+    document.addEventListener('fullscreenchange', changed);
+    return () => document.removeEventListener('fullscreenchange', changed);
+  }, []);
+  const toggleFullscreen = async () => {
+    try {
+      setViewStatus('');
+      if (document.fullscreenElement === root.current) await document.exitFullscreen();
+      else await root.current?.requestFullscreen();
+    } catch { setViewStatus('Full screen is unavailable in this browser.'); }
+  };
+
+  useEffect(() => {
     if (!ready || !location || handledLocation.current === location) return;
     handledLocation.current = location;
     if (lastPick.current?.lat === location.latitude && lastPick.current.lon === location.longitude) return;
@@ -58,7 +74,7 @@ export default function Globe({ onLocationSelect, location = null, className = '
   const coordinate = hover ?? (location ? { lat: location.latitude, lon: location.longitude } : null);
   const hasEsri = Boolean(import.meta.env.VITE_ARCGIS_ACCESS_TOKEN);
   const props = { location, measurement, path, satellite, labels, onPick, onHover: setHover, onHeight: setHeight, onFailure, onImageryStatus: setImageryStatus, onSatelliteReady: setSatelliteReady };
-  return <div className={`globe-view ${className}`} style={style} tabIndex={0} role="region" aria-label="Interactive Earth" aria-describedby="globe-help"
+  return <div ref={root} className={`globe-view ${className}`} style={style} tabIndex={0} role="region" aria-label="Interactive Earth" aria-describedby="globe-help"
     onPointerDownCapture={(e) => { if (e.target instanceof HTMLCanvasElement) e.currentTarget.focus({ preventScroll: true }); }}
     onKeyDown={(e) => {
       if (e.target !== e.currentTarget) return;
@@ -72,14 +88,19 @@ export default function Globe({ onLocationSelect, location = null, className = '
     {fallback ? <CanvasEarth ref={renderer} {...props} onReady={onCanvasReady} /> : <GlobeBoundary onFailure={onFailure}>
       <Suspense fallback={<div className="globe-loading" role="status">Opening Earth…</div>}><CesiumEarth ref={renderer} {...props} onReady={onCesiumReady} /></Suspense>
     </GlobeBoundary>}
-    <div className="globe-toolbar" aria-label="Globe controls">
-      <button aria-label="Zoom in" onClick={() => renderer.current?.zoom(.7)}><Plus /></button>
-      <button aria-label="Zoom out" onClick={() => renderer.current?.zoom(1.4)}><Minus /></button>
-      <button aria-label="Reset view" title="Reset view (R)" onClick={() => renderer.current?.reset()}><RotateCcw /></button>
-      <button aria-label="Focus selected location" disabled={!location} onClick={() => location && renderer.current?.flyTo(location)}><Focus /></button>
+    {children}
+    <div className="globe-toolbar globe-tools" aria-label="Map tools">
+      {document.fullscreenEnabled && <button aria-label={fullscreen ? 'Exit full screen' : 'Full screen'} title={fullscreen ? 'Exit full screen (Esc)' : 'Full screen'} aria-pressed={fullscreen} onClick={toggleFullscreen}>{fullscreen ? <Minimize /> : <Maximize />}</button>}
       <button aria-label="Measure distance" aria-pressed={measuring} onClick={() => { setMeasuring(!measuring); setMeasurement([]); }}><Ruler /></button>
       <button aria-label="Satellite imagery" aria-pressed={satellite && !fallback} disabled={!hasEsri || fallback} title={hasEsri ? 'Esri World Imagery' : 'Add an ArcGIS token to enable satellite imagery'} onClick={() => setSatellite(!satellite)}><Map /></button>
       <button aria-label="Place names and borders" aria-pressed={labels && !fallback} disabled={!hasEsri || fallback} title={hasEsri ? 'Esri reference labels' : 'Add an ArcGIS token to enable labels'} onClick={() => setLabels(!labels)}><Tags /></button>
+    </div>
+    <div className="globe-toolbar globe-navigation" aria-label="Globe controls">
+      <button aria-label="Reset view" title="Earth overview (R)" onClick={() => renderer.current?.reset()}><Globe2 /></button>
+      <button aria-label="Focus selected location" title="Focus selected location" disabled={!location} onClick={() => location && renderer.current?.flyTo(location)}><Focus /></button>
+      <span className="globe-toolbar-divider" />
+      <button aria-label="Zoom in" title="Zoom in (+)" onClick={() => renderer.current?.zoom(.7)}><Plus /></button>
+      <button aria-label="Zoom out" title="Zoom out (−)" onClick={() => renderer.current?.zoom(1.4)}><Minus /></button>
     </div>
     {measuring && <div className="distance-panel" role="status">
       <strong>Surface distance</strong><button aria-label="Clear measurement" onClick={() => setMeasurement([])}><X size={14} /></button>
@@ -92,6 +113,7 @@ export default function Globe({ onLocationSelect, location = null, className = '
       <div id="globe-help">Drag to rotate · Scroll / pinch to zoom · Double-click to focus</div>
       <div data-testid="map-status">{fallback ? 'Canvas fallback · global map' : satelliteReady && hasEsri ? 'Esri World Imagery' : 'Natural Earth · global map'} · {fallback ? 'Limited zoom detail' : `${Math.round(height / 1000).toLocaleString()} km altitude`}</div>
       {imageryStatus && <div role="status">{imageryStatus}</div>}
+      {viewStatus && <div role="status">{viewStatus}</div>}
       {!fallback && !satelliteReady && height < 1000000 && <div>Global imagery · no street-level detail</div>}
       <span className="sr-only">Arrow keys rotate, plus and minus zoom, and R resets the view.</span>
     </div>

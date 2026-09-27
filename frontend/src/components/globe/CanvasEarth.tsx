@@ -48,7 +48,7 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
     if (!context) { current.current.onImageryStatus('Canvas is unavailable. Place search and weather remain available.'); return; }
     let disposed = false, scheduled = 0;
     const draw = () => {
-      const w = element.width, h = element.height, radius = Math.min(w, h) * .4 * view.current.zoom;
+      const w = element.width, h = element.height, radius = Math.min(w, h) * .41 * view.current.zoom;
       const { center } = view.current;
       // Cap the backing store to keep the per-pixel fallback responsive on low-end devices.
       const pixels = context.createImageData(w, h), source = texture.current;
@@ -56,13 +56,13 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
         const offset = (y * w + x) * 4;
         const nx = (x - w / 2) / radius, ny = (h / 2 - y) / radius;
         const point = unproject(nx, ny, center);
-        let rgb = [2, 6, 23];
+        let rgb = [3, 6, 9];
         if (point) {
           if (source) {
             const tx = Math.floor((point.lon + 180) / 360 * source.width) % source.width;
             const ty = clamp(Math.floor((90 - point.lat) / 180 * source.height), 0, source.height - 1);
             const i = (ty * source.width + tx) * 4;
-            const shade = .7 + .3 * Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny));
+            const shade = clamp(.5 + .5 * Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny)) - .15 * nx + .08 * ny, .3, 1);
             rgb = [source.data[i] * shade, source.data[i + 1] * shade, source.data[i + 2] * shade];
           } else rgb = [17, 59, 89];
         }
@@ -80,8 +80,6 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
         if (label) { context.font = 'bold 13px sans-serif'; context.fillStyle = '#fff'; context.fillText(label, q.x + 7, q.y - 7); }
       };
       weather.current.forEach(({ point, color, opacity }) => { context.globalAlpha = opacity; dot(point, color, 5); }); context.globalAlpha = 1;
-      const location = current.current.location;
-      if (location) dot({ lat: location.latitude, lon: location.longitude }, '#22d3ee', 4);
       current.current.measurement.forEach((p, i) => dot(p, '#fde047', 4, i === 0 ? 'A' : 'B'));
       context.restore();
       context.strokeStyle = '#67e8f944'; context.lineWidth = 2; context.beginPath(); context.arc(w / 2, h / 2, radius, 0, 2 * Math.PI); context.stroke();
@@ -105,7 +103,7 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
     let down: { x: number; y: number; center: Coordinate } | null = null, blocked = false, pinch = 0, pinchZoom = 1;
     let lastTap = { time: 0, x: 0, y: 0 };
     const pick = (x: number, y: number) => {
-      const box = element.getBoundingClientRect(), radius = Math.min(box.width, box.height) * .4 * view.current.zoom;
+      const box = element.getBoundingClientRect(), radius = Math.min(box.width, box.height) * .41 * view.current.zoom;
       return unproject((x - box.left - box.width / 2) / radius, (box.height / 2 - (y - box.top)) / radius, view.current.center);
     };
     const pointerDown = (e: PointerEvent) => {
@@ -121,7 +119,7 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
       } else if (down && pointers.size && !pinch) {
         const dx = e.clientX - down.x, dy = e.clientY - down.y;
         if (Math.hypot(dx, dy) > 6) blocked = true;
-        if (blocked) { const radius = Math.min(element.clientWidth, element.clientHeight) * .4 * view.current.zoom; view.current.center = { lat: clamp(down.center.lat + dy / radius * 60, -89.9, 89.9), lon: wrapLongitude(down.center.lon - dx / radius * 60) }; redraw.current(); }
+        if (blocked) { const radius = Math.min(element.clientWidth, element.clientHeight) * .41 * view.current.zoom; view.current.center = { lat: clamp(down.center.lat + dy / radius * 60, -89.9, 89.9), lon: wrapLongitude(down.center.lon - dx / radius * 60) }; redraw.current(); }
       }
       current.current.onHover(pick(e.clientX, e.clientY));
     };
@@ -148,7 +146,7 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
       element.removeEventListener('pointerdown', pointerDown); element.removeEventListener('pointermove', pointerMove); element.removeEventListener('pointerup', pointerUp); element.removeEventListener('pointercancel', pointerUp); element.removeEventListener('pointerleave', leave); element.removeEventListener('wheel', wheel);
     };
   }, []);
-  useEffect(() => { redraw.current(); }, [props.location, props.measurement, props.path, weatherRevision]);
+  useEffect(() => { redraw.current(); }, [props.measurement, props.path, weatherRevision]);
   return <canvas ref={canvas} className="earth-renderer" data-testid="canvas-renderer" aria-label="Canvas Earth fallback" />;
 });
 CanvasEarth.displayName = 'CanvasEarth';

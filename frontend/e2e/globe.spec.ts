@@ -28,6 +28,14 @@ async function center(page: Page) {
   if (!box) throw new Error('Missing canvas');
   return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
+async function noLocationDot(page: Page) {
+  const c = await center(page);
+  const patch = await page.screenshot({ clip: { x: Math.round(c.x - 8), y: Math.round(c.y - 8), width: 16, height: 16 } });
+  const { data, info } = await sharp(patch).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  let cyan = 0;
+  for (let i = 0; i < data.length; i += info.channels) if (data[i] < 60 && data[i + 1] > 200 && data[i + 2] > 200) cyan++;
+  expect(cyan).toBe(0);
+}
 async function disableWebGL(page: Page) {
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
@@ -47,8 +55,13 @@ async function nearPune(page: Page, tolerance = .6) {
 test('Cesium renders local Natural Earth, picks after rotation and rejects dragging', async ({ page }, info) => {
   const errors: string[] = [], remoteMaps: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  page.on('request', (r) => { if (/arcgis.com|api.cesium.com/.test(r.url())) remoteMaps.push(r.url()); });
+  page.on('request', (r) => { if (/arcgis.com|(?:api|ion|assets).cesium.com/.test(r.url())) remoteMaps.push(r.url()); });
   await fixture(page); await ready(page);
+  const homeStatus = await page.getByTestId('map-status').textContent();
+  await noLocationDot(page);
+  await expect(page.locator('.cesium-widget-credits')).toContainText('Natural Earth');
+  await expect(page.locator('.cesium-widget-credits img')).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath('earth-overview.png') });
   await expect(page.getByRole('button', { name: 'Satellite imagery', exact: true })).toBeDisabled();
   const c = await center(page), selected = page.getByTestId('selected-location');
   const before = await selected.textContent();
@@ -59,7 +72,7 @@ test('Cesium renders local Natural Earth, picks after rotation and rejects dragg
   await page.mouse.click(c.x, c.y);
   await expect(selected).not.toHaveText(before!);
   await page.getByRole('button', { name: 'Reset view' }).click();
-  await expect(page.getByTestId('map-status')).toContainText('22,000 km');
+  await expect(page.getByTestId('map-status')).toHaveText(homeStatus!);
   await page.mouse.dblclick(c.x, c.y);
   await expect(page.getByTestId('map-status')).toContainText('80 km');
   await page.screenshot({ path: info.outputPath('cesium-desktop.png') });
@@ -78,6 +91,7 @@ test('submitted place search flies to Pune and selects accurate coordinates', as
   await expect(page.getByTestId('selected-location')).toContainText('18.5204° N, 73.8567° E');
   const c = await center(page); await page.mouse.click(c.x, c.y);
   await nearPune(page, .001);
+  await noLocationDot(page);
   expect(searches).toHaveLength(1);
   expect(weather.some(url => url.includes('lat=18.5204&lon=73.8567'))).toBe(true);
 });
@@ -130,6 +144,7 @@ test('Canvas fallback remains textured, searchable and measurable without WebGL'
   const c = await center(page);
   await page.mouse.click(c.x, c.y);
   await expect(page.getByTestId('selected-location')).toContainText('18.5204° N');
+  await noLocationDot(page);
   await page.getByRole('textbox', { name: 'Search places' }).fill('Pune');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('button', { name: /Pune Pune, Maharashtra/ }).click();
@@ -208,4 +223,23 @@ test('mobile touch and responsive resize', async ({ browser }, info) => {
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(page.locator('canvas').first()).toBeVisible();
   await context.close();
+});
+
+test('full screen retains layers and selection, and restores the dashboard', async ({ page }, info) => {
+  await fixture(page); await ready(page);
+  const globe = page.getByRole('region', { name: 'Interactive Earth' });
+  const initialBox = await globe.boundingBox();
+  await page.getByRole('button', { name: 'Full screen', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Exit full screen', exact: true })).toBeVisible();
+  await expect.poll(async () => Math.round((await globe.boundingBox())!.width)).toBe(1440);
+  await expect(page.getByRole('button', { name: 'Weather Layers', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Reset view', exact: true }).click();
+  const c = await center(page); await page.mouse.click(c.x, c.y);
+  await nearPune(page);
+  await noLocationDot(page);
+  await page.screenshot({ path: info.outputPath('earth-fullscreen.png') });
+  await page.getByRole('button', { name: 'Exit full screen', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Full screen', exact: true })).toBeVisible();
+  await expect.poll(async () => Math.round((await globe.boundingBox())!.width)).toBe(Math.round(initialBox!.width));
+  await expect(page.getByRole('textbox', { name: 'Search places' })).toBeVisible();
 });

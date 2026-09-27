@@ -2,6 +2,10 @@
 
 The dashboard uses React, TypeScript and **CesiumJS** with a WGS84 ellipsoid. Natural Earth is the default and requires no account or key. Satellite imagery and reference labels remain disabled until you configure Esri.
 
+The Earth overview fills the viewport with a clean space background, camera-relative illumination, a subtle atmospheric rim and stronger map contrast. Full screen keeps the weather-layer controls available. The selected location appears in the coordinate HUD and weather panel without a blue marker on the globe; yellow A/B markers appear only while measuring.
+
+No Cesium ion services or assets are requested. The optional engine logo is removed using the public `CreditDisplay.cesiumCredit` API, while Natural Earth/Esri attribution and bundled software licenses remain intact. See [Cesium's guidance for applications without ion](https://community.cesium.com/t/cesium-ion-logo-removal/8979/7). If ion services are added in future, retain their required attribution.
+
 ## Run locally
 
 With Node.js 22+ and Python 3.12+, in two terminals from the repository root:
@@ -36,16 +40,17 @@ See [Cesium's ArcGIS provider documentation](https://cesium.com/learn/cesiumjs/r
 - Drag to rotate; scroll or pinch to zoom.
 - Click/tap the surface to select coordinates and request weather. Dragging and multi-touch gestures do not count as selection.
 - Double-click/double-tap or use Focus selected location to animate toward the point.
-- Search for a city, landmark or address, then press Enter or Search. Selecting a result moves the camera and marker; its bounding box and viewport aspect determine altitude. Pune starts near 18.5204 N, 73.8567 E (live geocoder coordinates can differ).
+- Search for a city, landmark or address, then press Enter or Search. Selecting a result moves the camera and updates the coordinate HUD; its bounding box and viewport aspect determine altitude. Pune starts near 18.5204 N, 73.8567 E (live geocoder coordinates can differ).
 - Measure distance, then select A and B. The connector and distance follow the WGS84 ellipsoid; a third selection starts over. Measurement does not change the selected weather location.
 - Zoom, reset and measurement controls are keyboard-accessible. Focus the globe for arrow keys, +/-, and R.
+- Full screen expands the Earth and layer controls; use Exit full screen or Escape to return. Earth overview (R) fits the globe to the current viewport. Browsers without full-screen support omit that button.
 - Reduced-motion preferences shorten flights. Cesium renders on demand and pauses when hidden/offscreen.
 
 Natural Earth is a low-resolution global physical map: zooming closely cannot reveal streets or newer satellite detail. There is no elevation terrain, Street View or photorealistic building layer.
 
 ## Canvas fallback
 
-If WebGL creation fails, rendering fails, or the context is lost, a custom HTML Canvas renderer displays a locally bundled Natural Earth image. It supports rotation, limited zoom, selection, search focus, measurements, markers and weather points. It uses an orthographic geographic projection (a spherical visual approximation); the distance calculation remains ellipsoidal WGS84. It does not load satellite detail or reference tiles. Rendering uses a capped backing resolution and runs only when something changes.
+If WebGL creation fails, rendering fails, or the context is lost, a custom HTML Canvas renderer displays a locally bundled Natural Earth image. It supports rotation, limited zoom, selection, search focus, measurements, A/B markers and weather points. It uses an orthographic geographic projection (a spherical visual approximation); the distance calculation remains ellipsoidal WGS84. It does not load satellite detail or reference tiles. Rendering uses a capped backing resolution and runs only when something changes.
 
 The fallback JPEG is stitched from Cesium's bundled NaturalEarthII tiles. Regenerate it without downloading new imagery:
 
