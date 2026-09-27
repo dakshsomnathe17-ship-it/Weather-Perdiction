@@ -54,7 +54,7 @@ test('Cesium renders local Natural Earth, picks after rotation and rejects dragg
   const before = await selected.textContent();
   await page.mouse.move(c.x, c.y); await page.mouse.down(); await page.mouse.move(c.x + 80, c.y + 35, { steps: 12 }); await page.mouse.up();
   await expect(selected).toHaveText(before!);
-  await page.getByRole('region', { name: 'Interactive Earth' }).focus();
+  await expect(page.getByRole('region', { name: 'Interactive Earth' })).toBeFocused();
   await page.keyboard.press('ArrowRight');
   await page.mouse.click(c.x, c.y);
   await expect(selected).not.toHaveText(before!);
@@ -121,6 +121,12 @@ test('weather layer status, opacity and map picking stay compatible', async ({ p
 
 test('Canvas fallback remains textured, searchable and measurable without WebGL', async ({ page }, info) => {
   await disableWebGL(page); await fixture(page); await ready(page, true);
+  const topPixel = await page.getByTestId('canvas-renderer').evaluate((element) => {
+    const canvas = element as HTMLCanvasElement;
+    const color = canvas.getContext('2d')!.getImageData(canvas.width / 2, canvas.height * .05, 1, 1).data;
+    return [color[0], color[1], color[2]];
+  });
+  expect(topPixel.every(channel => channel < 50)).toBe(true);
   const c = await center(page);
   await page.mouse.click(c.x, c.y);
   await expect(page.getByTestId('selected-location')).toContainText('18.5204° N');
@@ -132,6 +138,54 @@ test('Canvas fallback remains textured, searchable and measurable without WebGL'
   await page.mouse.click(c.x, c.y + 60); await page.mouse.click(c.x + 45, c.y + 60);
   await expect(page.getByTestId('surface-distance')).toContainText('km');
   await page.screenshot({ path: info.outputPath('canvas-fallback.png') });
+});
+
+test('editing a submitted search hides results for the old query', async ({ page }) => {
+  await fixture(page); await ready(page);
+  const input = page.getByRole('textbox', { name: 'Search places' });
+  await input.fill('Pune'); await input.press('Enter');
+  await expect(page.getByRole('button', { name: /Pune Pune, Maharashtra/ })).toBeVisible();
+  await input.fill('Mumbai');
+  await expect(page.getByRole('button', { name: /Pune Pune, Maharashtra/ })).toBeHidden();
+});
+
+test('Canvas fallback frames broad and precise search results differently', async ({ page }) => {
+  await disableWebGL(page); await fixture(page);
+  await page.route('**/api/weather/search?**', route => {
+    const broad = new URL(route.request().url()).searchParams.get('q') === 'World';
+    return route.fulfill({ json: [{ id: broad ? 1 : 2, name: broad ? 'World' : 'Address', country: 'India',
+      displayName: broad ? 'World broad area' : 'Address precise area', lat: 18.5204, lon: 73.8567,
+      bounds: broad ? [-90, 90, -180, 180] : [18.52, 18.521, 73.856, 73.857] }] });
+  });
+  await ready(page, true);
+  const input = page.getByRole('textbox', { name: 'Search places' });
+  const topPixel = () => page.getByTestId('canvas-renderer').evaluate((element) => {
+    const canvas = element as HTMLCanvasElement;
+    return [...canvas.getContext('2d')!.getImageData(canvas.width / 2, canvas.height * .05, 1, 1).data].slice(0, 3);
+  });
+  await input.fill('World'); await input.press('Enter');
+  await page.getByRole('button', { name: /World broad area/ }).click();
+  await expect.poll(async () => (await topPixel()).every(channel => channel < 50)).toBe(true);
+  await input.fill('Address'); await input.press('Enter');
+  await page.getByRole('button', { name: /Address precise area/ }).click();
+  await expect.poll(async () => Math.max(...await topPixel())).toBeGreaterThan(60);
+});
+
+test('Canvas drag resumes after one finger lifts from a pinch', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage(); await disableWebGL(page); await fixture(page); await ready(page, true);
+  const canvas = page.getByTestId('canvas-renderer'), c = await center(page);
+  const cdp = await context.newCDPSession(page);
+  const finger = (id: number, x: number, y: number) => ({ id, x, y });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [finger(1, c.x - 20, c.y), finger(2, c.x + 20, c.y)] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [finger(1, c.x - 35, c.y), finger(2, c.x + 35, c.y)] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [finger(2, c.x + 35, c.y)] });
+  const afterPinch = await canvas.screenshot();
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [finger(1, c.x - 35, c.y + 50)] });
+  await expect.poll(async () => (await canvas.screenshot()).equals(afterPinch)).toBe(false);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect(page.getByTestId('selected-location')).toContainText('Pune');
+  await context.close();
 });
 
 test('WebGL context loss switches to the usable Canvas renderer', async ({ page }) => {

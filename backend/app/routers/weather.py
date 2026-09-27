@@ -39,7 +39,8 @@ async def search_location(q: str = Query(min_length=2, max_length=160)):
     try:
         return await geocoding_service.search(q)
     except SearchUnavailable as exc:
-        raise HTTPException(status_code=503, detail="Place search is temporarily unavailable. Try again later.", headers={"Retry-After": "60"}) from exc
+        headers = {"Retry-After": str(exc.retry_after)} if exc.retry_after else None
+        raise HTTPException(status_code=503, detail="Place search is temporarily unavailable. Try again later.", headers=headers) from exc
 
 @router.get("/map", response_model=WeatherMapData)
 async def get_map_data(layer: str, bounds: str):

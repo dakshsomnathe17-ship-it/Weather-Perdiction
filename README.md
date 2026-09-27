@@ -63,6 +63,7 @@ global weather overlays display “Awaiting data” while the existing map API r
 ## 🐳 Docker Deployment
 To deploy using Docker Compose:
 ```bash
+cp .env.example .env
 docker-compose up -d --build
 ```
 This will start the frontend, backend, PostgreSQL database, and Redis cache.

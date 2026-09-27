@@ -24,7 +24,7 @@ graph TD
 
 ## Component Descriptions
 
-1. **Frontend (React + Vite)**: Provides the user interface, including a 3D Earth visualization (Three.js) and chat interface. Hosted as static files behind Nginx in production.
+1. **Frontend (React + Vite)**: Provides the user interface, including a CesiumJS Earth visualization and Canvas fallback. Hosted as static files behind Nginx in production.
 2. **Backend (FastAPI)**: Serves RESTful APIs. Manages business logic, authentication, input validation, and orchestrates calls to external providers and ML models.
 3. **Database (PostgreSQL)**: Stores user preferences, saved locations, search history, and cached historical weather data for ML training.
 4. **Cache (Redis)**: Caches external API responses to reduce latency and API usage costs.

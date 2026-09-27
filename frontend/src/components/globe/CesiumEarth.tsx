@@ -39,6 +39,7 @@ const CesiumEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
       v = new Viewer(container.current, {
         baseLayer: false, baseLayerPicker: false, geocoder: false, animation: false, timeline: false,
         homeButton: false, sceneModePicker: false, navigationHelpButton: false, fullscreenButton: false,
+        blurActiveElementOnCanvasFocus: false,
         selectionIndicator: false, infoBox: false, requestRenderMode: true, maximumRenderTimeChange: Infinity,
         terrainProvider: new EllipsoidTerrainProvider({ ellipsoid: Ellipsoid.WGS84 }),
       });
@@ -121,24 +122,29 @@ const CesiumEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
     let cancelled = false;
     const added: ImageryLayer[] = [];
     const token = import.meta.env.VITE_ARCGIS_ACCESS_TOKEN;
+    props.onSatelliteReady(false);
     if (!token || (!props.satellite && !props.labels)) { props.onImageryStatus(''); return; }
     props.onImageryStatus('Loading Esri imagery…');
-    const add = async (url: string) => {
+    const failed = new Set<'satellite' | 'labels'>();
+    const report = () => current.current.onImageryStatus(failed.size
+      ? `Esri ${[...failed].join(' and ')} unavailable. Natural Earth remains available.` : '');
+    const add = async (kind: 'satellite' | 'labels', url: string) => {
       const provider = await ArcGisMapServerImageryProvider.fromUrl(new Resource({ url, queryParameters: { token } }), { enablePickFeatures: false });
       if (cancelled || scene.isDestroyed()) return;
       if (provider.credit) provider.credit.showOnScreen = true;
-      provider.errorEvent.addEventListener(() => { if (!cancelled) current.current.onImageryStatus('Esri tiles unavailable here. Natural Earth remains available.'); });
+      provider.errorEvent.addEventListener(() => { if (!cancelled) { failed.add(kind); if (kind === 'satellite') current.current.onSatelliteReady(false); report(); } });
       added.push(scene.imageryLayers.addImageryProvider(provider)); scene.scene.requestRender();
+      if (kind === 'satellite') current.current.onSatelliteReady(true);
     };
-    void (async () => {
-      try {
-        if (props.satellite) await add(import.meta.env.VITE_ESRI_IMAGERY_URL || 'https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer');
-        if (props.labels) await add(import.meta.env.VITE_ESRI_LABELS_URL || 'https://ibasemaps-api.arcgis.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer');
-        if (!cancelled) current.current.onImageryStatus('');
-      } catch { if (!cancelled) current.current.onImageryStatus('Esri unavailable. Check your ArcGIS token; Natural Earth remains available.'); }
-    })();
-    return () => { cancelled = true; if (!scene.isDestroyed()) { added.forEach((layer) => scene.imageryLayers.remove(layer, true)); scene.scene.requestRender(); } };
-  }, [scene, props.satellite, props.labels, props.onImageryStatus]);
+    const requested: Array<['satellite' | 'labels', string]> = [];
+    if (props.satellite) requested.push(['satellite', import.meta.env.VITE_ESRI_IMAGERY_URL || 'https://ibasemaps-api.arcgis.com/arcgis/rest/services/World_Imagery/MapServer']);
+    if (props.labels) requested.push(['labels', import.meta.env.VITE_ESRI_LABELS_URL || 'https://ibasemaps-api.arcgis.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer']);
+    void Promise.all(requested.map(async ([kind, url]) => {
+      try { await add(kind, url); }
+      catch { if (!cancelled) { failed.add(kind); if (kind === 'satellite') current.current.onSatelliteReady(false); } }
+    })).then(() => { if (!cancelled) report(); });
+    return () => { cancelled = true; props.onSatelliteReady(false); if (!scene.isDestroyed()) { added.forEach((layer) => scene.imageryLayers.remove(layer, true)); scene.scene.requestRender(); } };
+  }, [scene, props.satellite, props.labels, props.onImageryStatus, props.onSatelliteReady]);
 
   useEffect(() => {
     if (!scene || scene.isDestroyed()) return;

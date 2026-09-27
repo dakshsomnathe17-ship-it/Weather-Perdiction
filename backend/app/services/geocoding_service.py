@@ -15,7 +15,9 @@ from app.config import settings
 
 
 class SearchUnavailable(Exception):
-    pass
+    def __init__(self, message="Place search unavailable", retry_after=None):
+        super().__init__(message)
+        self.retry_after = retry_after
 
 
 class GeocodingService:
@@ -77,7 +79,9 @@ class GeocodingService:
                 lat, lon = float(row["lat"]), float(row["lon"])
                 if not math.isfinite(lat) or not math.isfinite(lon) or abs(lat) > 90 or abs(lon) > 180:
                     continue
-                address = row.get("address") or {}
+                address = row.get("address")
+                if not isinstance(address, dict):
+                    address = {}
                 display = str(row.get("display_name") or "")
                 bounds = None
                 try:
@@ -108,7 +112,7 @@ class GeocodingService:
                     if delay == 0:
                         break
                     if delay > 5:
-                        raise SearchUnavailable("Search service cooling down")
+                        raise SearchUnavailable("Search service cooling down", retry_after=math.ceil(delay))
                     await asyncio.sleep(delay)
                 async with httpx.AsyncClient(timeout=10, transport=self.transport, headers={
                     "User-Agent": settings.NOMINATIM_USER_AGENT,
@@ -119,6 +123,7 @@ class GeocodingService:
                     })
                     if response.status_code in (429, 503):
                         await asyncio.to_thread(self._cooldown)
+                        raise SearchUnavailable("Search service cooling down", retry_after=60)
                     response.raise_for_status()
                     results = self.normalize(response.json())
                 await asyncio.to_thread(self._save, key, results)

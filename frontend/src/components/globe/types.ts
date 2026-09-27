@@ -18,4 +18,5 @@ export interface GlobeRendererProps {
   onReady: () => void;
   onFailure: () => void;
   onImageryStatus: (message: string) => void;
+  onSatelliteReady: (ready: boolean) => void;
 }

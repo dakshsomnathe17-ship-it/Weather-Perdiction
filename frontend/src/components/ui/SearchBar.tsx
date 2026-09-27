@@ -15,7 +15,7 @@ export const SearchBar: React.FC = () => {
   };
   return <div className="relative w-full z-50">
     <form onSubmit={(e) => { e.preventDefault(); if (query.trim().length >= 2) { if (submitted === query.trim() && results.isError) void results.refetch(); setSubmitted(query.trim()); setOpen(true); } }} className="flex items-center gap-2 rounded-xl glass-strong p-2">
-      <input aria-label="Search places" placeholder="City, landmark or address" maxLength={160} value={query} onChange={(e) => setQuery(e.target.value)}
+      <input aria-label="Search places" placeholder="City, landmark or address" maxLength={160} value={query} onChange={(e) => { setQuery(e.target.value); setOpen(false); }}
         className="min-w-0 flex-1 bg-transparent px-2 py-2 text-white outline-none" />
       <button type="submit" aria-label="Search" disabled={query.trim().length < 2 || results.isFetching} className="rounded-lg bg-primary-600 p-2 text-white disabled:opacity-40">
         {results.isFetching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}

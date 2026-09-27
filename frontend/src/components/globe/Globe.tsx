@@ -22,16 +22,19 @@ export default function Globe({ onLocationSelect, location = null, className = '
   const [hover, setHover] = useState<Coordinate | null>(null);
   const [height, setHeight] = useState(22000000);
   const [satellite, setSatellite] = useState(false);
+  const [satelliteReady, setSatelliteReady] = useState(false);
   const [labels, setLabels] = useState(false);
   const [imageryStatus, setImageryStatus] = useState('');
   const [measuring, setMeasuring] = useState(false);
   const [measurement, setMeasurement] = useState<Coordinate[]>([]);
   const lastPick = useRef<Coordinate | null>(null);
   const handledLocation = useRef(location);
+  const hasRenderedCesium = useRef(false);
   const path = useMemo(() => measurement.length === 2 ? geodesicPath(measurement[0], measurement[1]) : [], [measurement]);
   const distance = measurement.length === 2 ? surfaceDistance(measurement[0], measurement[1]) : null;
-  const onReady = useCallback(() => setReady(true), []);
-  const onFailure = useCallback(() => { handledLocation.current = null; lastPick.current = null; setFallback(true); setReady(false); setImageryStatus(''); }, []);
+  const onCesiumReady = useCallback(() => { hasRenderedCesium.current = true; setReady(true); }, []);
+  const onCanvasReady = useCallback(() => setReady(true), []);
+  const onFailure = useCallback(() => { if (hasRenderedCesium.current) handledLocation.current = null; lastPick.current = null; setFallback(true); setReady(false); setImageryStatus(''); setSatelliteReady(false); }, []);
   const onPick = useCallback((point: Coordinate, focus = false) => {
     if (measuring) {
       if (!focus) setMeasurement((points) => {
@@ -54,7 +57,7 @@ export default function Globe({ onLocationSelect, location = null, className = '
 
   const coordinate = hover ?? (location ? { lat: location.latitude, lon: location.longitude } : null);
   const hasEsri = Boolean(import.meta.env.VITE_ARCGIS_ACCESS_TOKEN);
-  const props = { location, measurement, path, satellite, labels, onPick, onHover: setHover, onHeight: setHeight, onReady, onFailure, onImageryStatus: setImageryStatus };
+  const props = { location, measurement, path, satellite, labels, onPick, onHover: setHover, onHeight: setHeight, onFailure, onImageryStatus: setImageryStatus, onSatelliteReady: setSatelliteReady };
   return <div className={`globe-view ${className}`} style={style} tabIndex={0} role="region" aria-label="Interactive Earth" aria-describedby="globe-help"
     onPointerDownCapture={(e) => { if (e.target instanceof HTMLCanvasElement) e.currentTarget.focus({ preventScroll: true }); }}
     onKeyDown={(e) => {
@@ -66,8 +69,8 @@ export default function Globe({ onLocationSelect, location = null, className = '
       };
       if (actions[e.key]) { e.preventDefault(); actions[e.key](); }
     }}>
-    {fallback ? <CanvasEarth ref={renderer} {...props} /> : <GlobeBoundary onFailure={onFailure}>
-      <Suspense fallback={<div className="globe-loading" role="status">Opening Earth…</div>}><CesiumEarth ref={renderer} {...props} /></Suspense>
+    {fallback ? <CanvasEarth ref={renderer} {...props} onReady={onCanvasReady} /> : <GlobeBoundary onFailure={onFailure}>
+      <Suspense fallback={<div className="globe-loading" role="status">Opening Earth…</div>}><CesiumEarth ref={renderer} {...props} onReady={onCesiumReady} /></Suspense>
     </GlobeBoundary>}
     <div className="globe-toolbar" aria-label="Globe controls">
       <button aria-label="Zoom in" onClick={() => renderer.current?.zoom(.7)}><Plus /></button>
@@ -87,9 +90,9 @@ export default function Globe({ onLocationSelect, location = null, className = '
     <div className="globe-hud">
       <div className="globe-coordinates" data-testid="globe-coordinates">{coordinate ? `${hover ? 'Pointer' : 'Selected'} · ${formatCoordinates(coordinate.lat, coordinate.lon)}` : 'Select a place on Earth'}</div>
       <div id="globe-help">Drag to rotate · Scroll / pinch to zoom · Double-click to focus</div>
-      <div data-testid="map-status">{fallback ? 'Canvas fallback · global map' : satellite && hasEsri ? 'Esri World Imagery' : 'Natural Earth · global map'} · {fallback ? 'Limited zoom detail' : `${Math.round(height / 1000).toLocaleString()} km altitude`}</div>
+      <div data-testid="map-status">{fallback ? 'Canvas fallback · global map' : satelliteReady && hasEsri ? 'Esri World Imagery' : 'Natural Earth · global map'} · {fallback ? 'Limited zoom detail' : `${Math.round(height / 1000).toLocaleString()} km altitude`}</div>
       {imageryStatus && <div role="status">{imageryStatus}</div>}
-      {!fallback && !satellite && height < 1000000 && <div>Global imagery · no street-level detail</div>}
+      {!fallback && !satelliteReady && height < 1000000 && <div>Global imagery · no street-level detail</div>}
       <span className="sr-only">Arrow keys rotate, plus and minus zoom, and R resets the view.</span>
     </div>
     {fallback && <div className="fallback-credit"><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noreferrer">Natural Earth · public domain</a></div>}

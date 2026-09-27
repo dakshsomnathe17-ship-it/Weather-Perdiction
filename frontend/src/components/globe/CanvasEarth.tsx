@@ -3,7 +3,7 @@ import { useQueries } from '@tanstack/react-query';
 import { getMapData } from '@/api/weather';
 import { useGlobeStore } from '@/store/globeStore';
 import { layerColor } from '@/utils/weatherMap';
-import { clamp, project, unproject, wrapLongitude, type Coordinate } from '@/utils/geo';
+import { clamp, locationAltitude, project, unproject, wrapLongitude, type Coordinate } from '@/utils/geo';
 import type { GlobeHandle, GlobeRendererProps } from './types';
 
 // A CPU orthographic globe. It shares geographic selection and geodesic tools,
@@ -21,14 +21,16 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
   weather.current = queries.flatMap((q, i) => q.data?.points.map((point) => ({ point, color: layerColor(layers[i].id, point.value), opacity: layers[i].opacity })) ?? []);
   const weatherRevision = layers.map((layer, i) => `${layer.id}:${layer.opacity}:${queries[i].dataUpdatedAt}`).join('|');
   useImperativeHandle(ref, () => ({
-    flyTo(location) {
+    flyTo(location, altitude) {
       cancelAnimationFrame(animation.current);
       const from = { ...view.current.center }, delta = wrapLongitude(location.longitude - from.lon);
       const start = performance.now(), fromZoom = view.current.zoom;
+      const aspect = (canvas.current?.clientWidth ?? 1) / Math.max(1, canvas.current?.clientHeight ?? 1);
+      const targetZoom = clamp(Math.sqrt(22000000 / Math.max(1500, altitude ?? locationAltitude(location.bounds, aspect))), .75, 4);
       const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900;
       const tick = (now: number) => {
         const t = duration ? clamp((now - start) / duration, 0, 1) : 1, ease = t * t * (3 - 2 * t);
-        view.current = { center: { lat: from.lat + (location.latitude - from.lat) * ease, lon: wrapLongitude(from.lon + delta * ease) }, zoom: fromZoom + (3 - fromZoom) * ease };
+        view.current = { center: { lat: from.lat + (location.latitude - from.lat) * ease, lon: wrapLongitude(from.lon + delta * ease) }, zoom: fromZoom + (targetZoom - fromZoom) * ease };
         redraw.current();
         if (t < 1) animation.current = requestAnimationFrame(tick);
       };
@@ -131,7 +133,11 @@ const CanvasEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
         if (p) current.current.onPick(p, twice); lastTap = { time: now, x: e.clientX, y: e.clientY };
       }
       pointers.delete(e.pointerId); if (element.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
-      if (!pointers.size) { down = null; pinch = 0; }
+      if (pointers.size === 1) {
+        const remaining = [...pointers.values()][0];
+        down = { x: remaining.x, y: remaining.y, center: { ...view.current.center } };
+        pinch = 0; blocked = true;
+      } else if (!pointers.size) { down = null; pinch = 0; }
     };
     const wheel = (e: WheelEvent) => { e.preventDefault(); cancelAnimationFrame(animation.current); view.current.zoom = clamp(view.current.zoom * Math.exp(-e.deltaY * .001), .75, 4); redraw.current(); };
     const leave = () => current.current.onHover(null);

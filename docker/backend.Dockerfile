@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
 # Stage 2: Runtime
@@ -27,7 +27,7 @@ COPY --from=builder /app/requirements.txt .
 
 RUN pip install --no-cache /wheels/*
 
-COPY . .
+COPY backend/ .
 
 EXPOSE 8000
 

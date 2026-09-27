@@ -2,8 +2,12 @@ version: '3.9'
 services:
   frontend:
     build:
-      context: ./frontend
-      dockerfile: ../docker/frontend.Dockerfile
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      args:
+        VITE_ARCGIS_ACCESS_TOKEN: ${VITE_ARCGIS_ACCESS_TOKEN:-}
+        VITE_ESRI_IMAGERY_URL: ${VITE_ESRI_IMAGERY_URL:-}
+        VITE_ESRI_LABELS_URL: ${VITE_ESRI_LABELS_URL:-}
     ports:
       - '3000:80'
     depends_on:
@@ -15,11 +19,14 @@ services:
     build:
       context: .
       dockerfile: docker/backend.Dockerfile
+    env_file:
+      - .env
     ports:
       - '8000:8000'
     environment:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/weather_ai
       - REDIS_URL=redis://redis:6379
+      - NOMINATIM_CACHE_PATH=/app/cache/nominatim-cache.sqlite3
     depends_on:
       db:
         condition: service_healthy
@@ -27,6 +34,7 @@ services:
         condition: service_healthy
     volumes:
       - ml_models:/app/ml_models
+      - nominatim_cache:/app/cache
     networks:
       - weather-net
 
@@ -66,6 +74,7 @@ volumes:
   postgres_data:
   redis_data:
   ml_models:
+  nominatim_cache:
 
 networks:
   weather-net:
