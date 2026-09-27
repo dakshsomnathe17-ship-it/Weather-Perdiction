@@ -1,4 +1,4 @@
-import { Color } from 'three';
+
 import { isValidCoordinate } from './geo';
 
 export interface WeatherMapPoint { lat: number; lon: number; value: number; }
@@ -18,8 +18,9 @@ export function validMapPoints(points: unknown): WeatherMapPoint[] {
   return points.filter((p): p is WeatherMapPoint => p !== null && typeof p === 'object'
     && isValidCoordinate(p.lat, p.lon) && Number.isFinite(p.value));
 }
-export function layerColor(layer: string, value: number): Color {
+export function layerColor(layer: string, value: number): string {
   const scale = LAYER_SCALES[layer] ?? LAYER_SCALES.temperature;
   const weight = Math.min(1, Math.max(0, (value - scale.min) / (scale.max - scale.min)));
-  return new Color(scale.low).lerp(new Color(scale.high), weight);
+  const channels = [1, 3, 5].map((offset) => Math.round(parseInt(scale.low.slice(offset, offset + 2), 16) * (1 - weight) + parseInt(scale.high.slice(offset, offset + 2), 16) * weight));
+  return '#' + channels.map((channel) => channel.toString(16).padStart(2, '0')).join('');
 }

@@ -6,6 +6,7 @@ from app.schemas.weather import (
     WeatherSearchResult, WeatherMapData, LocationInfo
 )
 from app.services.weather_service import weather_service
+from app.services.geocoding_service import geocoding_service, SearchUnavailable
 
 router = APIRouter(prefix="/weather", tags=["Weather"])
 
@@ -34,9 +35,11 @@ async def get_history(lat: float, lon: float, start_date: str, end_date: str):
     )
 
 @router.get("/search", response_model=List[WeatherSearchResult])
-async def search_location(q: str):
-    data = await weather_service.search_locations(q)
-    return data
+async def search_location(q: str = Query(min_length=2, max_length=160)):
+    try:
+        return await geocoding_service.search(q)
+    except SearchUnavailable as exc:
+        raise HTTPException(status_code=503, detail="Place search is temporarily unavailable. Try again later.", headers={"Retry-After": "60"}) from exc
 
 @router.get("/map", response_model=WeatherMapData)
 async def get_map_data(layer: str, bounds: str):

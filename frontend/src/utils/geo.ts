@@ -1,61 +1,49 @@
-import * as THREE from 'three';
+import { Geodesic } from 'geographiclib-geodesic';
 
-export function latLonToVector3(lat: number, lon: number, radius: number): THREE.Vector3 {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lon + 180) * (Math.PI / 180);
-
-  const x = -(radius * Math.sin(phi) * Math.cos(theta));
-  const z = radius * Math.sin(phi) * Math.sin(theta);
-  const y = radius * Math.cos(phi);
-
-  return new THREE.Vector3(x, y, z);
-}
-
-export function vector3ToLatLon(vec3: THREE.Vector3): { lat: number; lon: number } {
-  if (!Number.isFinite(vec3.lengthSq()) || vec3.lengthSq() === 0) {
-    throw new RangeError('A geographic position must be a finite, nonzero vector');
-  }
-  const normalizedVec = vec3.clone().normalize();
-  const lat = (Math.asin(THREE.MathUtils.clamp(normalizedVec.y, -1, 1)) * 180) / Math.PI;
-  let lon = (Math.atan2(normalizedVec.z, -normalizedVec.x) * 180) / Math.PI;
-  lon -= 180;
-  if (lon < -180) lon += 360;
-  return { lat, lon };
-}
-
-export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // km
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-/** Raycast points are world-space; texture UVs and weather coordinates are Earth-local. */
-export function worldPointToLatLon(point: THREE.Vector3, earth: THREE.Object3D) {
-  earth.updateWorldMatrix(true, false);
-  return vector3ToLatLon(earth.worldToLocal(point.clone()));
-}
-
+export interface Coordinate { lat: number; lon: number; }
+export type Bounds = [number, number, number, number]; // south, north, west, east
+export const WGS84_RADIUS = 6378137;
+export const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+export const wrapLongitude = (lon: number) => ((lon + 180) % 360 + 360) % 360 - 180;
 export function isValidCoordinate(lat: number, lon: number): boolean {
   return Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180;
 }
-
 export function formatCoordinates(lat: number, lon: number): string {
-  return `${Math.abs(lat).toFixed(2)}° ${lat < 0 ? 'S' : 'N'}, ${Math.abs(lon).toFixed(2)}° ${lon < 0 ? 'W' : 'E'}`;
+  return `${Math.abs(lat).toFixed(4)}° ${lat < 0 ? 'S' : 'N'}, ${Math.abs(lon).toFixed(4)}° ${lon < 0 ? 'W' : 'E'}`;
+}
+export function surfaceDistance(a: Coordinate, b: Coordinate): number {
+  if (!isValidCoordinate(a.lat, a.lon) || !isValidCoordinate(b.lat, b.lon)) throw new RangeError('Invalid coordinates');
+  return Geodesic.WGS84.Inverse(a.lat, a.lon, b.lat, b.lon).s12!;
+}
+export function geodesicPath(a: Coordinate, b: Coordinate, segments = 128): Coordinate[] {
+  const line = Geodesic.WGS84.InverseLine(a.lat, a.lon, b.lat, b.lon);
+  return Array.from({ length: segments + 1 }, (_, i) => {
+    const point = line.Position(line.s13 * i / segments);
+    return { lat: point.lat2!, lon: point.lon2! };
+  });
+}
+export function locationAltitude(bounds?: Bounds, aspect = 1): number {
+  if (!bounds || bounds.some((v) => !Number.isFinite(v))) return 80000;
+  const [south, north, west, east] = bounds;
+  if (!isValidCoordinate(south, west) || !isValidCoordinate(north, east) || south > north) return 80000;
+  const latitude = (south + north) / 2;
+  const span = east >= west ? east - west : east + 360 - west;
+  const width = span > 180 ? WGS84_RADIUS * Math.PI * Math.cos(latitude * Math.PI / 180) : surfaceDistance({ lat: latitude, lon: west }, { lat: latitude, lon: east });
+  const height = surfaceDistance({ lat: south, lon: west }, { lat: north, lon: west });
+  return clamp(Math.max(height, width / Math.max(0.2, aspect)) * 1.8, 1500, 22000000);
 }
 
-export const CONTINENT_PATHS = {
-  // Simplified paths for demonstration
-  northAmerica: [[50, -100], [60, -120], [70, -100], [60, -80], [30, -90], [10, -80], [15, -100]],
-  southAmerica: [[10, -70], [0, -80], [-50, -70], [-20, -40], [0, -50]],
-  europe: [[40, -10], [60, 0], [70, 30], [50, 40], [40, 20]],
-  africa: [[30, -10], [30, 30], [10, 50], [-30, 30], [0, 10]],
-  asia: [[40, 40], [70, 60], [70, 150], [20, 120], [10, 80]],
-  australia: [[-10, 120], [-10, 140], [-30, 150], [-40, 140], [-30, 110]],
-  antarctica: [[-70, -180], [-70, 0], [-70, 180], [-90, 180], [-90, -180]]
-};
+// Orthographic projection for the Canvas fallback. Coordinates are geographic degrees.
+export function project(point: Coordinate, center: Coordinate) {
+  const rad = Math.PI / 180;
+  const lat = point.lat * rad, lat0 = center.lat * rad, dl = (point.lon - center.lon) * rad;
+  return { x: Math.cos(lat) * Math.sin(dl), y: Math.cos(lat0) * Math.sin(lat) - Math.sin(lat0) * Math.cos(lat) * Math.cos(dl), visible: Math.sin(lat0) * Math.sin(lat) + Math.cos(lat0) * Math.cos(lat) * Math.cos(dl) >= 0 };
+}
+export function unproject(x: number, y: number, center: Coordinate): Coordinate | null {
+  const rho = Math.hypot(x, y);
+  if (rho > 1) return null;
+  if (rho < 1e-10) return { ...center };
+  const lat0 = center.lat * Math.PI / 180, c = Math.asin(rho);
+  return { lat: Math.asin(Math.cos(c) * Math.sin(lat0) + y * Math.sin(c) * Math.cos(lat0) / rho) * 180 / Math.PI,
+    lon: wrapLongitude(center.lon + Math.atan2(x * Math.sin(c), rho * Math.cos(lat0) * Math.cos(c) - y * Math.sin(lat0) * Math.sin(c)) * 180 / Math.PI) };
+}

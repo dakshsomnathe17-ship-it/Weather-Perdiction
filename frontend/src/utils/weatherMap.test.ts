@@ -7,7 +7,7 @@ it('accepts zero-valued weather at zero coordinates and drops malformed points',
   expect(validMapPoints(undefined)).toEqual([]);
 });
 it('uses the selected layer scale and clamps outliers', () => {
-  expect(layerColor('temperature', -200).equals(layerColor('temperature', -30))).toBe(true);
-  expect(layerColor('humidity', 500).equals(layerColor('humidity', 100))).toBe(true);
-  expect(layerColor('rainfall', 20).equals(layerColor('wind', 20))).toBe(false);
+  expect(layerColor('temperature', -200)).toBe(layerColor('temperature', -30));
+  expect(layerColor('humidity', 500)).toBe(layerColor('humidity', 100));
+  expect(layerColor('rainfall', 20)).not.toBe(layerColor('wind', 20));
 });

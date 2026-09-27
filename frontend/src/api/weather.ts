@@ -18,8 +18,8 @@ export const getHistory = async (lat: number, lon: number, startDate: string, en
   const { data } = await client.get('/weather/history', { params: { lat, lon, start_date: startDate, end_date: endDate } });
   return data;
 };
-export const searchLocations = async (query: string): Promise<SearchResult[]> => {
-  const { data } = await client.get<SearchResponse[]>('/weather/search', { params: { q: query } });
+export const searchLocations = async (query: string, signal?: AbortSignal): Promise<SearchResult[]> => {
+  const { data } = await client.get<SearchResponse[]>('/weather/search', { params: { q: query }, signal });
   return data.map(({ lat, lon, ...location }) => ({ ...location, latitude: lat, longitude: lon }));
 };
 export const getMapData = async (layer: string, signal?: AbortSignal): Promise<WeatherMapData> => {

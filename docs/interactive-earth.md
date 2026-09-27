@@ -1,10 +1,10 @@
 # Interactive Earth
 
-The existing React / TypeScript / React Three Fiber components are retained. No Cesium service, NASA API key, or map token is required for the globe.
+The dashboard uses React, TypeScript and **CesiumJS** with a WGS84 ellipsoid. Natural Earth is the default and requires no account or key. Satellite imagery and reference labels remain disabled until you configure Esri.
 
 ## Run locally
 
-With Node.js 22 or newer, from the repository root:
+With Node.js 22+ and Python 3.12+, in two terminals from the repository root:
 
 ```sh
 cd frontend
@@ -12,63 +12,85 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:5173. Imagery is checked in under `frontend/public/textures`; the globe works without external imagery requests. Weather and search use the existing FastAPI service on port 8000, through Vite's `/api` proxy. To run that service in a second terminal, after configuring the backend environment described in the development guide:
-
 ```sh
-python -m pip install -r backend/requirements.txt
 cd backend
-python -m uvicorn app.main:app --reload --port 8000
+python -m venv .venv
+# Windows PowerShell:
+.venv/Scripts/python -m pip install -r requirements.txt
+.venv/Scripts/python -m uvicorn app.main:app --reload --port 8000
+# macOS/Linux: use .venv/bin/python instead
 ```
 
-If the service is unavailable, the globe stays interactive and the dashboard shows a retryable weather error. It does not invent weather for a selected point.
+Open http://localhost:5173. Vite proxies /api to port 8000. Defaults work locally; copy the root .env.example to backend/.env for backend overrides. The globe remains usable without the backend, with explicit weather/search errors. It does not invent weather.
 
-## Interactions
+## Optional Esri satellite imagery and labels
 
-- Drag to orbit; scroll or pinch to zoom. Panning is disabled so Earth stays centered.
-- Click or tap to select coordinates and request weather. Drags, cancelled pointers and multi-touch gestures do not select locations.
-- Double-click or double-tap to smoothly focus and zoom to the point. Search results and the focus button also move the camera to the selection.
-- Toolbar: pause/resume rotation, zoom, reset, focus, clouds and atmosphere.
-- Focus the globe with Tab: arrow keys rotate, `+` / `-` zoom, `R` resets, Space toggles rotation and Enter focuses the selection. Shortcuts do not intercept typing in search or other controls.
-- Motion is reduced when the operating system requests it. Rendering pauses when the globe is offscreen or the document is hidden; paused views render on demand.
+Copy frontend/.env.example to frontend/.env.local. Set VITE_ARCGIS_ACCESS_TOKEN to your browser-safe ArcGIS token, restricted to your application's origins and entitled for the services you use. Restart Vite (or rebuild production). Enable Satellite imagery and Place names and borders in the globe toolbar.
 
-## Coordinates, layers and rendering
+The configured World Imagery and World Boundaries and Places MapServer services load tiles as the camera approaches. Provider credits remain visible. Requests are made only after enabling a layer; token/coverage failures leave Natural Earth available with a status message. Optional VITE_ESRI_IMAGERY_URL and VITE_ESRI_LABELS_URL overrides support compatible licensed services. Frontend environment values are public in the built bundle; never put a private server credential here.
 
-`Globe.tsx` rotates one parent group containing Earth, clouds, weather and the marker. OrbitControls only moves the camera. A world-space ray hit is transformed back into Earth-local coordinates before latitude/longitude conversion. Camera flights use quaternion arcs and bounded radii, including flights to the opposite hemisphere.
+See [Cesium's ArcGIS provider documentation](https://cesium.com/learn/cesiumjs/ref-doc/ArcGisMapServerImageryProvider.html) and [map attribution](../frontend/public/maps/ATTRIBUTION.md). This implementation has not been validated with a paid/live Esri token.
 
-The day and night maps are sRGB; water and cloud masks are linear. The Earth shader blends diffuse sunlight, warm night lights, water-only specular response and a twilight rim. The separate atmosphere uses additive blending. Grayscale clouds are an alpha mask rather than an opaque shell. Texture effects dispose owned resources and ignore late results after unmount, including React StrictMode remounts. A plain surface and a status message remain when an asset fails; no fabricated continents are substituted.
+## Controls and search
 
-Weather layers request the existing endpoint:
+- Drag to rotate; scroll or pinch to zoom.
+- Click/tap the surface to select coordinates and request weather. Dragging and multi-touch gestures do not count as selection.
+- Double-click/double-tap or use Focus selected location to animate toward the point.
+- Search for a city, landmark or address, then press Enter or Search. Selecting a result moves the camera and marker; its bounding box and viewport aspect determine altitude. Pune starts near 18.5204 N, 73.8567 E (live geocoder coordinates can differ).
+- Measure distance, then select A and B. The connector and distance follow the WGS84 ellipsoid; a third selection starts over. Measurement does not change the selected weather location.
+- Zoom, reset and measurement controls are keyboard-accessible. Focus the globe for arrow keys, +/-, and R.
+- Reduced-motion preferences shorten flights. Cesium renders on demand and pauses when hidden/offscreen.
 
-```http
-GET /api/weather/map?layer=temperature&bounds=-180,-90,180,90
-```
+Natural Earth is a low-resolution global physical map: zooming closely cannot reveal streets or newer satellite detail. There is no elevation terrain, Street View or photorealistic building layer.
 
-The rendering contract is `{ "layer": "temperature", "points": [{ "lat": 37.77, "lon": -122.42, "value": 18 }] }`. Coordinates are degrees and values use the units in `frontend/src/utils/weatherMap.ts`: °C, mm, percent, km/h, hPa, UV index or AQI. Malformed points are ignored. Each active layer has its own palette and opacity. Instanced points are initialized after mount, anchored to Earth's shared transform and excluded from picking. Turning all layers off renders none.
+## Canvas fallback
 
-**Backend limitation:** the current map endpoint returns an empty array. The UI displays “Awaiting data” until a provider supplies points. The browser tests supply deterministic API fixtures to verify populated layers. This change does not implement a global weather-grid provider or alter ML forecasts.
+If WebGL creation fails, rendering fails, or the context is lost, a custom HTML Canvas renderer displays a locally bundled Natural Earth image. It supports rotation, limited zoom, selection, search focus, measurements, markers and weather points. It uses an orthographic geographic projection (a spherical visual approximation); the distance calculation remains ellipsoidal WGS84. It does not load satellite detail or reference tiles. Rendering uses a capped backing resolution and runs only when something changes.
 
-Dashboard queries are keyed by coordinates and cancelled when obsolete. Zero latitude/longitude is valid. Search normalizes the backend's `lat`/`lon` fields; weather normalizes `description`. Missing metrics display “Not reported”; previous-location data is cleared on selection.
-
-## Imagery and limitations
-
-See [full credits, sources and usage terms](../frontend/public/textures/ATTRIBUTION.md). Day imagery is NASA Blue Marble August 2004, night lights are NASA/NOAA Black Marble 2016 and decorative clouds are a 2002 composite. They are historical images, not live observations. Sun direction and cloud drift are illustrative, not an astronomical clock. The specular mask is a project-derived approximation from the day image, not an official scientific water mask. Original and bundled SHA-256 checksums are recorded in the texture manifest.
-
-Optional regeneration (requires network access, not needed to run):
+The fallback JPEG is stitched from Cesium's bundled NaturalEarthII tiles. Regenerate it without downloading new imagery:
 
 ```sh
 cd frontend
 npm run textures:prepare
 ```
 
+## Search service
+
+/api/weather/search?q=Pune uses Nominatim through the backend. Search occurs on explicit submission, never autocomplete. Responses are cached for 24 hours. A shared SQLite gate spaces upstream requests by at least 1.1 seconds across workers using the same file. Errors propagate as a retryable 503; upstream 429/503 triggers a 60-second cooldown. The UI credits OpenStreetMap.
+
+Configure NOMINATIM_BASE_URL, NOMINATIM_USER_AGENT and NOMINATIM_CACHE_PATH in backend/.env. Use an identifying application/contact user agent. Keep all local workers on the same durable cache file. For multiple hosts or high traffic, use a centrally rate-limited proxy or your own/contracted Nominatim service. Review the [public Nominatim policy](https://operations.osmfoundation.org/policies/nominatim/) before deploying at scale. Do not submit confidential addresses or personal information to the public service.
+
+## Weather integration
+
+Existing dashboard queries remain keyed by latitude/longitude. Selection clears previous weather; obsolete requests are cancelled. Zero coordinates are valid. Missing metrics display Not reported.
+
+Weather layers use /api/weather/map?layer=temperature&bounds=-180,-90,180,90. The contract is:
+
+```json
+{ "layer": "temperature", "points": [{ "lat": 18.5204, "lon": 73.8567, "value": 28 }] }
+```
+
+Cesium point collections and Canvas points share palettes, visibility and opacity. Picking always intersects the WGS84 surface in Cesium, so overlays and markers cannot skew geographic coordinates.
+
+**Existing backend limitation:** the map endpoint returns no global weather points. The layer controls display Awaiting data until a provider supplies them. Tests use explicit fixtures to verify populated layers; this change does not add a weather-grid provider or trained ML models.
+
 ## Validation
 
 ```sh
 cd frontend
-npm run typecheck
 npm run build
 npm test
 npx playwright install chromium
 npm run test:e2e
+npm run test:esri
 ```
 
-Unit tests cover texture-coordinate alignment, geographic round trips, transformed ray hits, poles, orbit arcs, responsive framing, gesture rejection and map-point validation. Browser tests use real WebGL rendering with software Chromium and mock only weather responses; they cover desktop/touch selection, drag suppression, search, overlays, responsive layout and failure states. Browser screenshots are written under the ignored `frontend/test-results` directory. Actual GPU performance and live weather-provider availability depend on the deployment environment. Vite still warns about the existing large application/3D chunks; the build succeeds.
+```sh
+cd backend
+.venv/Scripts/python -m pip install pytest
+.venv/Scripts/python -m pytest tests/test_geocoding.py -q
+```
+
+The build includes TypeScript checks and copies Cesium Workers/Assets/Widgets/ThirdParty into dist/cesium. Serve dist from the domain root and proxy /api to the backend in production. The preview command serves static assets only. The separate Esri test starts a server on port 4174 with a fixture token and intercepts every Esri request; it verifies authentication parameters, tile loading, layer removal and error recovery without using an account or making paid requests.
+
+Tests cover reference geodesic distances, poles/antipodes, projection round trips, camera framing, real Cesium WebGL rendering, picking after rotation, submitted search, weather overlays, touch/resizing, Canvas fallback and context loss. Browser tests mock weather/search responses; backend tests verify normalization, shared caching/rate limiting and API errors. Browser screenshots are saved under frontend/test-results (ignored). Cesium is lazy-loaded; Vite reports a large Cesium chunk warning, which does not prevent a successful build.

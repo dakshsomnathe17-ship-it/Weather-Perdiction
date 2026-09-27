@@ -21,7 +21,7 @@ An intelligent weather platform combining real-time API integrations, machine le
 
 | Category | Technology |
 |----------|------------|
-| **Frontend** | React, TypeScript, Vite, Three.js, Tailwind CSS |
+| **Frontend** | React, TypeScript, Vite, CesiumJS, Canvas fallback, Tailwind CSS |
 | **Backend** | FastAPI, Python 3.12, SQLAlchemy, Pydantic |
 | **ML & Data**| Scikit-learn, XGBoost, LightGBM, Pandas |
 | **Infra**    | Docker, Docker Compose, PostgreSQL, Redis, Nginx |
@@ -45,7 +45,7 @@ An intelligent weather platform combining real-time API integrations, machine le
    bash scripts/setup.sh
    ```
 
-3. Earth textures are bundled with attribution. To optionally regenerate them:
+3. Natural Earth imagery is bundled with attribution. To optionally regenerate the Canvas image from Cesium's local tiles:
    ```bash
    bash scripts/download_textures.sh
    ```
@@ -57,7 +57,7 @@ An intelligent weather platform combining real-time API integrations, machine le
 
 For frontend-only setup, Windows-friendly commands, globe controls and tests, see
 [Interactive Earth](docs/interactive-earth.md). From `frontend`, run `npm ci` then
-`npm run dev`. The globe needs no imagery API key. Weather/search require the backend;
+`npm run dev`. Natural Earth needs no API key. Optional Esri imagery and labels use your ArcGIS token in `frontend/.env.local` (see `frontend/.env.example`). Weather and submitted Nominatim place searches require the backend;
 global weather overlays display “Awaiting data” while the existing map API returns no points.
 
 ## 🐳 Docker Deployment

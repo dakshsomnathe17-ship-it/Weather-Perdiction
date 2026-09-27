@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = ["http://localhost:5173"]
     DEBUG: bool = True
     LOG_LEVEL: str = "INFO"
+    NOMINATIM_BASE_URL: str = "https://nominatim.openstreetmap.org"
+    NOMINATIM_USER_AGENT: str = "WeatherPrediction/1.0 (https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction)"
+    NOMINATIM_CACHE_PATH: str = "./nominatim-cache.sqlite3"
 
     model_config = SettingsConfigDict(env_file=".env")
 

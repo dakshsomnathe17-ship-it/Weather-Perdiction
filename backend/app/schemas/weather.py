@@ -47,6 +47,8 @@ class WeatherSearchResult(BaseModel):
     state: Optional[str] = None
     lat: float
     lon: float
+    bounds: Optional[List[float]] = None
+    displayName: Optional[str] = None
 
 class WeatherMapData(BaseModel):
     layer: str

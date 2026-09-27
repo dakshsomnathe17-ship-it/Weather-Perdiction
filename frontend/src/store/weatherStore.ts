@@ -22,7 +22,7 @@ export const useWeatherStore = create<WeatherState>((set) => ({
   currentWeather: null,
   forecast: [],
   hourly: [],
-  selectedLocation: { name: 'San Francisco', country: 'United States', latitude: 37.7749, longitude: -122.4194 },
+  selectedLocation: { name: 'Pune', country: 'India', latitude: 18.5204, longitude: 73.8567 },
   recentSearches: [],
   isLoading: false,
   error: null,
