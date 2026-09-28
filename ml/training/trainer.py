@@ -1,80 +1,51 @@
-import pandas as pd
+"""Chronological validation with a gap for future labels, never shuffled folds."""
 import numpy as np
-from typing import Dict, List, Any
-from sklearn.model_selection import train_test_split, KFold
-from ..models.base_model import WeatherModel
-from ..models.model_registry import registry
+import pandas as pd
+from sklearn.model_selection import TimeSeriesSplit
 from .evaluator import ModelEvaluator
-import logging
 
-logger = logging.getLogger(__name__)
+
+def issue_times(index):
+    return index.get_level_values('time') if isinstance(index, pd.MultiIndex) else index
+
 
 class ModelTrainer:
-    """Class to handle model training and validation."""
-    
-    def __init__(self, random_state: int = 42):
+    def __init__(self, random_state=42, horizon_hours=24):
         self.random_state = random_state
+        self.horizon_hours = horizon_hours
         self.evaluator = ModelEvaluator()
-        
-    def train(self, model: WeatherModel, X: pd.DataFrame, y: pd.DataFrame, validation_split: float = 0.2) -> Dict[str, Any]:
-        """
-        Train model with a single train-test split.
-        """
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=validation_split, random_state=self.random_state
-        )
-        
-        logger.info(f"Training on {len(X_train)} samples, testing on {len(X_test)} samples.")
-        model.train(X_train, y_train)
-        
-        preds = model.predict(X_test)
-        metrics = self.evaluator.evaluate(y_test, preds)
-        model.metrics = metrics
-        
-        return metrics
-        
-    def cross_validate(self, model: WeatherModel, X: pd.DataFrame, y: pd.DataFrame, cv: int = 5) -> Dict[str, Any]:
-        """
-        Perform K-fold cross-validation.
-        """
-        kf = KFold(n_splits=cv, shuffle=True, random_state=self.random_state)
-        fold_metrics = []
-        
-        for fold, (train_idx, test_idx) in enumerate(kf.split(X)):
-            logger.info(f"CV Fold {fold + 1}/{cv}")
-            X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
-            y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
-            
-            model.train(X_train, y_train)
-            preds = model.predict(X_test)
-            metrics = self.evaluator.evaluate(y_test, preds)
-            fold_metrics.append(metrics)
-            
-        # Aggregate metrics
-        agg_metrics = {}
-        for k in fold_metrics[0].keys():
-            if isinstance(fold_metrics[0][k], dict):
-                # Nested dict
-                agg_metrics[k] = {}
-                for sub_k in fold_metrics[0][k].keys():
-                    vals = [m[k][sub_k] for m in fold_metrics]
-                    agg_metrics[k][sub_k] = np.mean(vals)
-            else:
-                vals = [m[k] for m in fold_metrics]
-                agg_metrics[k] = np.mean(vals)
-                
-        model.metrics = agg_metrics
-        return agg_metrics
-        
-    def train_all_models(self, X: pd.DataFrame, y: pd.DataFrame, models: List[str]) -> Dict[str, Dict[str, Any]]:
-        """
-        Train multiple models and compare.
-        """
-        results = {}
-        for model_name in models:
-            logger.info(f"Processing model: {model_name}")
-            model = registry.create(model_name)
-            metrics = self.train(model, X, y)
-            results[model_name] = metrics
-            
-        return results
+
+    def train(self, model, X, y, validation_split=.2):
+        if not 0 < validation_split < 1:
+            raise ValueError('validation_split must be between zero and one')
+        times = pd.DatetimeIndex(issue_times(X.index))
+        unique = times.unique().sort_values()
+        cutoff = unique[int(len(unique) * (1 - validation_split))]
+        train = times + pd.Timedelta(hours=self.horizon_hours) < cutoff
+        test = times >= cutoff
+        if not train.any() or not test.any():
+            raise ValueError('Not enough chronological data for the forecast horizon')
+        model.train(X.loc[train], y.loc[train])
+        model.metrics = self.evaluator.evaluate(y.loc[test], model.predict(X.loc[test]))
+        return model.metrics
+
+    def cross_validate(self, model, X, y, cv=5):
+        times = pd.DatetimeIndex(issue_times(X.index))
+        unique = times.unique().sort_values()
+        folds = []
+        for _, test_indices in TimeSeriesSplit(n_splits=cv).split(unique):
+            first, last = unique[test_indices[0]], unique[test_indices[-1]]
+            train = times + pd.Timedelta(hours=self.horizon_hours) < first
+            test = (times >= first) & (times <= last)
+            if not train.any():
+                raise ValueError('Not enough data for purged chronological folds')
+            model.train(X.loc[train], y.loc[train])
+            folds.append(self.evaluator.evaluate(y.loc[test], model.predict(X.loc[test])))
+        model.train(X, y)  # Save the final fit, not whichever fold happened to run last.
+        model.metrics = {target: {metric: float(np.mean([f[target][metric] for f in folds]))
+                                 for metric in folds[0][target]} for target in folds[0]}
+        return model.metrics
+
+    def train_all_models(self, X, y, models):
+        from ml.models.model_registry import registry
+        return {name: self.train(registry.create(name), X, y) for name in models}

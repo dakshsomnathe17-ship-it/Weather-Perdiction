@@ -1,43 +1,72 @@
-# Machine Learning Workflow
+# ERA5 training and evaluation
 
-## Pipeline Overview
+The completed first experiment trains Random Forest, XGBoost, and LightGBM on hourly Pune/Mumbai data from 2015–2025. It produces an offline 24-hour hindcast model, six target variables, model binaries, held-out predictions, and an auditable report. The [model card](../ml/reports/era5_24h/MODEL_CARD.md) records actual results.
 
-```mermaid
-graph LR
-    A[Raw Historical Data] --> B[Data Cleaning]
-    B --> C[Feature Engineering]
-    C --> D[Model Training]
-    D --> E[Model Evaluation]
-    E --> F[Model Registry]
-    F --> G[Inference Service]
+## Data and attribution
+
+Data comes from the [Open-Meteo Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api), explicitly requesting `models=era5`. This is ERA5 processed and distributed by Open-Meteo, not a direct CDS download or an archive of native GRIB fields. The API provides converted units and derived fields such as relative humidity and wind speed. We request UTC, the nearest ERA5 grid cell, and `elevation=nan` to disable statistical elevation downscaling. Requested city coordinates and returned grid coordinates are both preserved in the manifest.
+
+Attribution: Contains modified Copernicus Climate Change Service information; processed by Open-Meteo. Source: [ERA5 hourly single-level reanalysis, DOI 10.24381/cds.adbb2d47](https://doi.org/10.24381/cds.adbb2d47). The API data is provided under CC BY 4.0; [Open-Meteo access terms](https://open-meteo.com/en/terms) also apply. The free API is for non-commercial use. Keep this attribution when sharing derived data or results.
+
+Direct [Copernicus CDS access](https://cds.climate.copernicus.eu/how-to-api) requires a personal token and acceptance of the dataset terms. This pipeline uses the documented Open-Meteo route and needs no CDS token. Never commit credentials.
+
+## Run from the repository root
+
+The recorded environment is Windows, Python 3.14.7, four training threads. `ml/requirements-lock.txt` records the exact installed packages, including pytest. The broader `ml/requirements.txt` is unpinned and may produce different results.
+
+PowerShell:
+
+```powershell
+python -m venv ml/.venv
+& ml/.venv/Scripts/python.exe -m pip install -r ml/requirements-lock.txt
+& ml/.venv/Scripts/python.exe -m ml.scripts.download_era5 --cities Pune,Mumbai --start-date 2015-01-01 --end-date 2025-12-31
+& ml/.venv/Scripts/python.exe -m ml.scripts.train --jobs 4
+& ml/.venv/Scripts/python.exe -m ml.scripts.evaluate
+& ml/.venv/Scripts/python.exe -m ml.scripts.predict --city Pune --at 2025-07-15T12:00:00Z
+& ml/.venv/Scripts/python.exe -m pytest tests/test_ml -q
 ```
 
-## Data Sources
-- Historical weather data from NOAA and Open-Meteo archive.
-- Features include: Temperature, Humidity, Pressure, Wind Speed/Direction, Season, Time of Day.
+On Linux/macOS, use `ml/.venv/bin/python` after creating the environment. That platform has not been validated for this recorded run. On an existing completed run, skip download/train and use evaluate/predict. For another training run, choose a fresh `--output-dir`; completed reports are protected from overwriting.
 
-## Feature Engineering
-1. **Missing Values**: Imputed using rolling averages for continuous variables.
-2. **Cyclical Encoding**: Time of day and Day of year are converted to Sine/Cosine pairs to preserve cyclical nature.
-3. **Lag Features**: Previous 3, 6, and 12-hour values are used as predictors for the current target.
+The downloader resumes validated yearly JSON chunks, retries temporary provider errors, and fails on incomplete timelines or incorrect units. It writes the CSV plus a manifest containing exact requests, retrieved timestamps, units, grid coordinates, missing-value counts, and SHA-256 hashes. Provider revisions can change a fresh download; retain the original raw cache and manifest to reproduce a recorded dataset.
 
-## Models
-1. **Random Forest**: Good baseline, handles non-linear relationships well.
-2. **XGBoost**: High performance, handles sparse data efficiently.
-3. **LightGBM**: Faster training speed, great for large historical datasets.
+`--cities india` expands to eight configured cities (Pune, Mumbai, Delhi, Bengaluru, Chennai, Kolkata, Hyderabad, Ahmedabad). Only Pune and Mumbai were downloaded and evaluated in the recorded run. Use a new data/output directory when expanding scope, then rerun training and validation. The old `ml.scripts.ingest_data` CLI delegates to this downloader; the former unpinned ingestion module is retired.
 
-## Training Process
-- Split: 80% train, 20% test (Time-series split, no future leakage).
-- Hyperparameter tuning using Grid Search / Random Search.
-- Models serialized using `joblib`.
+## Feature and target contract
 
-## Evaluation Metrics
-- **MAE** (Mean Absolute Error): Primary metric for temperature prediction.
-- **RMSE** (Root Mean Squared Error): Penalizes larger prediction errors heavily.
+Each issue hour uses six observed quantities: 2 m temperature (°C), relative humidity (%), mean sea-level pressure (hPa), 10 m wind speed (km/h), cloud cover (%), and preceding-hour precipitation (mm). Features include those current values, coordinates, 1/6/24-hour lags, trailing 6/24-hour means, trailing 24-hour rain, and known target-time hour/season encodings: 43 numeric features.
 
-## Prediction Workflow
-When a user requests a forecast, the backend API fetches the standard provider forecast, runs our ML models using current observations as input, and blends the predictions.
+The model predicts temperature, humidity, pressure, wind speed, and cloud cover at `issue + 24 hours`, plus precipitation accumulated over `(issue, issue + 24 hours]`. Precipitation output is an amount, not a probability.
 
-## Model Versioning & Retraining
-- Models are stored in `ml_models/` with timestamps (e.g., `xgboost_v1.2.joblib`).
-- Retraining is triggered weekly via a cron job pulling the latest historical data.
+Cleaning retains separate cities at the same timestamp, rejects conflicting duplicates and invalid coordinates, and marks physically invalid observations as missing. There is no future filling, global median imputation, or quantile-based clipping of observed extremes. Each city is reindexed hourly before lagging. Rows with incomplete features or targets are excluded. A history prediction needs all observations from `issue - 24 hours` through `issue`: 25 consecutive hourly records. Inference uses the same feature code and output bounds as evaluation.
+
+## Evaluation protocol
+
+- Initial training: 2015–2022; validation: 2023–2024; untouched test year: 2025.
+- Any training/validation issue whose target reaches the next partition is excluded (24-hour boundary purge). Cities at the same time stay in the same partition.
+- Fit every third issue hour with all cities retained; evaluate every usable hour. `--train-stride 1` enables hourly fitting for a new experiment.
+- Select the model using validation temperature RMSE; refit each model through 2024, then score 2025. No hyperparameter search or test-based selection was performed.
+- Compare with persistence (current instantaneous values and preceding-day rainfall) and training-only city/month/hour climatology.
+- Report MAE, RMSE, and R² separately for each target, plus per-city model scores. Do not average errors with different units or report an unsupported accuracy percentage.
+
+`ml.scripts.evaluate` verifies the dataset and model checksums, reloads each artifact, recomputes all held-out metrics, and checks them against the saved report. It does not refit the models.
+
+## Outputs
+
+| Path | Contents |
+| --- | --- |
+| `ml/data/era5/raw/` | Cached annual provider responses and request metadata |
+| `ml/data/era5/historical_weather.csv` | Combined hourly data |
+| `ml/data/era5/manifest.json` | Dataset provenance and hashes |
+| `ml/saved_models/era5_24h/*.joblib` | Three fitted multi-output models |
+| `ml/saved_models/era5_24h/*_test_predictions.csv` | Actual and predicted 2025 targets |
+| `ml/saved_models/era5_24h/report.json` | Parameters, splits, versions, scores, model hashes |
+| `ml/reports/era5_24h/` | Versioned report, manifest, and model card for this run |
+
+Raw data and binaries are intentionally ignored by Git. A fresh clone must download/train before evaluation or inference. Load only trusted joblib artifacts; serialization uses pickle. No weekly retraining job or live model integration is installed by this experiment.
+
+## Practical limits
+
+ERA5 is reanalysis: these results measure prediction of future reanalysis values using earlier reanalysis values. They are not a historical simulation of real-time data availability. Recent ERA5 data arrives with a delay, so these models cannot supply today's operational forecast from this input source. Live deployment needs a separately validated source with matching units/history and a proper API integration.
+
+These two-city models are not validated for arbitrary globe locations, other forecast horizons, extreme-weather warnings, confidence intervals, rain probability, terrain-resolved conditions, or street-level accuracy. Hourly errors and overlapping rain windows are correlated; reported metrics are descriptive, without statistical significance claims. The backend ML endpoint remains a placeholder and does not load these trained artifacts.

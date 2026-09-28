@@ -25,7 +25,8 @@ class XGBoostWeatherModel(WeatherModel):
             'reg_alpha': 0.1,
             'reg_lambda': 1.0,
             'random_state': 42,
-            'early_stopping_rounds': 10
+            'tree_method': 'hist',
+            'n_jobs': 4
         }
         
     def train(self, X_train: pd.DataFrame, y_train: pd.DataFrame) -> None:
