@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Focus, Globe2, Map, Maximize, Minimize, Minus, Plus, Ruler, Tags, X } from 'lucide-react';
+import { Focus, Globe2, Map, Maximize, Minimize, Minus, Plus, Route, Ruler, Tags, X } from 'lucide-react';
 import CanvasEarth from './CanvasEarth';
 import type { GlobeHandle } from './types';
 import type { Location } from '@/types';
@@ -13,9 +13,9 @@ class GlobeBoundary extends React.Component<{ children: React.ReactNode; onFailu
   componentDidCatch() { this.props.onFailure(); }
   render() { return this.state.failed ? null : this.props.children; }
 }
-interface GlobeProps { onLocationSelect?: (lat: number, lon: number) => void; location?: Location | null; className?: string; style?: React.CSSProperties; children?: React.ReactNode; }
+interface GlobeProps { onLocationSelect?: (lat: number, lon: number) => void; location?: Location | null; className?: string; style?: React.CSSProperties; children?: React.ReactNode; weatherSummary?: React.ReactNode; }
 
-export default function Globe({ onLocationSelect, location = null, className = '', style, children }: GlobeProps) {
+export default function Globe({ onLocationSelect, location = null, className = '', style, children, weatherSummary }: GlobeProps) {
   const root = useRef<HTMLDivElement>(null);
   const renderer = useRef<GlobeHandle>(null);
   const [fullscreen, setFullscreen] = useState(false);
@@ -26,6 +26,8 @@ export default function Globe({ onLocationSelect, location = null, className = '
   const [height, setHeight] = useState(22000000);
   const [satellite, setSatellite] = useState(false);
   const [satelliteReady, setSatelliteReady] = useState(false);
+  const [streets, setStreets] = useState(true);
+  const [streetState, setStreetState] = useState<'off' | 'loading' | 'ready' | 'error'>('off');
   const [labels, setLabels] = useState(false);
   const [imageryStatus, setImageryStatus] = useState('');
   const [measuring, setMeasuring] = useState(false);
@@ -37,7 +39,7 @@ export default function Globe({ onLocationSelect, location = null, className = '
   const distance = measurement.length === 2 ? surfaceDistance(measurement[0], measurement[1]) : null;
   const onCesiumReady = useCallback(() => { hasRenderedCesium.current = true; setReady(true); }, []);
   const onCanvasReady = useCallback(() => setReady(true), []);
-  const onFailure = useCallback(() => { if (hasRenderedCesium.current) handledLocation.current = null; lastPick.current = null; setFallback(true); setReady(false); setImageryStatus(''); setSatelliteReady(false); }, []);
+  const onFailure = useCallback(() => { if (hasRenderedCesium.current) handledLocation.current = null; lastPick.current = null; setFallback(true); setReady(false); setImageryStatus(''); setSatelliteReady(false); setStreetState('off'); }, []);
   const onPick = useCallback((point: Coordinate, focus = false) => {
     if (measuring) {
       if (!focus) setMeasurement((points) => {
@@ -73,7 +75,9 @@ export default function Globe({ onLocationSelect, location = null, className = '
 
   const coordinate = hover ?? (location ? { lat: location.latitude, lon: location.longitude } : null);
   const hasEsri = Boolean(import.meta.env.VITE_ARCGIS_ACCESS_TOKEN);
-  const props = { location, measurement, path, satellite, labels, onPick, onHover: setHover, onHeight: setHeight, onFailure, onImageryStatus: setImageryStatus, onSatelliteReady: setSatelliteReady };
+  const streetMap = streets && height < 1200000 && !satelliteReady && !fallback;
+  const streetVisible = streetMap && streetState !== 'error';
+  const props = { location, measurement, path, satellite, labels, streetMap, onPick, onHover: setHover, onHeight: setHeight, onFailure, onImageryStatus: setImageryStatus, onSatelliteReady: setSatelliteReady, onStreetState: setStreetState };
   return <div ref={root} className={`globe-view ${className}`} style={style} tabIndex={0} role="region" aria-label="Interactive Earth" aria-describedby="globe-help"
     onPointerDownCapture={(e) => { if (e.target instanceof HTMLCanvasElement) e.currentTarget.focus({ preventScroll: true }); }}
     onKeyDown={(e) => {
@@ -92,6 +96,7 @@ export default function Globe({ onLocationSelect, location = null, className = '
     <div className="globe-toolbar globe-tools" aria-label="Map tools">
       {document.fullscreenEnabled && <button aria-label={fullscreen ? 'Exit full screen' : 'Full screen'} title={fullscreen ? 'Exit full screen (Esc)' : 'Full screen'} aria-pressed={fullscreen} onClick={toggleFullscreen}>{fullscreen ? <Minimize /> : <Maximize />}</button>}
       <button aria-label="Measure distance" aria-pressed={measuring} onClick={() => { setMeasuring(!measuring); setMeasurement([]); }}><Ruler /></button>
+      <button aria-label="Street map detail" aria-pressed={streets && !fallback} disabled={fallback} title="Show streets and place names when zoomed in" onClick={() => setStreets(!streets)}><Route /></button>
       <button aria-label="Satellite imagery" aria-pressed={satellite && !fallback} disabled={!hasEsri || fallback} title={hasEsri ? 'Esri World Imagery' : 'Add an ArcGIS token to enable satellite imagery'} onClick={() => setSatellite(!satellite)}><Map /></button>
       <button aria-label="Place names and borders" aria-pressed={labels && !fallback} disabled={!hasEsri || fallback} title={hasEsri ? 'Esri reference labels' : 'Add an ArcGIS token to enable labels'} onClick={() => setLabels(!labels)}><Tags /></button>
     </div>
@@ -102,6 +107,7 @@ export default function Globe({ onLocationSelect, location = null, className = '
       <button aria-label="Zoom in" title="Zoom in (+)" onClick={() => renderer.current?.zoom(.7)}><Plus /></button>
       <button aria-label="Zoom out" title="Zoom out (−)" onClick={() => renderer.current?.zoom(1.4)}><Minus /></button>
     </div>
+    {!measuring && weatherSummary && <div className="globe-weather-summary" aria-label="Weather at selected place">{weatherSummary}</div>}
     {measuring && <div className="distance-panel" role="status">
       <strong>Surface distance</strong><button aria-label="Clear measurement" onClick={() => setMeasurement([])}><X size={14} /></button>
       <p>{measurement.length === 0 ? 'Select a starting point on Earth.' : measurement.length === 1 ? 'Select the second point.' : 'Select again to start a new measurement.'}</p>
@@ -111,10 +117,12 @@ export default function Globe({ onLocationSelect, location = null, className = '
     <div className="globe-hud">
       <div className="globe-coordinates" data-testid="globe-coordinates">{coordinate ? `${hover ? 'Pointer' : 'Selected'} · ${formatCoordinates(coordinate.lat, coordinate.lon)}` : 'Select a place on Earth'}</div>
       <div id="globe-help">Drag to rotate · Scroll / pinch to zoom · Double-click to focus</div>
-      <div data-testid="map-status">{fallback ? 'Canvas fallback · global map' : satelliteReady && hasEsri ? 'Esri World Imagery' : 'Natural Earth · global map'} · {fallback ? 'Limited zoom detail' : `${Math.round(height / 1000).toLocaleString()} km altitude`}</div>
+      <div data-testid="map-status">{fallback ? 'Canvas fallback · global map' : satelliteReady && hasEsri ? 'Esri World Imagery' : streetVisible ? 'OpenStreetMap · streets and places' : 'Natural Earth · global map'} · {fallback ? 'Limited zoom detail' : `${Math.round(height / 1000).toLocaleString()} km altitude`}</div>
+      {streetMap && streetState === 'loading' && <div role="status">Loading street detail…</div>}
+      {streetMap && streetState === 'error' && <div role="status">Street map unavailable. Switch Street map detail off and on to retry.</div>}
       {imageryStatus && <div role="status">{imageryStatus}</div>}
       {viewStatus && <div role="status">{viewStatus}</div>}
-      {!fallback && !satelliteReady && height < 1000000 && <div>Global imagery · no street-level detail</div>}
+      {!fallback && !satelliteReady && !streetVisible && <div>{streets && height >= 1200000 ? 'Zoom in for streets and place names' : 'Global imagery · no street-level detail'}</div>}
       <span className="sr-only">Arrow keys rotate, plus and minus zoom, and R resets the view.</span>
     </div>
     {fallback && <div className="fallback-credit"><a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank" rel="noreferrer">Natural Earth · public domain</a></div>}

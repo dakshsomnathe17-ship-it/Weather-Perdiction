@@ -12,6 +12,7 @@ export interface GlobeRendererProps {
   path: Coordinate[];
   satellite: boolean;
   labels: boolean;
+  streetMap: boolean;
   onPick: (point: Coordinate, focus?: boolean) => void;
   onHover: (point: Coordinate | null) => void;
   onHeight: (height: number) => void;
@@ -19,4 +20,5 @@ export interface GlobeRendererProps {
   onFailure: () => void;
   onImageryStatus: (message: string) => void;
   onSatelliteReady: (ready: boolean) => void;
+  onStreetState: (state: 'off' | 'loading' | 'ready' | 'error') => void;
 }

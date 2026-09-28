@@ -2,9 +2,12 @@ import { test, expect, type Page } from '@playwright/test';
 import sharp from 'sharp';
 
 async function fixture(page: Page) {
+  // Automated runs never hit OSM's public tile servers.
+  const streetTile = await sharp(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#e8e5d9"/><path d="M0 80H256M100 0V256" stroke="#ffffff" stroke-width="14"/><text x="16" y="45" fill="#333333" font-size="16">Street map test tile</text></svg>')).png().toBuffer();
+  await page.route('https://tile.openstreetmap.org/**', route => route.fulfill({ contentType: 'image/png', body: streetTile }));
   await page.route('**/api/weather/**', async (route) => {
     const url = new URL(route.request().url());
-    if (url.pathname.endsWith('/search')) return route.fulfill({ json: [{ id: 123, name: 'Pune', country: 'India', displayName: 'Pune, Maharashtra, India', lat: 18.5204, lon: 73.8567, bounds: [18.4, 18.7, 73.7, 74] }] });
+    if (url.pathname.endsWith('/search')) return route.fulfill({ json: [{ id: 123, name: 'Pune', country: 'India', displayName: 'Pune, Maharashtra, India', lat: 18.5204, lon: 73.8567, bounds: [18.4, 18.7, 73.7, 74] }, { id: 124, name: 'Pune District', country: 'India', displayName: 'Pune District, Maharashtra, India', lat: 18.5, lon: 73.9 }] });
     if (url.pathname.endsWith('/current')) return route.fulfill({ json: { temperature: 21, feels_like: 20, humidity: 65, wind_speed: 12, weather_code: 2, description: 'Partly cloudy' } });
     if (url.pathname.endsWith('/forecast')) return route.fulfill({ json: { forecast: [{ date: '2026-09-27', temp_max: 24, temp_min: 17, precipitation_sum: 0, weather_code: 2, description: 'Partly cloudy' }] } });
     return route.fulfill({ json: { layer: url.searchParams.get('layer'), points: [] } });
@@ -179,10 +182,10 @@ test('Canvas fallback frames broad and precise search results differently', asyn
     return [...canvas.getContext('2d')!.getImageData(canvas.width / 2, canvas.height * .05, 1, 1).data].slice(0, 3);
   });
   await input.fill('World'); await input.press('Enter');
-  await page.getByRole('button', { name: /World broad area/ }).click();
+  await expect(page.getByTestId('selected-location')).toContainText('World');
   await expect.poll(async () => (await topPixel()).every(channel => channel < 50)).toBe(true);
   await input.fill('Address'); await input.press('Enter');
-  await page.getByRole('button', { name: /Address precise area/ }).click();
+  await expect(page.getByTestId('selected-location')).toContainText('Address');
   await expect.poll(async () => Math.max(...await topPixel())).toBeGreaterThan(60);
 });
 
@@ -242,4 +245,80 @@ test('full screen retains layers and selection, and restores the dashboard', asy
   await expect(page.getByRole('button', { name: 'Full screen', exact: true })).toBeVisible();
   await expect.poll(async () => Math.round((await globe.boundingBox())!.width)).toBe(Math.round(initialBox!.width));
   await expect(page.getByRole('textbox', { name: 'Search places' })).toBeVisible();
+});
+
+test('street detail loads higher zoom tiles, retains attribution and returns to Natural Earth', async ({ page }, info) => {
+  await fixture(page);
+  const levels: number[] = [];
+  page.on('request', r => { if (r.url().startsWith('https://tile.openstreetmap.org/')) levels.push(Number(new URL(r.url()).pathname.split('/')[1])); });
+  await ready(page); expect(levels).toHaveLength(0);
+  await page.getByRole('button', { name: 'Focus selected location', exact: true }).click();
+  await expect(page.getByTestId('map-status')).toContainText('OpenStreetMap');
+  await expect(page.locator('.cesium-widget-credits')).toContainText('OpenStreetMap contributors');
+  await expect.poll(() => levels.length).toBeGreaterThan(0);
+  const initialLevel = Math.max(...levels);
+  for (let i = 0; i < 10; i++) await page.getByRole('button', { name: 'Zoom in', exact: true }).click();
+  await expect.poll(() => Math.max(...levels)).toBeGreaterThan(initialLevel);
+  await expect.poll(() => Math.max(...levels)).toBeGreaterThanOrEqual(14);
+  await page.screenshot({ path: info.outputPath('street-detail-fixture.png') });
+  await page.getByRole('button', { name: 'Reset view', exact: true }).click();
+  await expect(page.getByTestId('map-status')).toContainText('Natural Earth');
+});
+
+test('unavailable street tiles fall back and can be retried', async ({ page }) => {
+  await fixture(page);
+  const reject = async (route: import('@playwright/test').Route) => route.fulfill({ status: 503, body: 'Fixture unavailable' });
+  await page.route('https://tile.openstreetmap.org/**', reject);
+  await ready(page);
+  await page.getByRole('button', { name: 'Focus selected location', exact: true }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Street map unavailable' })).toBeVisible();
+  await expect(page.getByTestId('map-status')).toContainText('Natural Earth');
+  await page.unroute('https://tile.openstreetmap.org/**', reject);
+  await page.getByRole('button', { name: 'Street map detail', exact: true }).click();
+  await page.getByRole('button', { name: 'Street map detail', exact: true }).click();
+  await expect(page.getByTestId('map-status')).toContainText('OpenStreetMap');
+  await expect(page.getByRole('status').filter({ hasText: 'Street map unavailable' })).toBeHidden();
+});
+
+test('a unique search automatically flies to the area and replaces its weather and forecast', async ({ page }) => {
+  await fixture(page);
+  await page.route('**/api/weather/search?**', route => route.fulfill({ json: [{ id: 201, name: 'Mumbai', country: 'India', displayName: 'Mumbai, Maharashtra, India', lat: 19.076, lon: 72.8777, bounds: [19, 19.2, 72.8, 73] }] }));
+  await page.route('**/api/weather/current?**', route => route.fulfill({ json: { temperature: new URL(route.request().url()).searchParams.get('lat') === '19.076' ? 28 : 21, feels_like: 30, humidity: 75, wind_speed: 8, weather_code: 0, description: 'Clear sky' } }));
+  await page.route('**/api/weather/forecast?**', route => route.fulfill({ json: { forecast: [{ date: '2026-09-27', temp_max: new URL(route.request().url()).searchParams.get('lat') === '19.076' ? 34 : 24, temp_min: 20, precipitation_sum: 0, weather_code: 0, description: 'Clear sky' }] } }));
+  await ready(page);
+  const summary = page.getByLabel('Weather at selected place');
+  await expect(summary).toContainText('21°C');
+  await page.getByRole('textbox', { name: 'Search places' }).fill('Mumbai');
+  await page.getByRole('button', { name: 'Search', exact: true }).click();
+  await expect(page.getByTestId('selected-location')).toContainText('Mumbai');
+  await expect(summary).toContainText('28°C');
+  await expect(summary).toContainText('High 34°C');
+  await expect(page.getByRole('heading', { name: 'Mumbai', exact: true })).toBeVisible();
+  await expect(page.getByTestId('map-status')).toContainText('OpenStreetMap');
+  await page.getByRole('button', { name: 'Full screen', exact: true }).click();
+  await expect(summary).toBeVisible();
+  await expect(summary).toContainText('Mumbai');
+  await page.getByRole('button', { name: 'Exit full screen', exact: true }).click();
+});
+
+test('editing a pending unique search prevents a late result from changing the weather', async ({ page }) => {
+  await fixture(page);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  let started = false;
+  await page.route('**/api/weather/search?**', async route => {
+    started = true; await gate;
+    await route.fulfill({ json: [{ name: 'Mumbai', country: 'India', lat: 19.076, lon: 72.8777 }] });
+  });
+  await ready(page);
+  const input = page.getByRole('textbox', { name: 'Search places' });
+  await input.fill('Mumbai'); await input.press('Enter');
+  await expect.poll(() => started).toBe(true);
+  await input.fill('London');
+  const response = page.waitForResponse(r => r.url().includes('/search?'));
+  release(); await response;
+  await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeEnabled();
+  await expect(page.getByTestId('selected-location')).toContainText('Pune');
+  await expect(page.getByLabel('Weather at selected place')).toContainText('Pune');
+  await expect(input).toHaveValue('London');
 });

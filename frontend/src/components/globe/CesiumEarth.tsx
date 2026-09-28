@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { ArcGisMapServerImageryProvider, ArcType, Cartesian2, Cartesian3, Cartographic, Color, Credit, CreditDisplay, DirectionalLight, Ellipsoid, EllipsoidTerrainProvider, GeographicTilingScheme, ImageryLayer, Math as CesiumMath, PerspectiveFrustum, Resource, ScreenSpaceEventHandler, ScreenSpaceEventType, UrlTemplateImageryProvider, Viewer, type Entity } from 'cesium';
+import { ArcGisMapServerImageryProvider, ArcType, Cartesian2, Cartesian3, Cartographic, Color, Credit, CreditDisplay, DirectionalLight, Ellipsoid, EllipsoidTerrainProvider, GeographicTilingScheme, ImageryLayer, Math as CesiumMath, OpenStreetMapImageryProvider, PerspectiveFrustum, Resource, ScreenSpaceEventHandler, ScreenSpaceEventType, UrlTemplateImageryProvider, Viewer, type Entity } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { clamp, locationAltitude, wrapLongitude } from '@/utils/geo';
 import type { GlobeHandle, GlobeRendererProps } from './types';
@@ -164,6 +164,33 @@ const CesiumEarth = forwardRef<GlobeHandle, GlobeRendererProps>((props, ref) => 
       if (CreditDisplay.cesiumCredit === emptyCredit) CreditDisplay.cesiumCredit = previousCredit;
     };
   }, []);
+
+  useEffect(() => {
+    if (!scene || scene.isDestroyed() || !props.streetMap) { props.onStreetState('off'); return; }
+    // Only request the viewport being explored; browser HTTP caching is left intact.
+    const provider = new OpenStreetMapImageryProvider({
+      url: import.meta.env.VITE_STREET_MAP_URL || 'https://tile.openstreetmap.org/',
+      maximumLevel: 19,
+      credit: new Credit(import.meta.env.VITE_STREET_MAP_CREDIT || '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>', true),
+    });
+    provider.enablePickFeatures = false;
+    const layer = scene.imageryLayers.addImageryProvider(provider, 1);
+    let failed = false;
+    props.onStreetState('loading');
+    const removeError = provider.errorEvent.addEventListener(() => {
+      failed = true; layer.show = false;
+      current.current.onStreetState('error'); scene.scene.requestRender();
+    });
+    const removeProgress = scene.scene.globe.tileLoadProgressEvent.addEventListener((pending: number) => {
+      if (!failed && pending === 0) current.current.onStreetState('ready');
+    });
+    scene.scene.requestRender();
+    return () => {
+      removeError(); removeProgress();
+      if (!scene.isDestroyed()) { scene.imageryLayers.remove(layer, true); scene.scene.requestRender(); }
+      props.onStreetState('off');
+    };
+  }, [scene, props.streetMap, props.onStreetState]);
 
   useEffect(() => {
     if (!scene || scene.isDestroyed()) return;

@@ -20,6 +20,11 @@
 .globe-unavailable button { text-decoration: underline; }
 .earth-renderer { width: 100%; height: 100%; position: absolute; inset: 0; }
 .globe-loading { position: absolute; inset: 0; display: grid; place-items: center; color: #94a3b8; }
+.globe-weather-summary { position: absolute; top: 84px; left: 12px; max-width: min(280px, calc(100% - 80px)); padding: 10px 12px; border: 1px solid #ffffff1a; border-radius: 12px; background: #111820e8; backdrop-filter: blur(12px); color: #cbd5e1; font-size: 12px; line-height: 1.7; pointer-events: auto; }
+.globe-weather-place { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: white; font-weight: 600; }
+.globe-weather-summary strong { font-size: 22px; color: white; margin-right: 4px; }
+.globe-weather-summary small { color: #94a3b8; font-size: 10px; }
+.globe-weather-summary button { text-decoration: underline; }
 .distance-panel { position: absolute; top: 94px; left: 12px; max-width: calc(100% - 82px); padding: 10px 12px; border-radius: 10px; background: #020617de; color: #cbd5e1; font-size: 11px; line-height: 1.6; border: 1px solid #334155; }
 .distance-panel strong { color: #fde047; margin-right: 24px; }
 .distance-panel > button { float: right; padding: 3px; cursor: pointer; }
