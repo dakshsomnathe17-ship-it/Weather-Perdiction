@@ -25,7 +25,12 @@ class LightGBMWeatherModel(WeatherModel):
             'colsample_bytree': 0.8,
             'reg_alpha': 0.1,
             'reg_lambda': 1.0,
-            'random_state': 42
+            'random_state': 42,
+            'n_jobs': 4,
+            'verbosity': -1,
+            'deterministic': True,
+            'force_col_wise': True,
+            'subsample_freq': 1
         }
         
     def train(self, X_train: pd.DataFrame, y_train: pd.DataFrame) -> None:
