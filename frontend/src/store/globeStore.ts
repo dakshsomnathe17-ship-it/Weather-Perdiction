@@ -2,19 +2,9 @@ import { create } from 'zustand';
 import { WeatherLayer } from '@/types';
 
 interface GlobeState {
-  cameraPosition: [number, number, number];
-  zoomLevel: number;
   activeLayers: WeatherLayer[];
-  selectedPoint: [number, number] | null;
-  isRotating: boolean;
-  showClouds: boolean;
-  showAtmosphere: boolean;
-  setCamera: (pos: [number, number, number]) => void;
-  setZoom: (zoom: number) => void;
   toggleLayer: (id: string) => void;
   setLayerOpacity: (id: string, opacity: number) => void;
-  setSelectedPoint: (point: [number, number] | null) => void;
-  toggleRotation: () => void;
 }
 
 const defaultLayers: WeatherLayer[] = [
@@ -29,21 +19,11 @@ const defaultLayers: WeatherLayer[] = [
 ];
 
 export const useGlobeStore = create<GlobeState>((set) => ({
-  cameraPosition: [0, 0, 5],
-  zoomLevel: 1,
   activeLayers: defaultLayers,
-  selectedPoint: null,
-  isRotating: true,
-  showClouds: true,
-  showAtmosphere: true,
-  setCamera: (pos) => set({ cameraPosition: pos }),
-  setZoom: (zoom) => set({ zoomLevel: zoom }),
   toggleLayer: (id) => set((state) => ({
     activeLayers: state.activeLayers.map(l => l.id === id ? { ...l, active: !l.active } : l)
   })),
   setLayerOpacity: (id, opacity) => set((state) => ({
     activeLayers: state.activeLayers.map(l => l.id === id ? { ...l, opacity } : l)
   })),
-  setSelectedPoint: (point) => set({ selectedPoint: point }),
-  toggleRotation: () => set((state) => ({ isRotating: !state.isRotating }))
 }));

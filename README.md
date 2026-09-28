@@ -21,7 +21,7 @@ An intelligent weather platform combining real-time API integrations, machine le
 
 | Category | Technology |
 |----------|------------|
-| **Frontend** | React, TypeScript, Vite, Three.js, Tailwind CSS |
+| **Frontend** | React, TypeScript, Vite, CesiumJS, Canvas fallback, Tailwind CSS |
 | **Backend** | FastAPI, Python 3.12, SQLAlchemy, Pydantic |
 | **ML & Data**| Scikit-learn, XGBoost, LightGBM, Pandas |
 | **Infra**    | Docker, Docker Compose, PostgreSQL, Redis, Nginx |
@@ -36,8 +36,8 @@ An intelligent weather platform combining real-time API integrations, machine le
 ### Local Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/example/weather-ai.git
-   cd weather-ai
+   git clone https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction.git
+   cd Weather-Perdiction
    ```
 
 2. Run the setup script:
@@ -45,7 +45,7 @@ An intelligent weather platform combining real-time API integrations, machine le
    bash scripts/setup.sh
    ```
 
-3. Download 3D map textures:
+3. Natural Earth imagery is bundled with attribution. To optionally regenerate the Canvas image from Cesium's local tiles:
    ```bash
    bash scripts/download_textures.sh
    ```
@@ -55,9 +55,15 @@ An intelligent weather platform combining real-time API integrations, machine le
    bash scripts/dev.sh
    ```
 
+For frontend-only setup, Windows-friendly commands, globe controls and tests, see
+[Interactive Earth](docs/interactive-earth.md). From `frontend`, run `npm ci` then
+`npm run dev`. Natural Earth needs no API key. Optional Esri imagery and labels use your ArcGIS token in `frontend/.env.local` (see `frontend/.env.example`). Weather and submitted Nominatim place searches require the backend;
+global weather overlays display “Awaiting data” while the existing map API returns no points.
+
 ## 🐳 Docker Deployment
 To deploy using Docker Compose:
 ```bash
+cp .env.example .env
 docker-compose up -d --build
 ```
 This will start the frontend, backend, PostgreSQL database, and Redis cache.

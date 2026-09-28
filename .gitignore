@@ -61,6 +61,8 @@ yarn-error.log*
 dist/
 dist-ssr/
 *.tsbuildinfo
+playwright-report/
+test-results/
 
 # IDEs
 .idea/
@@ -72,6 +74,7 @@ Thumbs.db
 
 # Project specific
 weather.db
+nominatim-cache.sqlite3*
 ml_models/*.joblib
 ml_models/*.json
 dataset/

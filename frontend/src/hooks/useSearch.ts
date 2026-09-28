@@ -1,27 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { searchLocations } from '@/api/weather';
-import { useState, useEffect } from 'react';
 
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-  return debouncedValue;
-}
-
-export const useLocationSearch = (query: string) => {
-  const debouncedQuery = useDebounce(query, 300);
-  
-  return useQuery({
-    queryKey: ['location', 'search', debouncedQuery],
-    queryFn: () => searchLocations(debouncedQuery),
-    enabled: debouncedQuery.length > 2,
-    staleTime: 5 * 60 * 1000,
-  });
-};
+// Nominatim forbids autocomplete. The caller changes query only on form submission.
+export const useLocationSearch = (query: string) => useQuery({
+  queryKey: ['location', 'nominatim', query],
+  queryFn: ({ signal }) => searchLocations(query, signal),
+  enabled: query.trim().length >= 2,
+  staleTime: 24 * 60 * 60 * 1000,
+  retry: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+});

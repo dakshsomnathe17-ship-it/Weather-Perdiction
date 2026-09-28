@@ -1,0 +1,16 @@
+.git
+.env
+**/.env
+**/.env.*
+**/node_modules
+**/.venv
+**/venv
+**/dist
+**/test-results
+**/playwright-report
+**/__pycache__
+**/.pytest_cache
+**/*.pyc
+backend/weather.db
+backend/nominatim-cache.sqlite3*
+frontend/*.tsbuildinfo

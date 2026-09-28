@@ -30,7 +30,7 @@ class OpenMeteoProvider(WeatherProvider):
             "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility",
             "timezone": "auto"
         }
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(15.0, connect=5.0)) as client:
             response = await client.get(url, params=params)
             response.raise_for_status()
             data = response.json()
@@ -54,7 +54,7 @@ class OpenMeteoProvider(WeatherProvider):
             "timezone": "auto",
             "forecast_days": days
         }
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(15.0, connect=5.0)) as client:
             response = await client.get(url, params=params)
             response.raise_for_status()
             data = response.json()

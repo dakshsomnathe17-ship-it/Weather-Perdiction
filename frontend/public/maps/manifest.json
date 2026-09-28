@@ -1,0 +1,6 @@
+{
+  "source": "CesiumJS Assets/Textures/NaturalEarthII, Natural Earth II by Tom Patterson",
+  "sha256": "4eb0024fed71f63bb4c64c275e887535e2b6229d78b3d58df7af335ea4cb88bd",
+  "processing": "Level 2 TMS tiles stitched to 2048x1024; JPEG quality 90",
+  "license": "Natural Earth public domain"
+}
