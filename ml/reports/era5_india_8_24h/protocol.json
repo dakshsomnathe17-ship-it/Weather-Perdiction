@@ -1,0 +1,65 @@
+{
+  "purpose": "Expand the existing pooled model experiment to the eight configured Indian cities",
+  "cities": [
+    "Pune",
+    "Mumbai",
+    "Delhi",
+    "Bengaluru",
+    "Chennai",
+    "Kolkata",
+    "Hyderabad",
+    "Ahmedabad"
+  ],
+  "data_start": "2015-01-01",
+  "data_end": "2025-12-31",
+  "validation_start": "2023-01-01",
+  "test_start": "2025-01-01",
+  "horizon_hours": 24,
+  "train_stride_hours": 3,
+  "jobs": 4,
+  "selection_rule": "lowest validation temperature RMSE; never reselect on 2025 test scores",
+  "parameter_policy": "reuse two-city model parameters unchanged; no test-based hyperparameter tuning",
+  "prior_holdout_context": "Pune and Mumbai 2025 scores were already observed in the earlier two-city experiment",
+  "models": {
+    "random_forest": {
+      "n_estimators": 96,
+      "max_depth": 14,
+      "min_samples_split": 5,
+      "min_samples_leaf": 10,
+      "n_jobs": 4,
+      "random_state": 42,
+      "max_features": 0.85
+    },
+    "xgboost": {
+      "n_estimators": 240,
+      "max_depth": 6,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "reg_alpha": 0.1,
+      "reg_lambda": 1.0,
+      "random_state": 42,
+      "tree_method": "hist",
+      "n_jobs": 4
+    },
+    "lightgbm": {
+      "n_estimators": 240,
+      "max_depth": 8,
+      "learning_rate": 0.05,
+      "num_leaves": 31,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "reg_alpha": 0.1,
+      "reg_lambda": 1.0,
+      "random_state": 42,
+      "n_jobs": 4,
+      "verbosity": -1,
+      "deterministic": true,
+      "force_col_wise": true,
+      "subsample_freq": 1
+    }
+  },
+  "feature_precision": 10,
+  "numerical_remediation": "The initial expanded run exposed history-length-dependent rolling-average roundoff during inference verification. All models were refitted using a 10-decimal canonical feature format; hyperparameters and partitions are unchanged. Initial eight-city test scores had already been observed before this numerical correction.",
+  "remediation_recorded_at": "2026-09-30T16:50:37.174145+00:00"
+}

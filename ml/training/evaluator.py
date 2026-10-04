@@ -17,6 +17,14 @@ class ModelEvaluator:
         # Temperature has meaningful common units; do not average °C, %, hPa and mm.
         return pd.DataFrame({name: metrics['temperature'] for name, metrics in results.items()}).T
 
+    def evaluate_by_city(self, y_true, y_pred):
+        if 'city' not in y_true.index.names:
+            raise ValueError('Per-city evaluation requires a city index level')
+        if not y_true.index.equals(y_pred.index):
+            raise ValueError('Prediction coordinates do not match the evaluation set')
+        return {city: self.evaluate(y_true.xs(city, level='city'), y_pred.xs(city, level='city'))
+                for city in y_true.index.get_level_values('city').unique()}
+
     def generate_report(self, model_name, metrics, output_path):
         path = Path(output_path)
         path.parent.mkdir(parents=True, exist_ok=True)

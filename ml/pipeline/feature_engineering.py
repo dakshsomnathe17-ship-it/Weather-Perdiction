@@ -5,8 +5,9 @@ from ml.pipeline.era5 import VARIABLES
 
 class FeatureEngineering:
     """Features at issue hour t use observations no later than t, within one city."""
-    def __init__(self, horizon_hours=24):
+    def __init__(self, horizon_hours=24, feature_precision=None):
         self.horizon_hours = horizon_hours
+        self.feature_precision = feature_precision
         self.engineered_features = []
 
     def engineer_features(self, df):
@@ -32,6 +33,11 @@ class FeatureEngineering:
             g['precipitation_past_24h'] = g['precipitation'].rolling(24, min_periods=24).sum()
             frames.append(g)
         result = pd.concat(frames)
+        if self.feature_precision is not None:
+            # Incremental rolling sums can differ in their last bits depending on
+            # how much preceding history was supplied. Tree splits can amplify
+            # those tiny differences. Canonicalize both training and inference.
+            result = result.round(self.feature_precision)
         self.engineered_features = [c for c in result if c != 'city']
         return result
 

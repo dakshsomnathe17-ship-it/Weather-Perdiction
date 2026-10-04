@@ -41,6 +41,9 @@ class WeatherPredictor:
             if missing:
                 raise ValueError(f"Missing required features: {missing}")
             df_features = df_features[model.feature_names]
+        precision = getattr(model, 'metadata', {}).get('feature_precision')
+        if precision is not None:
+            df_features = df_features.round(precision)
             
         preds = model.predict(df_features)
         for target, (low, high) in getattr(model, 'metadata', {}).get('prediction_bounds', {}).items():
@@ -60,7 +63,7 @@ class WeatherPredictor:
         if history.empty:
             raise ValueError('No observation history supplied for this city')
         clean = DataCleaning().clean(history)
-        features = FeatureEngineering(model.metadata['horizon_hours']).engineer_features(clean)
+        features = FeatureEngineering(model.metadata['horizon_hours'], model.metadata.get('feature_precision')).engineer_features(clean)
         latest = features.iloc[-1]
         if latest[model.feature_names].isna().any():
             raise ValueError('Latest issue hour needs a complete, contiguous 25-hour history')

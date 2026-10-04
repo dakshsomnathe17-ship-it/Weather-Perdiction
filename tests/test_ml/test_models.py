@@ -4,6 +4,7 @@ import pytest
 from ml.models.base_model import WeatherModel
 from ml.models.model_registry import registry
 from ml.training.trainer import ModelTrainer
+from ml.training.evaluator import ModelEvaluator
 
 
 @pytest.mark.parametrize('name', ['random_forest', 'xgboost', 'lightgbm'])
@@ -38,3 +39,18 @@ def test_cross_validation_never_trains_on_future_and_refits_all_data():
     metrics = ModelTrainer().cross_validate(model, X, y, cv=3)
     assert model.checks == 3 and model.fits[-1].equals(X.index)
     assert 'RMSE' in metrics['temperature']
+
+
+def test_per_city_scores_keep_errors_separate_and_reject_misalignment():
+    from ml.pipeline.era5 import LOCATIONS
+    clock = pd.date_range('2025-01-01', periods=4, freq='h', tz='UTC')
+    index = pd.MultiIndex.from_product([clock, LOCATIONS], names=['time', 'city'])
+    truth = pd.DataFrame({'temperature': np.repeat([10., 15., 20., 25.], 8)}, index=index)
+    predicted = truth.copy()
+    predicted['temperature'] += np.tile(np.arange(8), 4)
+    scores = ModelEvaluator().evaluate_by_city(truth, predicted)
+    for offset, city in enumerate(LOCATIONS):
+        assert scores[city]['temperature']['MAE'] == offset
+        assert scores[city]['temperature']['RMSE'] == offset
+    with pytest.raises(ValueError, match='coordinates'):
+        ModelEvaluator().evaluate_by_city(truth, predicted.iloc[::-1])

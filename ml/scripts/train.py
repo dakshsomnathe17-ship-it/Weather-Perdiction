@@ -1,4 +1,4 @@
-"""Reproducible 24-hour ERA5 hindcast study with an untouched final year."""
+"""Reproducible 24-hour ERA5 hindcast study with a chronological final-year holdout."""
 import argparse
 import importlib.metadata
 import json
@@ -17,6 +17,7 @@ from ml.pipeline.supervised import UNITS, build_supervised, chronological_masks,
 from ml.training.evaluator import ModelEvaluator
 
 LOG = logging.getLogger(__name__)
+FEATURE_PRECISION = 10
 
 
 def bounded_predictions(model, X):
@@ -40,7 +41,7 @@ def run(args):
     raw = pd.read_csv(data_file)
     raw['time'] = pd.to_datetime(raw['time'], utc=True)
     raw = raw.set_index('time')
-    X, y, persistence = build_supervised(raw)
+    X, y, persistence = build_supervised(raw, feature_precision=FEATURE_PRECISION)
     masks = chronological_masks(X.index, args.validation_start, args.test_start)
     # One row every N issue hours, retaining every city; evaluation remains hourly.
     issue = X.index.get_level_values('time')
@@ -53,6 +54,7 @@ def run(args):
               'source': manifest['source'], 'dataset_sha256': manifest['dataset_sha256'],
               'raw_rows': len(raw), 'usable_rows': len(X), 'features': list(X), 'targets': UNITS,
               'cities': manifest['cities'], 'horizon_hours': 24, 'train_stride_hours': args.train_stride,
+              'feature_precision': FEATURE_PRECISION,
               'validation_start': args.validation_start, 'test_start': args.test_start,
               'selection_rule': 'lowest validation temperature RMSE; test scores do not select/tune models',
               'limitations': ['ERA5 reanalysis hindcast, not an operational forecast evaluation',
@@ -61,17 +63,21 @@ def run(args):
                              'No calibrated rain probability or confidence intervals'],
               'python': platform.python_version(),
               'packages': {p: importlib.metadata.version(p) for p in ('numpy', 'pandas', 'scikit-learn', 'xgboost', 'lightgbm', 'joblib')},
-              'splits': {}, 'baselines': {}, 'models': {}}
+              'splits': {}, 'baselines': {}, 'baseline_by_city': {}, 'models': {}}
     for split, mask in masks.items():
         indices = issue[mask]
         report['splits'][split] = {'rows': int(mask.sum()), 'fit_rows': int((mask & stride).sum()) if 'train' in split else None,
                                   'first_issue': indices.min().isoformat(), 'last_issue': indices.max().isoformat(),
-                                  'last_target': (indices.max() + pd.Timedelta(hours=24)).isoformat()}
+                                  'last_target': (indices.max() + pd.Timedelta(hours=24)).isoformat(),
+                                  'city_rows': {city: int(count) for city, count in X.index[mask].get_level_values('city').value_counts().items()}}
     for split, cutoff in [('validation', args.validation_start), ('test', args.test_start)]:
         mask = masks[split]
         climatology = seasonal_baseline(raw, X.index[mask], cutoff)
         report['baselines'][split] = {'persistence': evaluator.evaluate(y.loc[mask], persistence.loc[mask]),
                                      'climatology': evaluator.evaluate(y.loc[mask], climatology)}
+        report['baseline_by_city'][split] = {
+            'persistence': evaluator.evaluate_by_city(y.loc[mask], persistence.loc[mask]),
+            'climatology': evaluator.evaluate_by_city(y.loc[mask], climatology)}
     params = {'random_forest': dict(n_estimators=96, max_depth=14, min_samples_leaf=10, max_features=.85, n_jobs=args.jobs),
               'xgboost': dict(n_estimators=240, max_depth=6, n_jobs=args.jobs),
               'lightgbm': dict(n_estimators=240, max_depth=8, n_jobs=args.jobs)}
@@ -81,6 +87,7 @@ def run(args):
         started = time.perf_counter()
         model = registry.create(name, **params[name])
         mask = masks['train'] & stride
+        (output / 'progress.json').write_text(json.dumps({**report, 'stage': f'validation_fit:{name}'}, indent=2), encoding='utf-8')
         LOG.info('Validation fit %s: %s rows, %s features', name, int(mask.sum()), len(X.columns))
         model.train(X.loc[mask], y.loc[mask])
         metrics = evaluator.evaluate(y.loc[masks['validation']], bounded_predictions(model, X.loc[masks['validation']]))
@@ -93,6 +100,7 @@ def run(args):
         started = time.perf_counter()
         model = registry.create(name, **params[name])
         fit = masks['final_train'] & stride
+        (output / 'progress.json').write_text(json.dumps({**report, 'stage': f'final_fit:{name}'}, indent=2), encoding='utf-8')
         LOG.info('Final fit %s: %s rows', name, int(fit.sum()))
         model.train(X.loc[fit], y.loc[fit])
         test_X, truth = X.loc[masks['test']], y.loc[masks['test']]
@@ -100,17 +108,15 @@ def run(args):
         metrics = evaluator.evaluate(truth, predictions)
         model.metrics = metrics
         model.metadata = {'horizon_hours': 24, 'cities': manifest['cities'], 'dataset_sha256': manifest['dataset_sha256'],
-                          'feature_contract': 'utc_issue_hour_with_24h_causal_history_v1',
+                          'feature_contract': 'utc_issue_hour_with_24h_causal_history_v2',
+                          'feature_precision': FEATURE_PRECISION,
                           'trained_until': report['splits']['final_train']['last_target'],
                           'status': 'research_hindcast', 'prediction_bounds': {'humidity': [0, 100], 'cloud_cover': [0, 100], 'wind_speed': [0, None], 'precipitation_24h': [0, None]}}
         model_path = output / f'{name}.joblib'
         model.save(str(model_path))
         reloaded = WeatherModel.load(str(model_path))
         np.testing.assert_allclose(bounded_predictions(reloaded, test_X.iloc[:16]), predictions.iloc[:16], rtol=1e-6)
-        per_city = {}
-        for city in manifest['cities']:
-            select = truth.index.get_level_values('city') == city
-            per_city[city] = evaluator.evaluate(truth.loc[select], predictions.loc[select])
+        per_city = evaluator.evaluate_by_city(truth, predictions)
         record = report['models'][name]
         record.update(test=metrics, test_by_city=per_city, artifact=model_path.name,
                       artifact_sha256=sha256(model_path), artifact_bytes=model_path.stat().st_size,
@@ -119,6 +125,7 @@ def run(args):
         pd.concat([truth.add_prefix('actual_'), predictions.add_prefix('predicted_')], axis=1).to_csv(prediction_file)
         LOG.info('%s holdout temperature MAE %.3f C; artifact %s', name, metrics['temperature']['MAE'], model_path)
         (output / 'progress.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+    report['finished_at'] = datetime.now(timezone.utc).isoformat()
     (output / 'report.json').write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding='utf-8')
     (output / 'data_manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding='utf-8')
     print(json.dumps({'selected_model': report['selected_model'], 'report': str(output / 'report.json')}, indent=2))

@@ -9,11 +9,11 @@ UNITS = {'temperature': '°C', 'humidity': '%', 'pressure': 'hPa', 'wind_speed':
          'cloud_cover': '%', 'precipitation_24h': 'mm over next 24 hours'}
 
 
-def build_supervised(raw, horizon_hours=24):
+def build_supervised(raw, horizon_hours=24, feature_precision=None):
     if horizon_hours != 24:
         raise ValueError('This experiment supports a 24-hour horizon only')
     clean = DataCleaning().clean(raw)
-    engineered = FeatureEngineering(horizon_hours).engineer_features(clean)
+    engineered = FeatureEngineering(horizon_hours, feature_precision).engineer_features(clean)
     features, targets, persistence = [], [], []
     for city, group in engineered.groupby('city'):
         g = group.sort_index()

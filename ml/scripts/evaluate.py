@@ -21,7 +21,7 @@ def evaluate_run(model_dir, data_dir):
         raise ValueError('Dataset checksum differs from the training run')
     raw = pd.read_csv(data_file)
     raw['time'] = pd.to_datetime(raw['time'], utc=True)
-    X, y, _ = build_supervised(raw.set_index('time'))
+    X, y, _ = build_supervised(raw.set_index('time'), feature_precision=report.get('feature_precision'))
     test = chronological_masks(X.index, report['validation_start'], report['test_start'])['test']
     evaluator, results = ModelEvaluator(), {}
     for name, record in report['models'].items():
@@ -34,6 +34,13 @@ def evaluate_run(model_dir, data_dir):
         for target, metrics in results[name].items():
             for metric, value in metrics.items():
                 np.testing.assert_allclose(value, record['test'][target][metric], rtol=1e-6, atol=1e-8)
+        per_city = evaluator.evaluate_by_city(y.loc[test], predictions)
+        if set(per_city) != set(record['test_by_city']):
+            raise ValueError(f'Evaluated cities differ from the saved report: {name}')
+        for city, targets in per_city.items():
+            for target, metrics in targets.items():
+                for metric, value in metrics.items():
+                    np.testing.assert_allclose(value, record['test_by_city'][city][target][metric], rtol=1e-6, atol=1e-8)
     return results
 
 

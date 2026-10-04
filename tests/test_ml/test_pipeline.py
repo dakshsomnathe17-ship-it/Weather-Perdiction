@@ -107,32 +107,45 @@ def test_era5_download_is_pinned_validated_and_resumable(tmp_path, monkeypatch):
         era5.validate_response(saved['response'], '2020-01-01', '2020-01-01')
 
 
-def test_saved_history_inference_matches_training_features(raw_weather, tmp_path):
+@pytest.mark.parametrize('model_name,precision', [('random_forest', None), ('random_forest', 10), ('xgboost', 10), ('lightgbm', 10)])
+def test_saved_history_inference_matches_training_features(raw_weather, tmp_path, model_name, precision):
     from ml.models.model_registry import registry
     from ml.prediction.predictor import WeatherPredictor
     from ml.scripts.train import bounded_predictions
-    X, y, _ = build_supervised(raw_weather)
-    model = registry.create('random_forest', n_estimators=4, max_depth=3, n_jobs=1)
+    X, y, _ = build_supervised(raw_weather, feature_precision=precision)
+    model = registry.create(model_name, n_estimators=4, max_depth=3, n_jobs=1)
     model.train(X.iloc[:1000], y.iloc[:1000])
     model.metadata = {'cities': ['Pune', 'Mumbai'], 'horizon_hours': 24,
+                      'feature_precision': precision,
                       'prediction_bounds': {'humidity': [0, 100], 'cloud_cover': [0, 100],
                                             'wind_speed': [0, None], 'precipitation_24h': [0, None]}}
-    model.save(str(tmp_path / 'random_forest.joblib'))
+    model.save(str(tmp_path / f'{model_name}.joblib'))
     predictor = WeatherPredictor(str(tmp_path))
     issue = pd.Timestamp('2022-01-15T12:00:00Z')
     history = raw_weather.loc[(raw_weather.index <= issue) & (raw_weather.index >= issue - pd.Timedelta(hours=24))]
     for city in ['Pune', 'Mumbai']:
-        result = predictor.predict_history('random_forest', history, city)
+        result = predictor.predict_history(model_name, history, city)
         expected = bounded_predictions(model, X.loc[[(issue, city)]]).iloc[0]
         np.testing.assert_allclose(list(result['predictions'].values()), expected)
         assert result['valid_time'] == (issue + pd.Timedelta(hours=24)).isoformat()
         assert result['status'] == 'research_hindcast'
     with pytest.raises(ValueError, match='outside'):
-        predictor.predict_history('random_forest', history, 'Delhi')
+        predictor.predict_history(model_name, history, 'Delhi')
     with pytest.raises(ValueError, match='No observation history'):
-        predictor.predict_history('random_forest', history.loc[history.city == 'Pune'], 'Mumbai')
+        predictor.predict_history(model_name, history.loc[history.city == 'Pune'], 'Mumbai')
     with pytest.raises(ValueError, match='contiguous'):
-        predictor.predict_history('random_forest', history.loc[history.index != issue - pd.Timedelta(hours=1)], 'Pune')
+        predictor.predict_history(model_name, history.loc[history.index != issue - pd.Timedelta(hours=1)], 'Pune')
+
+
+def test_feature_precision_removes_rolling_history_roundoff(raw_weather):
+    # Match source precision, including sea-level pressure values near 1,000 hPa.
+    raw_weather.loc[:, era5.VARIABLES] = raw_weather[era5.VARIABLES].round(1)
+    clean = DataCleaning().clean(raw_weather)
+    full = FeatureEngineering(feature_precision=10).engineer_features(clean)
+    for issue in pd.date_range('2022-01-01', periods=12, freq='37h', tz='UTC'):
+        window = clean.loc[(clean.index <= issue) & (clean.index >= issue - pd.Timedelta(hours=24))]
+        short = FeatureEngineering(feature_precision=10).engineer_features(window)
+        pd.testing.assert_frame_equal(full.loc[full.index == issue], short.loc[short.index == issue], check_exact=True)
 
 
 @pytest.mark.parametrize('header', [None, '20', 'invalid', 'Wed, 21 Oct 2015 07:28:00 GMT'])
