@@ -1,50 +1,127 @@
-import React from 'react';
-import { GlassCard } from '@/components/ui';
-import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { CloudRain, Droplets, ThermometerSun } from 'lucide-react';
+import { useWeatherStore } from '@/store/weatherStore';
+import { useUiStore } from '@/store/uiStore';
+import { useForecast } from '@/hooks/useWeather';
+import { WeatherState } from '@/components/ui/WeatherState';
+import { WeatherSource } from '@/components/ui/WeatherSource';
+import { dayLabel, formatRain, summarizeOutlook } from '@/utils/outlook';
+import { formatTemperature } from '@/utils/format';
 
-const mockData = Array.from({ length: 30 }).map((_, i) => ({
-  day: i + 1,
-  temp: 20 + Math.random() * 10,
-  rain: Math.random() * 20
-}));
-
-export const Analytics: React.FC = () => {
+export function Analytics() {
+  const location = useWeatherStore((s) => s.selectedLocation),
+    units = useUiStore((s) => s.units);
+  const query = useForecast(location?.latitude ?? NaN, location?.longitude ?? NaN),
+    days = query.data?.forecast ?? [];
+  const summary = summarizeOutlook(days);
   return (
-    <div className="flex flex-col gap-6 max-w-6xl mx-auto pb-20">
-      <h2 className="text-3xl font-bold text-white mb-2">Weather Analytics</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <GlassCard padding="p-6" glow>
-          <span className="text-surface-400 text-sm">Avg Temperature (30d)</span>
-          <div className="text-3xl font-bold text-white mt-2">24.5°C</div>
-        </GlassCard>
-        <GlassCard padding="p-6">
-          <span className="text-surface-400 text-sm">Total Rainfall (30d)</span>
-          <div className="text-3xl font-bold text-white mt-2">142 mm</div>
-        </GlassCard>
-        <GlassCard padding="p-6">
-          <span className="text-surface-400 text-sm">Sunny Days</span>
-          <div className="text-3xl font-bold text-white mt-2">18 Days</div>
-        </GlassCard>
+    <div className="page-content">
+      <div className="page-heading">
+        <div>
+          <span className="eyebrow">SEE THE PATTERNS</span>
+          <h1>Your week, understood.</h1>
+          <p>
+            Forecast insights for {location?.name ?? 'your location'} · {days.length || 7} days
+            ahead
+          </p>
+        </div>
+        <span className="pill">Forecast insights</span>
       </div>
-
-      <GlassCard className="h-[400px]" padding="p-6">
-        <h3 className="text-xl font-semibold text-white mb-6">Temperature Trends</h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={mockData}>
-            <defs>
-              <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="day" stroke="#94a3b8" />
-            <YAxis stroke="#94a3b8" />
-            <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155' }} />
-            <Area type="monotone" dataKey="temp" stroke="#f59e0b" fillOpacity={1} fill="url(#colorTemp)" />
-          </AreaChart>
-        </ResponsiveContainer>
-      </GlassCard>
+      {!summary ? (
+        <WeatherState
+          label="forecast"
+          loading={query.isLoading}
+          error={query.isError}
+          retry={() => void query.refetch()}
+        />
+      ) : (
+        <>
+          {query.isError && (
+            <p role="alert" className="inline-notice">
+              Refresh failed. Insights use the last retrieved forecast.
+            </p>
+          )}
+          <div className="insight-stats">
+            <section className="panel insight-stat">
+              <ThermometerSun />
+              <span>Warmest day</span>
+              <strong>{formatTemperature(summary.warmest.temp_max, units)}</strong>
+              <p>{dayLabel(summary.warmest.date, true)}</p>
+            </section>
+            <section className="panel insight-stat">
+              <CloudRain />
+              <span>Forecast precipitation</span>
+              <strong>{formatRain(summary.totalRain, units)}</strong>
+              <p>Total across {days.length} days</p>
+            </section>
+            <section className="panel insight-stat">
+              <Droplets />
+              <span>Days with precipitation</span>
+              <strong>
+                {summary.wetDays}
+                <small> / {days.length}</small>
+              </strong>
+              <p>At least {formatRain(1, units)} per day</p>
+            </section>
+          </div>
+          <div className="forecast-details-grid">
+            <section className="panel">
+              <div className="section-heading">
+                <div>
+                  <span className="eyebrow">PRECIPITATION OUTLOOK</span>
+                  <h2>When to expect a wetter day</h2>
+                  <p>Forecast daily totals · {units === 'metric' ? 'millimetres' : 'inches'}</p>
+                </div>
+              </div>
+              <div className="rain-chart" role="list">
+                {days.map((day) => (
+                  <div className="rain-chart-row" role="listitem" key={day.date}>
+                    <span>{dayLabel(day.date)}</span>
+                    <div className="rain-track">
+                      <span
+                        style={{
+                          width: `${(day.precipitation_sum / Math.max(1, summary.wettest.precipitation_sum)) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <strong>{formatRain(day.precipitation_sum, units)}</strong>
+                  </div>
+                ))}
+              </div>
+            </section>
+            <section className="panel insight-notes">
+              <span className="eyebrow">WHAT STANDS OUT</span>
+              <h2>Ahead of the weather</h2>
+              <div>
+                <ThermometerSun size={21} />
+                <p>
+                  The forecast ranges from a low of{' '}
+                  <strong>{formatTemperature(summary.coolest.temp_min, units)}</strong> to a high of{' '}
+                  <strong>{formatTemperature(summary.warmest.temp_max, units)}</strong>.
+                </p>
+              </div>
+              <div>
+                <CloudRain size={21} />
+                <p>
+                  {summary.totalRain > 0 ? (
+                    <>
+                      <strong>{dayLabel(summary.wettest.date)}</strong> has the highest forecast
+                      precipitation, at{' '}
+                      <strong>{formatRain(summary.wettest.precipitation_sum, units)}</strong>.
+                    </>
+                  ) : (
+                    'No precipitation is forecast in this daily outlook.'
+                  )}
+                </p>
+              </div>
+              <p className="subtle">
+                These insights summarize the current provider forecast. Forecasts may change as new
+                data arrives.
+              </p>
+            </section>
+          </div>
+        </>
+      )}
+      <WeatherSource updatedAt={query.dataUpdatedAt} />
     </div>
   );
-};
+}
