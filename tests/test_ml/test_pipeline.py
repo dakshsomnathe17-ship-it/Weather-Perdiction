@@ -151,3 +151,15 @@ def test_feature_precision_removes_rolling_history_roundoff(raw_weather):
 @pytest.mark.parametrize('header', [None, '20', 'invalid', 'Wed, 21 Oct 2015 07:28:00 GMT'])
 def test_retry_after_handles_seconds_and_http_dates(header):
     assert 5 <= era5.retry_delay(header, 0) <= 60
+
+
+def test_city_groups_preserve_previous_run_and_expand_without_duplicates():
+    from ml.scripts.download_era5 import resolve_cities
+    previous = resolve_cities('india8')
+    expanded = resolve_cities('india16')
+    assert len(previous) == 8
+    assert expanded[:8] == previous
+    assert len(expanded) == len(set(expanded)) == 16
+    assert resolve_cities('india') == resolve_cities('all') == expanded
+    assert resolve_cities(' Jaipur, Kochi,Jaipur, ') == ['Jaipur', 'Kochi']
+    assert all(-90 <= era5.LOCATIONS[c][0] <= 90 and -180 <= era5.LOCATIONS[c][1] <= 180 for c in expanded)

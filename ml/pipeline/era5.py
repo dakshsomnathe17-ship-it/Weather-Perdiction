@@ -19,6 +19,15 @@ LOCATIONS = {
     'Delhi': (28.6139, 77.2090), 'Bengaluru': (12.9716, 77.5946),
     'Chennai': (13.0827, 80.2707), 'Kolkata': (22.5726, 88.3639),
     'Hyderabad': (17.3850, 78.4867), 'Ahmedabad': (23.0225, 72.5714),
+    # Additional city centres verified through Open-Meteo Geocoding / GeoNames.
+    'Jaipur': (26.91962, 75.78781), 'Lucknow': (26.83928, 80.92313),
+    'Nagpur': (21.14631, 79.08491), 'Indore': (22.71792, 75.83330),
+    'Patna': (25.59408, 85.13563), 'Bhubaneswar': (20.27241, 85.83385),
+    'Kochi': (9.93988, 76.26022), 'Guwahati': (26.18440, 91.74580),
+}
+CITY_GROUPS = {
+    'india8': ('Pune', 'Mumbai', 'Delhi', 'Bengaluru', 'Chennai', 'Kolkata', 'Hyderabad', 'Ahmedabad'),
+    'india16': tuple(LOCATIONS),
 }
 URL = 'https://archive-api.open-meteo.com/v1/archive'
 

@@ -21,7 +21,7 @@ def export_report(model_dir, output_dir, compare_report=None):
         if sha256(source / record['artifact']) != record['artifact_sha256']:
             raise ValueError(f"Artifact checksum differs: {record['artifact']}")
     output.mkdir(parents=True, exist_ok=True)
-    for filename in ('report.json', 'data_manifest.json', 'protocol.json', 'data_quality.json', 'verification.json', 'inference_examples.json'):
+    for filename in ('report.json', 'data_manifest.json', 'protocol.json', 'data_quality.json', 'verification.json', 'inference_examples.json', 'city_geocoding.json'):
         if (source / filename).exists():
             (output / filename).write_bytes((source / filename).read_bytes())
 
@@ -80,7 +80,7 @@ def export_report(model_dir, output_dir, compare_report=None):
     if (source / 'protocol.json').exists():
         protocol = json.loads((source / 'protocol.json').read_text(encoding='utf-8'))
         lines += [f"Prior evaluation context: {protocol['prior_holdout_context']}. "
-                  'This expansion reuses the fixed earlier parameters and date splits; it is not a new independent audit of those two cities. '
+                  'This expansion reuses the fixed earlier parameters and date splits; it is not a new independent audit of previously evaluated cities. '
                   'See [protocol.json](protocol.json).', '']
         if protocol.get('numerical_remediation'):
             lines += [f"Numerical correction: {protocol['numerical_remediation']}", '']
@@ -157,7 +157,7 @@ def export_report(model_dir, output_dir, compare_report=None):
     if (source / 'verification.json').exists():
         lines += ['## Verification', '',
                   'See [verification.json](verification.json) for completed checks and '
-                  '[inference_examples.json](inference_examples.json) for historical predictions and actual values for all eight cities. '
+                  f'[inference_examples.json](inference_examples.json) for historical predictions and actual values for all {len(cities)} cities. '
                   'These examples use the minimum 25-hour observation history and are checked against the stored holdout predictions.', '']
     (output / 'MODEL_CARD.md').write_text('\n'.join(lines), encoding='utf-8')
     return output / 'MODEL_CARD.md'
@@ -168,7 +168,7 @@ def make_chart(report, path):
     selected = report['models'][report['selected_model']]['test_by_city']
     baseline = report['baseline_by_city']['test']['persistence']
     y = np.arange(len(cities))
-    fig, axes = plt.subplots(1, 2, figsize=(11, 5.5), layout='constrained')
+    fig, axes = plt.subplots(1, 2, figsize=(11, max(5.5, len(cities) * .42 + 1.5)), layout='constrained')
     for axis, target, label in zip(axes, ('temperature', 'precipitation_24h'), ('Temperature MAE (°C)', 'Next-24-hour rain MAE (mm)')):
         axis.barh(y - .19, [selected[c][target]['MAE'] for c in cities], .36, label=report['selected_model'], color='#2563eb')
         axis.barh(y + .19, [baseline[c][target]['MAE'] for c in cities], .36, label='Persistence', color='#94a3b8')

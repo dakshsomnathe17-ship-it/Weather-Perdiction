@@ -45,9 +45,9 @@ def test_per_city_scores_keep_errors_separate_and_reject_misalignment():
     from ml.pipeline.era5 import LOCATIONS
     clock = pd.date_range('2025-01-01', periods=4, freq='h', tz='UTC')
     index = pd.MultiIndex.from_product([clock, LOCATIONS], names=['time', 'city'])
-    truth = pd.DataFrame({'temperature': np.repeat([10., 15., 20., 25.], 8)}, index=index)
+    truth = pd.DataFrame({'temperature': np.repeat([10., 15., 20., 25.], len(LOCATIONS))}, index=index)
     predicted = truth.copy()
-    predicted['temperature'] += np.tile(np.arange(8), 4)
+    predicted['temperature'] += np.tile(np.arange(len(LOCATIONS)), 4)
     scores = ModelEvaluator().evaluate_by_city(truth, predicted)
     for offset, city in enumerate(LOCATIONS):
         assert scores[city]['temperature']['MAE'] == offset
