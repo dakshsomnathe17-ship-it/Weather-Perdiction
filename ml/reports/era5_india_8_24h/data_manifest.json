@@ -1,0 +1,3559 @@
+{
+  "source": "ERA5 via Open-Meteo Historical Weather API",
+  "model": "era5",
+  "endpoint": "https://archive-api.open-meteo.com/v1/archive",
+  "start": "2015-01-01",
+  "end": "2025-12-31",
+  "cities": [
+    "Pune",
+    "Mumbai",
+    "Delhi",
+    "Bengaluru",
+    "Chennai",
+    "Kolkata",
+    "Hyderabad",
+    "Ahmedabad"
+  ],
+  "variables": [
+    "temperature_2m",
+    "relative_humidity_2m",
+    "pressure_msl",
+    "wind_speed_10m",
+    "cloud_cover",
+    "precipitation"
+  ],
+  "timezone": "UTC",
+  "downscaling": false,
+  "attribution": "Contains modified Copernicus Climate Change Service information; processed by Open-Meteo.",
+  "sources": [
+    "https://doi.org/10.24381/cds.adbb2d47",
+    "https://open-meteo.com/en/docs/historical-weather-api",
+    "https://open-meteo.com/en/terms"
+  ],
+  "license": "CC BY 4.0; API access terms also apply",
+  "chunks": [
+    {
+      "path": "raw\\pune_2015-01-01_2015-12-31.json",
+      "sha256": "0170c29105036bab49344ae4fc399b27193350cbd4cda339a5c5b5a38494a686",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:27:47.917178+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2016-01-01_2016-12-31.json",
+      "sha256": "47553faeee4e5e97cfff99b2e1c218383e22813ff278e41bc83f988893b6a003",
+      "rows": 8784,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:27:50.467748+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2017-01-01_2017-12-31.json",
+      "sha256": "7fbea5e8b00cc84dd8fb7411963076e7db3aef99f37c36d629715f92b23e3210",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:27:52.985403+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2018-01-01_2018-12-31.json",
+      "sha256": "e3e80ec10e7d713ff013c12e9d3c475b6e3743bc67b838e51734d55cb7e19641",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:27:55.490544+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2019-01-01_2019-12-31.json",
+      "sha256": "307549fbb2a294e0d9b9d9e236a2da34178b13848a3a6ab6f4e00eaa8dbbfddc",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:27:57.994935+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2020-01-01_2020-12-31.json",
+      "sha256": "35a3a08fb8b42c0bfcf1f2260ec6ebc218a04463691832badfec6affac81ee20",
+      "rows": 8784,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:00.510701+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2021-01-01_2021-12-31.json",
+      "sha256": "e24137dc640ece725e8a8b93f504ec3e6903141abad19e806ac39e2419534bc4",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:03.059560+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2022-01-01_2022-12-31.json",
+      "sha256": "029401c951fcbb2c4cfee1cc44d2204068a5d7a0aca2cca05b6fe75188371250",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:05.767581+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2023-01-01_2023-12-31.json",
+      "sha256": "f48e2b89244e43da682e816927eeb8441c00cdf32a1027fd795f1d2326fdc214",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:08.459860+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2024-01-01_2024-12-31.json",
+      "sha256": "640d54b56e83bb71fbf9efd44487b4076609fccbedf7510545ce8b1e1574f31b",
+      "rows": 8784,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:11.184031+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\pune_2025-01-01_2025-12-31.json",
+      "sha256": "5886b0d20595a7632f3810cd8155b2b10bd068ab8370c19a8b6bee8835be5d1a",
+      "rows": 8760,
+      "request": {
+        "latitude": 18.5204,
+        "longitude": 73.8567,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:13.946920+00:00",
+      "grid_latitude": 18.5,
+      "grid_longitude": 73.75,
+      "elevation": 709.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2015-01-01_2015-12-31.json",
+      "sha256": "0d4360d5ff25e59c7009dfbd43d44017192bbff8c60388847f0e59eeee7be2a1",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:16.463733+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2016-01-01_2016-12-31.json",
+      "sha256": "8118c5a630bf36c798f23dfe2dac72bc464c6518162e49900a7ca817b970100e",
+      "rows": 8784,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:19.098315+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2017-01-01_2017-12-31.json",
+      "sha256": "41960d240dcf3488968888285636c32b0a1c859c7433022240f1ebf82b2995dc",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:21.712768+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2018-01-01_2018-12-31.json",
+      "sha256": "3b009fb27aa08879eb4b09e2fff7349f453ce9c57db7881e2889f4032a76c901",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:24.344058+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2019-01-01_2019-12-31.json",
+      "sha256": "cd7c99f93712a2f2fa88f265ad636aa166d8200b115c19051afd657f13848b86",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:26.862153+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2020-01-01_2020-12-31.json",
+      "sha256": "88ba333c4b1662d0e5b7d3c048dd1b53f4f48e31539e8b0ca54708221d5e92f2",
+      "rows": 8784,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:29.388089+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2021-01-01_2021-12-31.json",
+      "sha256": "1e9640731c90f069041a8795cf75bc74b9ba6a5f767355e0d3b0759dbb51b928",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:31.921067+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2022-01-01_2022-12-31.json",
+      "sha256": "f018e21d6b8b652eb8b8f9292bd8a4145ae71785d21fa96ffee9a07d42bc3da2",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:34.583726+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2023-01-01_2023-12-31.json",
+      "sha256": "7dd35b3ceb28de6eb24893090112fe60c38a60a20f7bbb5ccec77019179c887a",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:37.197374+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2024-01-01_2024-12-31.json",
+      "sha256": "0d81b35eccd5c9bbb232c24ddf8756c5ea7acf52334cf85e0d8715e936eaab7c",
+      "rows": 8784,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:39.867629+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\mumbai_2025-01-01_2025-12-31.json",
+      "sha256": "f086bd400f4502c433982b7f6d2f11a3b960b28603aa4b14037da40895da7a92",
+      "rows": 8760,
+      "request": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-28T13:28:42.517080+00:00",
+      "grid_latitude": 19.0,
+      "grid_longitude": 73.0,
+      "elevation": 24.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2015-01-01_2015-12-31.json",
+      "sha256": "86228ac523a61440b31b3b43c00d498bd372b097e202b47c64ebe44f53a9a362",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:18.815494+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2016-01-01_2016-12-31.json",
+      "sha256": "ddeb91a81d827dafbf96d1045b38b4b55a7c5f8ef08ec9a2a0359ff255d3b8cf",
+      "rows": 8784,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:21.287178+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2017-01-01_2017-12-31.json",
+      "sha256": "9a2e9b06b8730d8820e2c4dcde6771d25f0cedbb4ec3ded0b9febc8490390f9f",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:23.761443+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2018-01-01_2018-12-31.json",
+      "sha256": "bdee9833325bcec9efc87821d8616f64d0b64dde64b5b7c6b1737a34f87cc586",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:26.247754+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2019-01-01_2019-12-31.json",
+      "sha256": "c12a9f70ff25270cd344f5eda7c1aa56c76f2f04e309871fccc5f2e9c57533b5",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:28.723429+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2020-01-01_2020-12-31.json",
+      "sha256": "59dedde07e9540a1487a73a9724e67a66394db652d2a614354767dc487953e66",
+      "rows": 8784,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:31.185730+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2021-01-01_2021-12-31.json",
+      "sha256": "371c04bfabbfd090a35512957fb81d0d54fc6a43a35ada9d4959372d46e775e3",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:33.658978+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2022-01-01_2022-12-31.json",
+      "sha256": "b5af99326703a1a24f4cf7a70188cee5973991046fba2124e4ddf289ca7322ed",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:36.277848+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2023-01-01_2023-12-31.json",
+      "sha256": "70d58a06ace6c0eb93d7dae3c4335c8b6ce00e8e0e9a991f86dba57f88ab6478",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:38.883782+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2024-01-01_2024-12-31.json",
+      "sha256": "d9ae1d8b32d47bc24b63b306eb7b3d169d27aa5964f9ac190265545bcad7a923",
+      "rows": 8784,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:41.544669+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\delhi_2025-01-01_2025-12-31.json",
+      "sha256": "f453584600424a8db2eedb0aeadad90a544a286fc6dc107f1937c75eb2af60bf",
+      "rows": 8760,
+      "request": {
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:44.160972+00:00",
+      "grid_latitude": 28.5,
+      "grid_longitude": 77.25,
+      "elevation": 220.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2015-01-01_2015-12-31.json",
+      "sha256": "7e6d43e3210f9141905fc0ce5cf04dc9dbd85406e1ae0b346eacc2fa02f21f9f",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:46.694694+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2016-01-01_2016-12-31.json",
+      "sha256": "567dd1405399c456c9019b1b2c91444b69c8fa76df6c42561345075842136180",
+      "rows": 8784,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:49.175342+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2017-01-01_2017-12-31.json",
+      "sha256": "dc9af26a3b24650ab06bd252cc8e14622922f595abb9232b59c285d7c79b450c",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:51.686657+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2018-01-01_2018-12-31.json",
+      "sha256": "f5b9f0ebf6e9c4b48c3f5335a7dd1d8732ca5885506503bfe434bdba2dcc7a72",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:56.064623+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2019-01-01_2019-12-31.json",
+      "sha256": "8bea1f45703324c487e3d9af9edc87db2752080540ddbab4f62f9847cb007b69",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:04:58.666333+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2020-01-01_2020-12-31.json",
+      "sha256": "4f4cc99fad8280ff1d0a1533ba234d8d9510aefb08b766aacad227b13bc3d5ff",
+      "rows": 8784,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:01.254544+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2021-01-01_2021-12-31.json",
+      "sha256": "1b6e9ef5aec54a1d8c07fd96ba3147264b0f237e786f44ab470a62b9f08f2249",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:03.854945+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2022-01-01_2022-12-31.json",
+      "sha256": "e5d623f4589c1dc1115ede27f20762e051f6a5522c4c76b9d935e94f997c9ed5",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:06.711859+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2023-01-01_2023-12-31.json",
+      "sha256": "fe9558a236024189f47d691b1139eb35a4e3c48a79eabbb48d402bee78ea935c",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:09.612985+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2024-01-01_2024-12-31.json",
+      "sha256": "99a03a84054444a2c42b3eb61aff66435576464eaebc44a054e45daf43ee3b70",
+      "rows": 8784,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:12.496067+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\bengaluru_2025-01-01_2025-12-31.json",
+      "sha256": "5b1ae1bf5fca891331ff0d78430c73ffbc0c2bfee74d557d8ab7f628136d0b8f",
+      "rows": 8760,
+      "request": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:15.455915+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 77.5,
+      "elevation": 864.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2015-01-01_2015-12-31.json",
+      "sha256": "968775aa397ff47258d037fbf6acf32060bb76dc8a6ea4dfd4d86a0d719c3651",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:18.056367+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2016-01-01_2016-12-31.json",
+      "sha256": "841672dd1f01b8a9ab53a0e6e929ec41c02efefacc369333cca2bb55313ac1b3",
+      "rows": 8784,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:20.536038+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2017-01-01_2017-12-31.json",
+      "sha256": "caa9335c1965f994640bbce9b69b6125eb5245b2c9e1429415167c968c6a20ef",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:22.996866+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2018-01-01_2018-12-31.json",
+      "sha256": "51e976937f6ab6c61cf2641601632918c30757295cd86fdd92fe17a92e7f114f",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:25.733586+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2019-01-01_2019-12-31.json",
+      "sha256": "cb7b724408cb584edf44c45a542ce2d172d91aa34472dead0fc2e93dd3f42641",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:28.498018+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2020-01-01_2020-12-31.json",
+      "sha256": "2555e1e0dc81a64a79fe48ba307f85bf90262a7dcb5ad1c945b676d720e9db2f",
+      "rows": 8784,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:31.126776+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2021-01-01_2021-12-31.json",
+      "sha256": "dda0df8a02b51d44883c73a6ca103e5d4284c37a9bb04dfa51b140138a2bf019",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:33.685764+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2022-01-01_2022-12-31.json",
+      "sha256": "e0e4b5541f1c4f7f13d018285cb73c65ea15cc799c2a4495269dfd4fed838328",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:36.392549+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2023-01-01_2023-12-31.json",
+      "sha256": "32a58c81d4b24c0c38b013cae8ec0b4a8850500e655cb9f536d76040f20958ee",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:39.096822+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2024-01-01_2024-12-31.json",
+      "sha256": "dcda80c0181c1031992daf076ab30609ad188d3ff1b6032f50cafa1dfdc11979",
+      "rows": 8784,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:41.825923+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\chennai_2025-01-01_2025-12-31.json",
+      "sha256": "536ebf33946fd6a939edde58f097d6877646572435903a81d5499212f14ac798",
+      "rows": 8760,
+      "request": {
+        "latitude": 13.0827,
+        "longitude": 80.2707,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:44.367482+00:00",
+      "grid_latitude": 13.0,
+      "grid_longitude": 80.25,
+      "elevation": 10.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2015-01-01_2015-12-31.json",
+      "sha256": "e5c72df61611aafaf86cbc5bc4d1baac0b5b43026d17a5fa7b13c615edcf6cd0",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:46.824689+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2016-01-01_2016-12-31.json",
+      "sha256": "52ab610fc66a710ea4018136d5e4faa551e3baf76f5f7fa51980a4f348ff1d56",
+      "rows": 8784,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:49.318925+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2017-01-01_2017-12-31.json",
+      "sha256": "d07440459942076ce90a4b755034f5510ddcca2133ebbd4b7c0cae728274cb54",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:51.809876+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2018-01-01_2018-12-31.json",
+      "sha256": "768b0f7a7a3929715a532c030b52937b6610ad9629dd9184cea35ec47acf1676",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:54.299673+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2019-01-01_2019-12-31.json",
+      "sha256": "7f4025a11e716722f0030023bc1987b53cdfeb5d1af9fbee299eece6e3ca4991",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:56.940786+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2020-01-01_2020-12-31.json",
+      "sha256": "f152b627d1c5d250957903d41a007aca0d6a41039b76d0ed1affa2f3295c109a",
+      "rows": 8784,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:05:59.405202+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2021-01-01_2021-12-31.json",
+      "sha256": "0689a99119bbaf1ea7a017df981625a13dd8190028ff59db3b3ffe443983d2d6",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:01.885172+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2022-01-01_2022-12-31.json",
+      "sha256": "572bd7c93b949cf3255f0b8a6f37a380263bd45a06ba938062ff01888f5811e3",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:04.500836+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2023-01-01_2023-12-31.json",
+      "sha256": "ba4a04b6f7ef23dcf2192e675a4687fabdc33617185655303190a5925a1efca9",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:07.099570+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2024-01-01_2024-12-31.json",
+      "sha256": "6fd7cbce18db48619614fb6e728de1bf2f89c8af8a9efbf5a10a5787a0817e04",
+      "rows": 8784,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:09.860957+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\kolkata_2025-01-01_2025-12-31.json",
+      "sha256": "294234e21b3ad5f52e8bf1fd260f3c645f76da36c5b6dd72bd2616b1f412535f",
+      "rows": 8760,
+      "request": {
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:12.784568+00:00",
+      "grid_latitude": 22.5,
+      "grid_longitude": 88.25,
+      "elevation": 6.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2015-01-01_2015-12-31.json",
+      "sha256": "6c9c743deb736a8a7de7b80b08ae3e5679d77197da926308d84f187bd2bc1eb4",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:15.326771+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2016-01-01_2016-12-31.json",
+      "sha256": "6ae7daa4b041d1246c2fcc250bce8066bccda66b19bc3675a2465f03166ddfaf",
+      "rows": 8784,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:17.821131+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2017-01-01_2017-12-31.json",
+      "sha256": "3591c6c4fa3fd8878f62737dd2933af48b7d02b7a778663da0d5195819611cf1",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:20.323334+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2018-01-01_2018-12-31.json",
+      "sha256": "e129e44b5a8060e7a576daeea553fa8d92777edf2dd8e21daec2ef69dd3305e1",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:22.832455+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2019-01-01_2019-12-31.json",
+      "sha256": "ae856593e24c26b56ff20795ada530aa15defa99d59b7195b35127587690d29d",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:25.391983+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2020-01-01_2020-12-31.json",
+      "sha256": "675a66671a40f51cba6162ad94d74b859a97397e02936f5e239b44e044988d62",
+      "rows": 8784,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:27.843150+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2021-01-01_2021-12-31.json",
+      "sha256": "0fefa2e1bdac4b868543f7f515f5f61e9ed1b73e4f57d62b4dea2a705c751b36",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:30.315889+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2022-01-01_2022-12-31.json",
+      "sha256": "881d65a6a2865e7eb8a1291eb722cf6a7f059ad3ed161e4d657de0d1194526d6",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:33.050908+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2023-01-01_2023-12-31.json",
+      "sha256": "67987cbcfcb84760d34ef0964f8b06ac3bd186082d826f695ae1b81dc17232d2",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:35.771752+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2024-01-01_2024-12-31.json",
+      "sha256": "9ca84bdeb2abce073d4c829ab0e356eaa4708d8ded6e5f29192f2f47258c91fd",
+      "rows": 8784,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:38.445847+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\hyderabad_2025-01-01_2025-12-31.json",
+      "sha256": "1b5d603137e05ac1063815b3929032c15ee71fc369c6a7c8dc4d72eae15b0752",
+      "rows": 8760,
+      "request": {
+        "latitude": 17.385,
+        "longitude": 78.4867,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:41.158508+00:00",
+      "grid_latitude": 17.5,
+      "grid_longitude": 78.5,
+      "elevation": 558.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2015-01-01_2015-12-31.json",
+      "sha256": "ad14525fab992859ff16e3cad7f09fcdaec1fed47282db5aea1c2ee318e24b81",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2015-01-01",
+        "end_date": "2015-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:43.633176+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2016-01-01_2016-12-31.json",
+      "sha256": "9d85225678bb3e9e2cfde55477495f51b680c0fa3f638f187ffb0f487cde92ab",
+      "rows": 8784,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2016-01-01",
+        "end_date": "2016-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:46.113081+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2017-01-01_2017-12-31.json",
+      "sha256": "817b862f50c5c745d435d9781275e7b8db5d3f2e98cde040dea982db7d5f1849",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2017-01-01",
+        "end_date": "2017-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:48.573763+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2018-01-01_2018-12-31.json",
+      "sha256": "fdba468e094effb431a1f511268f778ff854cb4be9f1120b6748d68668c2aa6b",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2018-01-01",
+        "end_date": "2018-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:51.092210+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2019-01-01_2019-12-31.json",
+      "sha256": "247dfdf29f21bcd48f86609ecc865ebd8ad236b3021ba1594fbc002c24ff5aee",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2019-01-01",
+        "end_date": "2019-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:53.598461+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2020-01-01_2020-12-31.json",
+      "sha256": "3b0c847fa9c247f22830696348021ae22224f7eb17cfab0f240af260fafdde0f",
+      "rows": 8784,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:56.073709+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2021-01-01_2021-12-31.json",
+      "sha256": "6ce6103f4df1118d4fdc9bc283e05c5771cb62b6e731d6b81dd8e1de89f44299",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:06:58.548018+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2022-01-01_2022-12-31.json",
+      "sha256": "21b98e51e4fe8ea344bb670c8bc7879426a410dbf467887101d777cb3e264c35",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:07:01.212065+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2023-01-01_2023-12-31.json",
+      "sha256": "9ddd123df3cc8eb7859c54e723644c8b5b5a560478c239f91a1041d714e7f425",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:07:03.802181+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2024-01-01_2024-12-31.json",
+      "sha256": "eb05a3002ba621c616b64958dcb5802ce2961bf03659bd4614d2ff7ce4a54a8d",
+      "rows": 8784,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:07:06.438913+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    },
+    {
+      "path": "raw\\ahmedabad_2025-01-01_2025-12-31.json",
+      "sha256": "24da318b7c39c1ed4b592fdfc1c633f9f173b4c133476b93523c7ef03934b69a",
+      "rows": 8760,
+      "request": {
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,precipitation",
+        "models": "era5",
+        "timezone": "UTC",
+        "elevation": "nan",
+        "cell_selection": "nearest",
+        "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
+        "precipitation_unit": "mm"
+      },
+      "retrieved_at": "2026-09-29T13:07:09.060834+00:00",
+      "grid_latitude": 23.0,
+      "grid_longitude": 72.5,
+      "elevation": 43.0,
+      "units": {
+        "time": "iso8601",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "pressure_msl": "hPa",
+        "wind_speed_10m": "km/h",
+        "cloud_cover": "%",
+        "precipitation": "mm"
+      },
+      "missing": {
+        "temperature_2m": 0,
+        "relative_humidity_2m": 0,
+        "pressure_msl": 0,
+        "wind_speed_10m": 0,
+        "cloud_cover": 0,
+        "precipitation": 0
+      }
+    }
+  ],
+  "rows": 771456,
+  "dataset_sha256": "794d3da182867ebe2969cb2cacc064332c9fe2eb4735d16a220bd5bb951105c9",
+  "dataset_file": "historical_weather.csv"
+}

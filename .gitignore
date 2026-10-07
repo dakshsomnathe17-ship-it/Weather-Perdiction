@@ -75,4 +75,7 @@ weather.db
 ml_models/*.joblib
 ml_models/*.json
 dataset/
+ml/data/
+ml/saved_models/
+.cdsapirc
 *.log

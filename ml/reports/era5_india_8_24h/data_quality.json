@@ -1,0 +1,282 @@
+{
+  "checked_at": "2026-09-29T13:08:03.770776+00:00",
+  "dataset_sha256": "794d3da182867ebe2969cb2cacc064332c9fe2eb4735d16a220bd5bb951105c9",
+  "source": "ERA5 via Open-Meteo Historical Weather API",
+  "rows": 771456,
+  "chunks_verified": 88,
+  "original_chunks_reused_unchanged": 22,
+  "cities": {
+    "Pune": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 7.9,
+          "max": 40.1
+        },
+        "relative_humidity_2m": {
+          "min": 11.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 994.3,
+          "max": 1022.5
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 38.3
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 17.5
+        }
+      }
+    },
+    "Mumbai": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 14.5,
+          "max": 37.3
+        },
+        "relative_humidity_2m": {
+          "min": 23.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 990.5,
+          "max": 1020.2
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 53.9
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 27.7
+        }
+      }
+    },
+    "Delhi": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 2.5,
+          "max": 46.5
+        },
+        "relative_humidity_2m": {
+          "min": 8.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 988.8,
+          "max": 1027.8
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 32.3
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 21.1
+        }
+      }
+    },
+    "Bengaluru": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 12.6,
+          "max": 37.7
+        },
+        "relative_humidity_2m": {
+          "min": 13.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 1000.8,
+          "max": 1022.3
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 36.9
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 14.4
+        }
+      }
+    },
+    "Chennai": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 19.7,
+          "max": 37.8
+        },
+        "relative_humidity_2m": {
+          "min": 37.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 986.9,
+          "max": 1020.8
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 65.2
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 24.7
+        }
+      }
+    },
+    "Kolkata": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 9.6,
+          "max": 42.9
+        },
+        "relative_humidity_2m": {
+          "min": 18.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 975.2,
+          "max": 1023.1
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 49.6
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 24.4
+        }
+      }
+    },
+    "Hyderabad": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 10.4,
+          "max": 41.9
+        },
+        "relative_humidity_2m": {
+          "min": 12.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 995.8,
+          "max": 1022.7
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 37.1
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 22.9
+        }
+      }
+    },
+    "Ahmedabad": {
+      "rows": 96432,
+      "first_hour": "2015-01-01T00:00:00+00:00",
+      "last_hour": "2025-12-31T23:00:00+00:00",
+      "missing_hours": 0,
+      "nonfinite_values": 0,
+      "missing_or_invalid_after_cleaning": 0,
+      "range": {
+        "temperature_2m": {
+          "min": 9.2,
+          "max": 45.7
+        },
+        "relative_humidity_2m": {
+          "min": 10.0,
+          "max": 100.0
+        },
+        "pressure_msl": {
+          "min": 989.1,
+          "max": 1025.5
+        },
+        "wind_speed_10m": {
+          "min": 0.0,
+          "max": 44.4
+        },
+        "cloud_cover": {
+          "min": 0.0,
+          "max": 100.0
+        },
+        "precipitation": {
+          "min": 0.0,
+          "max": 24.0
+        }
+      }
+    }
+  }
+}

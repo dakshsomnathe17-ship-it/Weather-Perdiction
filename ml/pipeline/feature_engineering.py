@@ -1,102 +1,45 @@
-import pandas as pd
 import numpy as np
-import logging
-from typing import List
+import pandas as pd
+from ml.pipeline.era5 import VARIABLES
 
-logger = logging.getLogger(__name__)
 
 class FeatureEngineering:
-    """Class for engineering features for weather prediction."""
-    
-    def __init__(self):
+    """Features at issue hour t use observations no later than t, within one city."""
+    def __init__(self, horizon_hours=24, feature_precision=None):
+        self.horizon_hours = horizon_hours
+        self.feature_precision = feature_precision
         self.engineered_features = []
-        
-    def engineer_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Generate time, cyclical, lag, rolling, rate of change, and interaction features.
-        
-        Args:
-            df: Input cleaned DataFrame with DatetimeIndex.
-            
-        Returns:
-            pd.DataFrame: DataFrame with engineered features.
-        """
-        logger.info("Starting feature engineering.")
-        df_feat = df.copy()
-        
-        # Time features
-        df_feat['hour'] = df_feat.index.hour
-        df_feat['day_of_week'] = df_feat.index.dayofweek
-        df_feat['month'] = df_feat.index.month
-        df_feat['day_of_year'] = df_feat.index.dayofyear
-        
-        # Cyclical encoding
-        df_feat['hour_sin'] = np.sin(2 * np.pi * df_feat['hour'] / 24)
-        df_feat['hour_cos'] = np.cos(2 * np.pi * df_feat['hour'] / 24)
-        df_feat['day_of_week_sin'] = np.sin(2 * np.pi * df_feat['day_of_week'] / 7)
-        df_feat['day_of_week_cos'] = np.cos(2 * np.pi * df_feat['day_of_week'] / 7)
-        df_feat['month_sin'] = np.sin(2 * np.pi * df_feat['month'] / 12)
-        df_feat['month_cos'] = np.cos(2 * np.pi * df_feat['month'] / 12)
-        df_feat['day_of_year_sin'] = np.sin(2 * np.pi * df_feat['day_of_year'] / 365.25)
-        df_feat['day_of_year_cos'] = np.cos(2 * np.pi * df_feat['day_of_year'] / 365.25)
-        
-        # Lag and Rolling features
-        lag_vars = ['temperature_2m', 'relative_humidity_2m', 'pressure_msl', 'wind_speed_10m']
-        lags = [1, 3, 6, 12, 24]
-        
-        # Sort by city (if exists) and time to ensure proper lag calculations
-        if 'city' in df_feat.columns:
-            groupby_col = 'city'
-            groups = df_feat.groupby(groupby_col)
-        else:
-            groupby_col = None
-            groups = [('all', df_feat)]
-            
-        engineered_dfs = []
-        for name, group in groups if groupby_col else [(None, df_feat)]:
-            g = group.copy()
-            for var in lag_vars:
-                if var not in g.columns:
-                    continue
-                # Lag features
-                for lag in lags:
-                    g[f'{var}_lag_{lag}h'] = g[var].shift(lag)
-                # Rolling features
-                for window in [3, 6, 12, 24]:
-                    g[f'{var}_rolling_{window}h_mean'] = g[var].rolling(window=window, min_periods=1).mean()
-                    
-            # Rate of change
-            if 'temperature_2m' in g.columns:
-                g['temperature_change_1h'] = g['temperature_2m'] - g['temperature_2m'].shift(1)
-            if 'pressure_msl' in g.columns:
-                g['pressure_change_3h'] = g['pressure_msl'] - g['pressure_msl'].shift(3)
-                
-            engineered_dfs.append(g)
-            
-        df_feat = pd.concat(engineered_dfs)
-        
-        # Interaction features
-        if 'temperature_2m' in df_feat.columns and 'wind_speed_10m' in df_feat.columns:
-            df_feat['wind_chill'] = df_feat['temperature_2m'] * df_feat['wind_speed_10m']
-            
-        if 'relative_humidity_2m' in df_feat.columns and 'pressure_msl' in df_feat.columns:
-            # Adding epsilon to avoid division by zero
-            df_feat['humidity_pressure_ratio'] = df_feat['relative_humidity_2m'] / (df_feat['pressure_msl'] + 1e-6)
-            
-        # Drop rows with NaN resulting from shifts
-        rows_before = len(df_feat)
-        df_feat.dropna(inplace=True)
-        logger.info(f"Dropped {rows_before - len(df_feat)} rows due to NaNs from lag features.")
-        
-        self.engineered_features = list(df_feat.columns)
-        logger.info("Feature engineering complete.")
-        return df_feat
-        
-    def get_feature_names(self) -> List[str]:
-        """
-        Get the list of engineered feature names.
-        
-        Returns:
-            List[str]: List of column names.
-        """
+
+    def engineer_features(self, df):
+        frames = []
+        for city, group in df.groupby('city', sort=True):
+            for coordinate in ('latitude', 'longitude'):
+                if group[coordinate].nunique() != 1:
+                    raise ValueError(f'Coordinates changed within {city}')
+            # Reindex before shifting so a missing hour cannot masquerade as a one-hour lag.
+            g = group.sort_index().asfreq('h').copy()
+            g['city'] = city
+            for coordinate in ('latitude', 'longitude'):
+                g[coordinate] = group[coordinate].iloc[0]
+            valid_time = g.index + pd.Timedelta(hours=self.horizon_hours)
+            for name, values, period in [('hour', valid_time.hour, 24), ('season', valid_time.dayofyear, 365.25)]:
+                g[f'{name}_sin'] = np.sin(2 * np.pi * values / period)
+                g[f'{name}_cos'] = np.cos(2 * np.pi * values / period)
+            for variable in VARIABLES:
+                for lag in (1, 6, 24):
+                    g[f'{variable}_lag_{lag}h'] = g[variable].shift(lag)
+                for window in (6, 24):
+                    g[f'{variable}_mean_{window}h'] = g[variable].rolling(window, min_periods=window).mean()
+            g['precipitation_past_24h'] = g['precipitation'].rolling(24, min_periods=24).sum()
+            frames.append(g)
+        result = pd.concat(frames)
+        if self.feature_precision is not None:
+            # Incremental rolling sums can differ in their last bits depending on
+            # how much preceding history was supplied. Tree splits can amplify
+            # those tiny differences. Canonicalize both training and inference.
+            result = result.round(self.feature_precision)
+        self.engineered_features = [c for c in result if c != 'city']
+        return result
+
+    def get_feature_names(self):
         return self.engineered_features

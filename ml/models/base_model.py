@@ -17,6 +17,7 @@ class WeatherModel(ABC):
         self.target_names: List[str] = []
         self.metrics: Dict[str, float] = {}
         self.parameters: Dict[str, Any] = {}
+        self.metadata: Dict[str, Any] = {}
     
     @abstractmethod
     def train(self, X_train: pd.DataFrame, y_train: pd.DataFrame) -> None:
@@ -36,7 +37,7 @@ class WeatherModel(ABC):
     def save(self, filepath: str) -> None:
         """Save the model to disk using joblib."""
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        joblib.dump(self, filepath)
+        joblib.dump(self, filepath, compress=3)
     
     @classmethod
     def load(cls, filepath: str) -> 'WeatherModel':
@@ -52,5 +53,6 @@ class WeatherModel(ABC):
             'feature_names': self.feature_names,
             'target_names': self.target_names,
             'metrics': self.metrics,
-            'parameters': self.parameters
+            'parameters': self.parameters,
+            'metadata': self.metadata
         }

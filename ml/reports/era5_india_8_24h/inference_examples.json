@@ -1,0 +1,186 @@
+[
+  {
+    "city": "Pune",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 24.759051156981926,
+      "humidity": 85.45088854246198,
+      "pressure": 1004.7773873181868,
+      "wind_speed": 14.029196317200258,
+      "cloud_cover": 90.13572732904761,
+      "precipitation_24h": 8.850176334557744
+    },
+    "actual_at_valid_time": {
+      "temperature": 26.8,
+      "humidity": 77.0,
+      "pressure": 1004.3,
+      "wind_speed": 13.9,
+      "cloud_cover": 98.0,
+      "precipitation_24h": 2.4
+    }
+  },
+  {
+    "city": "Mumbai",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 27.2682005162453,
+      "humidity": 88.66384649295924,
+      "pressure": 1002.6414441682056,
+      "wind_speed": 16.737510826610485,
+      "cloud_cover": 93.35987783970526,
+      "precipitation_24h": 15.607639746128878
+    },
+    "actual_at_valid_time": {
+      "temperature": 29.4,
+      "humidity": 81.0,
+      "pressure": 1002.7,
+      "wind_speed": 13.0,
+      "cloud_cover": 83.0,
+      "precipitation_24h": 5.6
+    }
+  },
+  {
+    "city": "Delhi",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 31.64643182039869,
+      "humidity": 73.65841760509467,
+      "pressure": 997.8483591643449,
+      "wind_speed": 9.121470710309312,
+      "cloud_cover": 81.69710758648324,
+      "precipitation_24h": 5.530430125753829
+    },
+    "actual_at_valid_time": {
+      "temperature": 31.6,
+      "humidity": 73.0,
+      "pressure": 998.6,
+      "wind_speed": 8.4,
+      "cloud_cover": 97.0,
+      "precipitation_24h": 2.8
+    }
+  },
+  {
+    "city": "Bengaluru",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 25.81613624615832,
+      "humidity": 74.73827046391101,
+      "pressure": 1007.0352869748099,
+      "wind_speed": 17.836490329764437,
+      "cloud_cover": 92.84853063332835,
+      "precipitation_24h": 5.648593000030376
+    },
+    "actual_at_valid_time": {
+      "temperature": 24.2,
+      "humidity": 85.0,
+      "pressure": 1006.1,
+      "wind_speed": 12.3,
+      "cloud_cover": 96.0,
+      "precipitation_24h": 8.1
+    }
+  },
+  {
+    "city": "Chennai",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 32.49568550203052,
+      "humidity": 67.77627543997129,
+      "pressure": 1001.6165795426391,
+      "wind_speed": 10.96080564573353,
+      "cloud_cover": 88.42369189913116,
+      "precipitation_24h": 2.9454698432738837
+    },
+    "actual_at_valid_time": {
+      "temperature": 31.3,
+      "humidity": 73.0,
+      "pressure": 1001.1,
+      "wind_speed": 18.9,
+      "cloud_cover": 99.0,
+      "precipitation_24h": 2.0
+    }
+  },
+  {
+    "city": "Kolkata",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 30.49940535455431,
+      "humidity": 85.56229022498022,
+      "pressure": 999.7303646221835,
+      "wind_speed": 10.092494706985837,
+      "cloud_cover": 95.47641767726462,
+      "precipitation_24h": 18.657584613792064
+    },
+    "actual_at_valid_time": {
+      "temperature": 29.0,
+      "humidity": 94.0,
+      "pressure": 1001.4,
+      "wind_speed": 9.9,
+      "cloud_cover": 100.0,
+      "precipitation_24h": 19.6
+    }
+  },
+  {
+    "city": "Hyderabad",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 29.991701128190986,
+      "humidity": 65.39120373544706,
+      "pressure": 1002.1123500732289,
+      "wind_speed": 16.110756478878045,
+      "cloud_cover": 95.52185968654473,
+      "precipitation_24h": 3.1549020418350358
+    },
+    "actual_at_valid_time": {
+      "temperature": 29.1,
+      "humidity": 72.0,
+      "pressure": 1002.1,
+      "wind_speed": 7.0,
+      "cloud_cover": 100.0,
+      "precipitation_24h": 2.1
+    }
+  },
+  {
+    "city": "Ahmedabad",
+    "issue_time": "2025-07-15T12:00:00+00:00",
+    "valid_time": "2025-07-16T12:00:00+00:00",
+    "status": "research_hindcast",
+    "model": "lightgbm",
+    "predictions": {
+      "temperature": 32.76986650799641,
+      "humidity": 70.48076686566309,
+      "pressure": 998.4306689855672,
+      "wind_speed": 10.668094574638944,
+      "cloud_cover": 91.34853524699695,
+      "precipitation_24h": 5.746466778657647
+    },
+    "actual_at_valid_time": {
+      "temperature": 33.6,
+      "humidity": 60.0,
+      "pressure": 1000.0,
+      "wind_speed": 6.5,
+      "cloud_cover": 79.0,
+      "precipitation_24h": 0.0
+    }
+  }
+]

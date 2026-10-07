@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-import numpy as np
 from typing import Dict, Any, List
 from ..models.base_model import WeatherModel
 import logging
@@ -42,11 +41,37 @@ class WeatherPredictor:
             if missing:
                 raise ValueError(f"Missing required features: {missing}")
             df_features = df_features[model.feature_names]
+        precision = getattr(model, 'metadata', {}).get('feature_precision')
+        if precision is not None:
+            df_features = df_features.round(precision)
             
         preds = model.predict(df_features)
+        for target, (low, high) in getattr(model, 'metadata', {}).get('prediction_bounds', {}).items():
+            preds[target] = preds[target].clip(lower=low, upper=high)
         
         # Return as dict
         return preds.iloc[0].to_dict()
+
+    def predict_history(self, model_name: str, history: pd.DataFrame, city: str) -> Dict[str, Any]:
+        """Forecast from supplied historical observations, never fabricate missing features."""
+        from ml.pipeline.data_cleaning import DataCleaning
+        from ml.pipeline.feature_engineering import FeatureEngineering
+        model = self.load_model(model_name)
+        if city not in model.metadata.get('cities', []):
+            raise ValueError('This city is outside the model training/evaluation scope')
+        history = history.loc[history['city'] == city]
+        if history.empty:
+            raise ValueError('No observation history supplied for this city')
+        clean = DataCleaning().clean(history)
+        features = FeatureEngineering(model.metadata['horizon_hours'], model.metadata.get('feature_precision')).engineer_features(clean)
+        latest = features.iloc[-1]
+        if latest[model.feature_names].isna().any():
+            raise ValueError('Latest issue hour needs a complete, contiguous 25-hour history')
+        issue = features.index[-1]
+        return {'city': city, 'issue_time': issue.isoformat(),
+                'valid_time': (issue + pd.Timedelta(hours=model.metadata['horizon_hours'])).isoformat(),
+                'status': 'research_hindcast', 'model': model_name,
+                'predictions': self.predict(model_name, latest[model.feature_names].to_dict())}
         
     def predict_ensemble(self, features: Dict[str, Any], models: List[str] = None) -> Dict[str, Any]:
         """Make ensemble prediction across multiple models."""
@@ -65,5 +90,5 @@ class WeatherPredictor:
         
         return {
             'predictions': mean_preds,
-            'confidence_std': std_preds
+            'ensemble_spread_not_calibrated_confidence': std_preds
         }

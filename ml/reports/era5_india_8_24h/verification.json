@@ -1,0 +1,25 @@
+{
+  "verified_at": "2026-09-30T17:18:07.310901+00:00",
+  "dataset_sha256": "794d3da182867ebe2969cb2cacc064332c9fe2eb4735d16a220bd5bb951105c9",
+  "raw_chunk_hashes_verified": 88,
+  "model_artifact_hashes_verified": [
+    "random_forest",
+    "xgboost",
+    "lightgbm"
+  ],
+  "reproduced_all_overall_and_city_model_metrics": true,
+  "minimum_history_inference_verified_cities": [
+    "Pune",
+    "Mumbai",
+    "Delhi",
+    "Bengaluru",
+    "Chennai",
+    "Kolkata",
+    "Hyderabad",
+    "Ahmedabad"
+  ],
+  "inference_issue_time": "2025-07-15T12:00:00+00:00",
+  "fixed_hyperparameters_match_protocol": true,
+  "feature_precision": 10,
+  "tests": "......................                                                   [100%]\n22 passed in 4.50s"
+}

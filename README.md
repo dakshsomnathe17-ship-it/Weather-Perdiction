@@ -9,7 +9,7 @@ An intelligent weather platform combining real-time API integrations, machine le
 
 ## ✨ Features
 - 🌦️ **Real-time Weather Data**: Integrated with Open-Meteo and NOAA.
-- 🤖 **ML-Powered Forecasts**: Enhanced predictions using Random Forest, XGBoost, and LightGBM models.
+- 🤖 **ERA5 ML Experiments**: Trained Random Forest, XGBoost, and LightGBM models for offline 24-hour hindcasts at sixteen Indian city grid cells; these are not connected to live forecasts.
 - 💬 **Natural Language Chat**: Query weather conditions conversational style.
 - 🗺️ **3D Interactive Map**: Visualize global weather patterns dynamically.
 - ⚡ **High Performance**: Built with FastAPI and React/TypeScript.
@@ -67,7 +67,7 @@ This will start the frontend, backend, PostgreSQL database, and Redis cache.
 weather-ai/
 ├── backend/       # FastAPI application
 ├── frontend/      # React/Vite application
-├── ml_models/     # Serialized machine learning models
+├── ml/            # ERA5 acquisition, training, local models, and evaluation reports
 ├── docker/        # Dockerfiles and configurations
 ├── scripts/       # Automation scripts
 ├── docs/          # Project documentation
@@ -80,7 +80,7 @@ weather-ai/
 | GET | `/api/weather/current` | Get current weather for a location |
 | GET | `/api/weather/forecast` | Get 7-day forecast |
 | POST | `/api/chat` | Send a natural language query |
-| GET | `/api/ml/predict` | Get ML-enhanced prediction |
+| GET | `/api/ml/predict` | Placeholder endpoint; does not serve the trained ERA5 models |
 
 See [API Docs](docs/api.md) for details.
 
@@ -93,7 +93,9 @@ See [API Docs](docs/api.md) for details.
 | `LLM_API_KEY` | Key for Chat functionality (if using external LLM) |
 
 ## 🧠 ML Models
-The platform utilizes historical weather data to train ensembles of predictive models (Random Forest, XGBoost, LightGBM) to refine forecast accuracy in micro-climates. See [ML Workflow](docs/ml-workflow.md).
+The expanded experiment uses 1,542,912 hourly ERA5 records (2015–2025) for Pune, Mumbai, Delhi, Bengaluru, Chennai, Kolkata, Hyderabad, Ahmedabad, Jaipur, Lucknow, Nagpur, Indore, Patna, Bhubaneswar, Kochi, and Guwahati, downloaded through Open-Meteo with `models=era5`. All three models predict six weather quantities 24 hours ahead. Models are selected on 2023–2024 validation temperature RMSE and evaluated on 2025, with separate model and baseline scores for each city. These are reanalysis hindcast results, not evidence of live or global forecast accuracy.
+
+See [ML Workflow](docs/ml-workflow.md) for download/train/predict commands and the [sixteen-city model card](ml/reports/era5_india_16_24h/MODEL_CARD.md) for scores, limitations, and dataset provenance. The [eight-city run](ml/reports/era5_india_8_24h/MODEL_CARD.md) and [original two-city run](ml/reports/era5_24h/MODEL_CARD.md) are preserved for comparison. Large datasets and trained binaries stay in local ignored directories; compact reports are versioned. The existing backend ML endpoint remains a placeholder.
 
 ## 🤝 Contributing
 Please read [Development Guide](docs/development.md) for details on our code of conduct, and the process for submitting pull requests.

@@ -1,0 +1,700 @@
+{
+  "created_at": "2026-09-28T13:30:30.868346+00:00",
+  "status": "research_hindcast",
+  "source": "ERA5 via Open-Meteo Historical Weather API",
+  "dataset_sha256": "e4f196f24ef0839f7ea4db27cfc8f52fac7b72384f8a6af37c8e408de73b7583",
+  "raw_rows": 192864,
+  "usable_rows": 192768,
+  "features": [
+    "temperature_2m",
+    "relative_humidity_2m",
+    "pressure_msl",
+    "wind_speed_10m",
+    "cloud_cover",
+    "precipitation",
+    "latitude",
+    "longitude",
+    "hour_sin",
+    "hour_cos",
+    "season_sin",
+    "season_cos",
+    "temperature_2m_lag_1h",
+    "temperature_2m_lag_6h",
+    "temperature_2m_lag_24h",
+    "temperature_2m_mean_6h",
+    "temperature_2m_mean_24h",
+    "relative_humidity_2m_lag_1h",
+    "relative_humidity_2m_lag_6h",
+    "relative_humidity_2m_lag_24h",
+    "relative_humidity_2m_mean_6h",
+    "relative_humidity_2m_mean_24h",
+    "pressure_msl_lag_1h",
+    "pressure_msl_lag_6h",
+    "pressure_msl_lag_24h",
+    "pressure_msl_mean_6h",
+    "pressure_msl_mean_24h",
+    "wind_speed_10m_lag_1h",
+    "wind_speed_10m_lag_6h",
+    "wind_speed_10m_lag_24h",
+    "wind_speed_10m_mean_6h",
+    "wind_speed_10m_mean_24h",
+    "cloud_cover_lag_1h",
+    "cloud_cover_lag_6h",
+    "cloud_cover_lag_24h",
+    "cloud_cover_mean_6h",
+    "cloud_cover_mean_24h",
+    "precipitation_lag_1h",
+    "precipitation_lag_6h",
+    "precipitation_lag_24h",
+    "precipitation_mean_6h",
+    "precipitation_mean_24h",
+    "precipitation_past_24h"
+  ],
+  "targets": {
+    "temperature": "°C",
+    "humidity": "%",
+    "pressure": "hPa",
+    "wind_speed": "km/h",
+    "cloud_cover": "%",
+    "precipitation_24h": "mm over next 24 hours"
+  },
+  "cities": [
+    "Pune",
+    "Mumbai"
+  ],
+  "horizon_hours": 24,
+  "train_stride_hours": 3,
+  "validation_start": "2023-01-01",
+  "test_start": "2025-01-01",
+  "selection_rule": "lowest validation temperature RMSE; test scores do not select/tune models",
+  "limitations": [
+    "ERA5 reanalysis hindcast, not an operational forecast evaluation",
+    "Only the listed cities and 24-hour horizon are evaluated",
+    "ERA5 is delayed; live deployment needs matching recent inputs and separate validation",
+    "No calibrated rain probability or confidence intervals"
+  ],
+  "python": "3.14.7",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "lightgbm": "4.7.0",
+    "joblib": "1.6.0"
+  },
+  "splits": {
+    "train": {
+      "rows": 140160,
+      "fit_rows": 46720,
+      "first_issue": "2015-01-02T00:00:00+00:00",
+      "last_issue": "2022-12-30T23:00:00+00:00",
+      "last_target": "2022-12-31T23:00:00+00:00"
+    },
+    "validation": {
+      "rows": 35040,
+      "fit_rows": null,
+      "first_issue": "2023-01-01T00:00:00+00:00",
+      "last_issue": "2024-12-30T23:00:00+00:00",
+      "last_target": "2024-12-31T23:00:00+00:00"
+    },
+    "final_train": {
+      "rows": 175248,
+      "fit_rows": 58416,
+      "first_issue": "2015-01-02T00:00:00+00:00",
+      "last_issue": "2024-12-30T23:00:00+00:00",
+      "last_target": "2024-12-31T23:00:00+00:00"
+    },
+    "test": {
+      "rows": 17472,
+      "fit_rows": null,
+      "first_issue": "2025-01-01T00:00:00+00:00",
+      "last_issue": "2025-12-30T23:00:00+00:00",
+      "last_target": "2025-12-31T23:00:00+00:00"
+    }
+  },
+  "baselines": {
+    "validation": {
+      "persistence": {
+        "temperature": {
+          "MAE": 0.7246889269406394,
+          "RMSE": 0.996546405062465,
+          "R2": 0.9408161110975817
+        },
+        "humidity": {
+          "MAE": 4.616352739726027,
+          "RMSE": 6.565730613812197,
+          "R2": 0.8735150219276944
+        },
+        "pressure": {
+          "MAE": 0.8530051369863012,
+          "RMSE": 1.0745370405891899,
+          "R2": 0.9191663704188093
+        },
+        "wind_speed": {
+          "MAE": 2.475505136986302,
+          "RMSE": 3.3177854145615906,
+          "R2": 0.6382368510064712
+        },
+        "cloud_cover": {
+          "MAE": 18.321118721461186,
+          "RMSE": 29.8457707933063,
+          "R2": 0.4657693044507075
+        },
+        "precipitation_24h": {
+          "MAE": 2.879686073059361,
+          "RMSE": 8.677399560228507,
+          "R2": 0.4698997160800996
+        }
+      },
+      "climatology": {
+        "temperature": {
+          "MAE": 1.1700597709302005,
+          "RMSE": 1.5287626814111117,
+          "R2": 0.8607200537995944
+        },
+        "humidity": {
+          "MAE": 6.3993621091955974,
+          "RMSE": 8.52483086958712,
+          "R2": 0.7867719316359769
+        },
+        "pressure": {
+          "MAE": 1.5414510253102796,
+          "RMSE": 1.9328775284806021,
+          "R2": 0.7384480438813906
+        },
+        "wind_speed": {
+          "MAE": 2.955999294737746,
+          "RMSE": 3.932077216159962,
+          "R2": 0.4918735367542759
+        },
+        "cloud_cover": {
+          "MAE": 22.29154034949278,
+          "RMSE": 28.81324519698772,
+          "R2": 0.5020937370390108
+        },
+        "precipitation_24h": {
+          "MAE": 4.302978199318688,
+          "RMSE": 9.740401024138755,
+          "R2": 0.3320675837621897
+        }
+      }
+    },
+    "test": {
+      "persistence": {
+        "temperature": {
+          "MAE": 0.6895203754578755,
+          "RMSE": 0.9357131934534911,
+          "R2": 0.9467507698730456
+        },
+        "humidity": {
+          "MAE": 4.45066391941392,
+          "RMSE": 6.376772898632395,
+          "R2": 0.8945029575924974
+        },
+        "pressure": {
+          "MAE": 0.899627976190476,
+          "RMSE": 1.1479933021559279,
+          "R2": 0.9174546041559795
+        },
+        "wind_speed": {
+          "MAE": 2.426156135531136,
+          "RMSE": 3.315028321858695,
+          "R2": 0.6556103866918598
+        },
+        "cloud_cover": {
+          "MAE": 16.123740842490843,
+          "RMSE": 28.955947341554662,
+          "R2": 0.551975038122874
+        },
+        "precipitation_24h": {
+          "MAE": 3.9721382783882784,
+          "RMSE": 11.345383696777569,
+          "R2": 0.11025288891082785
+        }
+      },
+      "climatology": {
+        "temperature": {
+          "MAE": 1.2224637171407946,
+          "RMSE": 1.6647489748703341,
+          "R2": 0.8314513263213098
+        },
+        "humidity": {
+          "MAE": 6.841630336904759,
+          "RMSE": 9.450911989377449,
+          "R2": 0.7682681005687912
+        },
+        "pressure": {
+          "MAE": 1.5466743395252214,
+          "RMSE": 2.0246989028472355,
+          "R2": 0.743235462939411
+        },
+        "wind_speed": {
+          "MAE": 3.3054400065893423,
+          "RMSE": 4.341369132102347,
+          "R2": 0.4093516616248145
+        },
+        "cloud_cover": {
+          "MAE": 23.148210854214433,
+          "RMSE": 29.53940242281007,
+          "R2": 0.5337379530604702
+        },
+        "precipitation_24h": {
+          "MAE": 4.7126233343295265,
+          "RMSE": 10.956597979308652,
+          "R2": 0.17018809004718738
+        }
+      }
+    }
+  },
+  "models": {
+    "random_forest": {
+      "parameters": {
+        "n_estimators": 96,
+        "max_depth": 14,
+        "min_samples_split": 5,
+        "min_samples_leaf": 10,
+        "n_jobs": 4,
+        "random_state": 42,
+        "max_features": 0.85
+      },
+      "validation": {
+        "temperature": {
+          "MAE": 0.7049215486393734,
+          "RMSE": 0.9581100003692926,
+          "R2": 0.9452934671231563
+        },
+        "humidity": {
+          "MAE": 4.372804093790166,
+          "RMSE": 6.07780362658457,
+          "R2": 0.8916157547651955
+        },
+        "pressure": {
+          "MAE": 0.8258031372012267,
+          "RMSE": 1.0402197940747127,
+          "R2": 0.9242470542530657
+        },
+        "wind_speed": {
+          "MAE": 2.2188152165824615,
+          "RMSE": 2.931174388006151,
+          "R2": 0.7176348770956754
+        },
+        "cloud_cover": {
+          "MAE": 18.44564862239617,
+          "RMSE": 25.112778788854875,
+          "R2": 0.6217727794877548
+        },
+        "precipitation_24h": {
+          "MAE": 2.4891878430613725,
+          "RMSE": 6.894077856028025,
+          "R2": 0.6653959346511941
+        }
+      },
+      "validation_fit_seconds": 157.04,
+      "test": {
+        "temperature": {
+          "MAE": 0.6605772037317635,
+          "RMSE": 0.8936891066428352,
+          "R2": 0.9514263481567425
+        },
+        "humidity": {
+          "MAE": 4.126227234448467,
+          "RMSE": 5.784235244273849,
+          "R2": 0.9131978907588334
+        },
+        "pressure": {
+          "MAE": 0.8458366293524026,
+          "RMSE": 1.068623244419701,
+          "R2": 0.9284740920753403
+        },
+        "wind_speed": {
+          "MAE": 2.2415721377193396,
+          "RMSE": 3.0167058747019544,
+          "R2": 0.7148052696902489
+        },
+        "cloud_cover": {
+          "MAE": 17.18001881294929,
+          "RMSE": 24.020955643251753,
+          "R2": 0.691676080827407
+        },
+        "precipitation_24h": {
+          "MAE": 3.3149398615732033,
+          "RMSE": 8.679578065064334,
+          "R2": 0.47925460578939627
+        }
+      },
+      "test_by_city": {
+        "Pune": {
+          "temperature": {
+            "MAE": 0.7363443097622266,
+            "RMSE": 0.9962246915606946,
+            "R2": 0.9487960577386356
+          },
+          "humidity": {
+            "MAE": 4.4566423823342225,
+            "RMSE": 6.319433830251883,
+            "R2": 0.9236709573477456
+          },
+          "pressure": {
+            "MAE": 0.8430585565811233,
+            "RMSE": 1.0618660070225963,
+            "R2": 0.92572518165112
+          },
+          "wind_speed": {
+            "MAE": 1.9864894296650026,
+            "RMSE": 2.7010733218236775,
+            "R2": 0.7100319602054084
+          },
+          "cloud_cover": {
+            "MAE": 16.78083993757933,
+            "RMSE": 23.727765422765685,
+            "R2": 0.6990266400417994
+          },
+          "precipitation_24h": {
+            "MAE": 2.9586899219906497,
+            "RMSE": 7.384689593734307,
+            "R2": 0.5132293593559849
+          }
+        },
+        "Mumbai": {
+          "temperature": {
+            "MAE": 0.5848100977013002,
+            "RMSE": 0.77775111866775,
+            "R2": 0.9335236136964669
+          },
+          "humidity": {
+            "MAE": 3.7958120865627114,
+            "RMSE": 5.194180473112916,
+            "R2": 0.8876336244089371
+          },
+          "pressure": {
+            "MAE": 0.8486147021236821,
+            "RMSE": 1.0753380213486656,
+            "R2": 0.9231120588430266
+          },
+          "wind_speed": {
+            "MAE": 2.4966548457736764,
+            "RMSE": 3.3023070086009527,
+            "R2": 0.7076441019513147
+          },
+          "cloud_cover": {
+            "MAE": 17.57919768831925,
+            "RMSE": 24.310610195392915,
+            "R2": 0.6821938804137824
+          },
+          "precipitation_24h": {
+            "MAE": 3.6711898011557573,
+            "RMSE": 9.80492276253536,
+            "R2": 0.45577309755678896
+          }
+        }
+      },
+      "artifact": "random_forest.joblib",
+      "artifact_sha256": "f11a377166e6d1cbcae70108eeb16984d3cca782458031f4123bdb8bb3e29caa",
+      "artifact_bytes": 42453806,
+      "final_fit_seconds": 171.4
+    },
+    "xgboost": {
+      "parameters": {
+        "n_estimators": 240,
+        "max_depth": 6,
+        "learning_rate": 0.05,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "reg_alpha": 0.1,
+        "reg_lambda": 1.0,
+        "random_state": 42,
+        "tree_method": "hist",
+        "n_jobs": 4
+      },
+      "validation": {
+        "temperature": {
+          "MAE": 0.7005272686535908,
+          "RMSE": 0.9471919671948485,
+          "R2": 0.9465331673213253
+        },
+        "humidity": {
+          "MAE": 4.378070700876244,
+          "RMSE": 6.078235319125529,
+          "R2": 0.8916003576465169
+        },
+        "pressure": {
+          "MAE": 0.8479947624032353,
+          "RMSE": 1.0715718823638745,
+          "R2": 0.9196118716735534
+        },
+        "wind_speed": {
+          "MAE": 2.2142762365896407,
+          "RMSE": 2.9288146907511226,
+          "R2": 0.7180893215752377
+        },
+        "cloud_cover": {
+          "MAE": 18.374435244337338,
+          "RMSE": 25.21368095092928,
+          "R2": 0.6187272690531112
+        },
+        "precipitation_24h": {
+          "MAE": 2.563880926892982,
+          "RMSE": 7.187989202897445,
+          "R2": 0.6362578093226368
+        }
+      },
+      "validation_fit_seconds": 13.9,
+      "test": {
+        "temperature": {
+          "MAE": 0.6672276744475732,
+          "RMSE": 0.898925023496352,
+          "R2": 0.9508555173754446
+        },
+        "humidity": {
+          "MAE": 4.161548771701017,
+          "RMSE": 5.804852284371399,
+          "R2": 0.9125780017411131
+        },
+        "pressure": {
+          "MAE": 0.8566670721703835,
+          "RMSE": 1.0826963758266446,
+          "R2": 0.9265777799282109
+        },
+        "wind_speed": {
+          "MAE": 2.288649263658694,
+          "RMSE": 3.121330848611925,
+          "R2": 0.6946800604841799
+        },
+        "cloud_cover": {
+          "MAE": 17.06009886919473,
+          "RMSE": 23.911091243203746,
+          "R2": 0.6944899870453034
+        },
+        "precipitation_24h": {
+          "MAE": 3.4003632177611554,
+          "RMSE": 9.129813337178478,
+          "R2": 0.42382818887412566
+        }
+      },
+      "test_by_city": {
+        "Pune": {
+          "temperature": {
+            "MAE": 0.7472077469249349,
+            "RMSE": 1.0044211550098243,
+            "R2": 0.9479500282137026
+          },
+          "humidity": {
+            "MAE": 4.4698609214125975,
+            "RMSE": 6.293174564804657,
+            "R2": 0.9243039824889743
+          },
+          "pressure": {
+            "MAE": 0.8587031940837482,
+            "RMSE": 1.083492579703094,
+            "R2": 0.9226689254757747
+          },
+          "wind_speed": {
+            "MAE": 2.019200697666778,
+            "RMSE": 2.7500468873407597,
+            "R2": 0.6994217284775842
+          },
+          "cloud_cover": {
+            "MAE": 16.603772426523854,
+            "RMSE": 23.62116841905047,
+            "R2": 0.7017248117125672
+          },
+          "precipitation_24h": {
+            "MAE": 3.048855337278331,
+            "RMSE": 7.712635555020753,
+            "R2": 0.4690354743392138
+          }
+        },
+        "Mumbai": {
+          "temperature": {
+            "MAE": 0.5872476019702115,
+            "RMSE": 0.7792756502705345,
+            "R2": 0.9332627470082644
+          },
+          "humidity": {
+            "MAE": 3.8532366219894354,
+            "RMSE": 5.271486885465941,
+            "R2": 0.8842639747619415
+          },
+          "pressure": {
+            "MAE": 0.854630950257019,
+            "RMSE": 1.0818995859989207,
+            "R2": 0.9221708768196485
+          },
+          "wind_speed": {
+            "MAE": 2.5580978296506096,
+            "RMSE": 3.4529197283487894,
+            "R2": 0.6803682359077408
+          },
+          "cloud_cover": {
+            "MAE": 17.516425311865607,
+            "RMSE": 24.197540606443507,
+            "R2": 0.6851432627060879
+          },
+          "precipitation_24h": {
+            "MAE": 3.7518710982439782,
+            "RMSE": 10.354817040337977,
+            "R2": 0.39301702227562196
+          }
+        }
+      },
+      "artifact": "xgboost.joblib",
+      "artifact_sha256": "7f5a423974c31025696c2cf32a560ebeddcab99a70f1be69ced64c812c658abb",
+      "artifact_bytes": 2046742,
+      "final_fit_seconds": 13.69
+    },
+    "lightgbm": {
+      "parameters": {
+        "n_estimators": 240,
+        "max_depth": 8,
+        "learning_rate": 0.05,
+        "num_leaves": 31,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "reg_alpha": 0.1,
+        "reg_lambda": 1.0,
+        "random_state": 42,
+        "n_jobs": 4,
+        "verbosity": -1,
+        "deterministic": true,
+        "force_col_wise": true,
+        "subsample_freq": 1
+      },
+      "validation": {
+        "temperature": {
+          "MAE": 0.6985333778291125,
+          "RMSE": 0.9446225859237773,
+          "R2": 0.9468228453532667
+        },
+        "humidity": {
+          "MAE": 4.364266661221259,
+          "RMSE": 6.073268424779956,
+          "R2": 0.8917774450934058
+        },
+        "pressure": {
+          "MAE": 0.8432213929492142,
+          "RMSE": 1.0648742258292252,
+          "R2": 0.9206136326578135
+        },
+        "wind_speed": {
+          "MAE": 2.2073708501451472,
+          "RMSE": 2.9195239114708293,
+          "R2": 0.7198750375755605
+        },
+        "cloud_cover": {
+          "MAE": 18.359055366503526,
+          "RMSE": 25.13144316995648,
+          "R2": 0.6212103566360453
+        },
+        "precipitation_24h": {
+          "MAE": 2.5532064842690643,
+          "RMSE": 7.100534052651674,
+          "R2": 0.6450551534791301
+        }
+      },
+      "validation_fit_seconds": 8.0,
+      "test": {
+        "temperature": {
+          "MAE": 0.6647051930729888,
+          "RMSE": 0.8972822123359521,
+          "R2": 0.9510349791315742
+        },
+        "humidity": {
+          "MAE": 4.154490129951658,
+          "RMSE": 5.805897131115541,
+          "R2": 0.9125465277926317
+        },
+        "pressure": {
+          "MAE": 0.8556769748463258,
+          "RMSE": 1.0834129501355023,
+          "R2": 0.9264805598979969
+        },
+        "wind_speed": {
+          "MAE": 2.2725001074741793,
+          "RMSE": 3.0904966738287323,
+          "R2": 0.7006824928743557
+        },
+        "cloud_cover": {
+          "MAE": 17.032899528532337,
+          "RMSE": 23.938660484468187,
+          "R2": 0.693785081125182
+        },
+        "precipitation_24h": {
+          "MAE": 3.3838754068356605,
+          "RMSE": 9.13571911578964,
+          "R2": 0.4230825342600384
+        }
+      },
+      "test_by_city": {
+        "Pune": {
+          "temperature": {
+            "MAE": 0.7450214211869889,
+            "RMSE": 1.0041431109613046,
+            "R2": 0.947978841190634
+          },
+          "humidity": {
+            "MAE": 4.4806691840709805,
+            "RMSE": 6.305344253757569,
+            "R2": 0.9240109387540044
+          },
+          "pressure": {
+            "MAE": 0.8556334786333331,
+            "RMSE": 1.0788333071046126,
+            "R2": 0.9233325790380851
+          },
+          "wind_speed": {
+            "MAE": 2.0037407408308328,
+            "RMSE": 2.7298157055065233,
+            "R2": 0.7038279700934152
+          },
+          "cloud_cover": {
+            "MAE": 16.51952268360294,
+            "RMSE": 23.58116512942933,
+            "R2": 0.7027342355402548
+          },
+          "precipitation_24h": {
+            "MAE": 3.0007983603730266,
+            "RMSE": 7.565722316263271,
+            "R2": 0.4890708503575465
+          }
+        },
+        "Mumbai": {
+          "temperature": {
+            "MAE": 0.5843889649589886,
+            "RMSE": 0.7758397707374597,
+            "R2": 0.9338499478513343
+          },
+          "humidity": {
+            "MAE": 3.828311075832335,
+            "RMSE": 5.259231582255888,
+            "R2": 0.8848014820600327
+          },
+          "pressure": {
+            "MAE": 0.8557204710593187,
+            "RMSE": 1.08797331609022,
+            "R2": 0.9212945663239728
+          },
+          "wind_speed": {
+            "MAE": 2.541259474117526,
+            "RMSE": 3.413274907748105,
+            "R2": 0.6876658271624716
+          },
+          "cloud_cover": {
+            "MAE": 17.54627637346173,
+            "RMSE": 24.29089505802253,
+            "R2": 0.6827091328616708
+          },
+          "precipitation_24h": {
+            "MAE": 3.766952453298295,
+            "RMSE": 10.472944827430554,
+            "R2": 0.37908910032886467
+          }
+        }
+      },
+      "artifact": "lightgbm.joblib",
+      "artifact_sha256": "c515b76f0a6123f685614d178816f1fb096d939d0338fbb7953a595fba54689f",
+      "artifact_bytes": 1465498,
+      "final_fit_seconds": 8.45
+    }
+  },
+  "selected_model": "lightgbm"
+}
