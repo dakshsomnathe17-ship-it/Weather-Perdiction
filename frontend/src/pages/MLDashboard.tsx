@@ -15,19 +15,39 @@ const targets = [
   ['cloud_cover', 'Cloud cover', '%'],
   ['precipitation_24h', 'Next 24h precipitation', 'mm'],
 ] as const;
-const modelCard = `https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction/blob/${report.sourceCommit}/ml/reports/era5_india_8_24h/MODEL_CARD.md`;
+const modelCard = `https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction/blob/${report.sourceCommit}/${report.sourcePath.replace(/report\.json$/, 'MODEL_CARD.md')}`;
+const exampleTime = (value: string) =>
+  new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+    hour12: false,
+  }).format(new Date(value));
 
 export function MLDashboard() {
   const [city, setCity] = useState(report.cities[0]);
+  const [cityFilter, setCityFilter] = useState('');
   const selected = report.models.find((m) => m.id === report.selectedModel)!;
+  const selectedName = modelNames[selected.id];
   const example = report.examples.find((e) => e.city === city)!;
+  const visibleCities = report.cities.filter((name) =>
+    name.toLowerCase().includes(cityFilter.trim().toLowerCase()),
+  );
+  const scoreScale =
+    Math.max(0.1, ...Object.values(selected.cities).map((scores) => scores.temperature.MAE)) * 1.1;
+  const worseTargets = targets
+    .filter(([key]) => selected.test[key].MAE > report.baseline[key].MAE)
+    .map(([, label]) => label.toLowerCase());
   return (
     <div className="page-content">
       <div className="page-heading">
         <div>
           <span className="eyebrow">THE SCIENCE BEHIND THE EXPERIMENT</span>
           <h1>Weather, with a learning curve.</h1>
-          <p>ERA5 research · Eight Indian cities · 24-hour prediction horizon</p>
+          <p>
+            ERA5 research · {report.cities.length} Indian cities · {report.horizon}-hour prediction
+            horizon
+          </p>
         </div>
         <span className="pill research-pill">
           <FlaskConical size={14} />
@@ -95,7 +115,7 @@ export function MLDashboard() {
         ))}
       </div>
       <p className="subtle">
-        Lower error is better. LightGBM was selected using validation temperature RMSE, then
+        Lower error is better. {selectedName} was selected using validation temperature RMSE, then
         refitted through 2024. Persistence temperature MAE:{' '}
         {report.baseline.temperature.MAE.toFixed(3)} °C. Research metrics retain their original
         units.
@@ -104,30 +124,46 @@ export function MLDashboard() {
         <section className="panel">
           <div className="section-heading">
             <div>
-              <span className="eyebrow">LIGHTGBM · 2025</span>
+              <span className="eyebrow">{selectedName.toUpperCase()} · 2025</span>
               <h2>Error by city</h2>
               <p>Temperature mean absolute error in °C</p>
             </div>
           </div>
+          <label className="city-filter">
+            Find a city
+            <input
+              type="search"
+              aria-label="Filter evaluated cities"
+              placeholder="Search evaluated cities"
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
+            />
+          </label>
+          <p className="city-filter-count" role="status">
+            {visibleCities.length} of {report.cities.length} evaluated cities
+          </p>
           <div className="city-scores">
-            {report.cities.map((name) => {
+            {visibleCities.map((name) => {
               const score = selected.cities[name as keyof typeof selected.cities].temperature.MAE;
               return (
                 <div key={name}>
                   <span>{name}</span>
                   <div className="score-track">
-                    <span style={{ width: `${(score / 1.3) * 100}%` }} />
+                    <span style={{ width: `${(score / scoreScale) * 100}%` }} />
                   </div>
                   <strong>{score.toFixed(3)}°</strong>
                 </div>
               );
             })}
           </div>
+          {!visibleCities.length && (
+            <p className="subtle">No evaluated cities match. Try another city name.</p>
+          )}
         </section>
         <section className="panel">
           <div className="section-heading">
             <div>
-              <span className="eyebrow">LIGHTGBM VS PERSISTENCE</span>
+              <span className="eyebrow">{selectedName.toUpperCase()} VS PERSISTENCE</span>
               <h2>Across weather variables</h2>
               <p>2025 mean absolute error · lower is better</p>
             </div>
@@ -156,16 +192,22 @@ export function MLDashboard() {
             </table>
           </div>
           <p className="table-note">
-            Cloud-cover MAE is worse than persistence. Performance varies by variable and location.
+            {worseTargets.length > 0 && (
+              <>Higher MAE than persistence: {worseTargets.join(', ')}. </>
+            )}
+            Performance varies by variable and location.
           </p>
         </section>
       </div>
       <section className="panel">
         <div className="section-heading">
           <div>
-            <span className="eyebrow">RECORDED EXAMPLE · LIGHTGBM</span>
+            <span className="eyebrow">RECORDED EXAMPLE · {selectedName.toUpperCase()}</span>
             <h2>A past prediction, revisited</h2>
-            <p>Issued 15 July 2025, 12:00 UTC · Valid 16 July 2025, 12:00 UTC</p>
+            <p>
+              Issued {exampleTime(example.issue_time)} UTC · Valid {exampleTime(example.valid_time)}{' '}
+              UTC
+            </p>
           </div>
           <div className="city-select">
             <label htmlFor="research-city">City</label>

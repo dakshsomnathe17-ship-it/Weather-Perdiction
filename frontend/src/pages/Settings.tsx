@@ -1,5 +1,6 @@
 import { ExternalLink, Globe2, SlidersHorizontal, Database } from 'lucide-react';
 import { UnitSwitch } from '@/components/layout/Header';
+import report from '@/data/model-evaluation.json';
 
 export function Settings() {
   const hasEsri = Boolean(import.meta.env.VITE_ARCGIS_ACCESS_TOKEN);
@@ -74,8 +75,8 @@ export function Settings() {
           <div>
             <h3>ERA5 model research</h3>
             <p>
-              Historical experiments covering eight Indian cities. Model lab scores are recorded
-              evaluation results; these models do not power the live weather forecast.
+              Historical experiments covering {report.cities.length} Indian cities. Model lab scores
+              are recorded evaluation results; these models do not power the live weather forecast.
             </p>
           </div>
         </div>

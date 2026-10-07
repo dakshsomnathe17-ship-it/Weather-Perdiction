@@ -5,7 +5,7 @@ The React/TypeScript interface puts current conditions and daily forecasts first
 - **Overview:** search a place, view its conditions, humidity, wind, apparent temperature and first-day precipitation total, then open any forecast day. The Earth is beside the conditions on desktop and below the forecast on mobile.
 - **Forecast:** daily high/low chart, selectable dates and precipitation totals for the same location. The API currently supplies daily data, so the interface does not invent hourly conditions or rain probabilities.
 - **Insights:** warmest day, total precipitation, days with at least 1 mm, and a daily precipitation chart calculated from that forecast.
-- **Model lab:** recorded eight-city ERA5 evaluation results and July 2025 examples. These are historical research results, not live model inference. All research metrics keep their original units.
+- **Model lab:** recorded sixteen-city ERA5 evaluation results and July 2025 examples. Filter the city error list or select a city to inspect its historical prediction and ERA5 actual values. These are historical research results, not live model inference. All research metrics keep their original units.
 - **Settings:** persistent unit preferences and source/imagery information. The demo assistant, fake notifications, nonworking theme selector and training buttons are no longer exposed in the interface.
 
 Search is submitted explicitly (Enter or Search), works on every page, and preserves Nominatim attribution. Current weather and forecast requests stay keyed by coordinates. Loading, unavailable, empty and failed-refresh states are distinct. On mobile the five main destinations are in a bottom navigation bar. Keyboard focus, skip navigation and reduced-motion preferences are supported.
@@ -57,6 +57,12 @@ The browser tests stub weather and map tile responses, so automated tests do not
 
 `frontend/src/data/model-evaluation.json` is a display snapshot extracted from `ml/reports/era5_india_8_24h/report.json` and `inference_examples.json` at training commit `f7ea9f7f8d51b2a4be29362585c12455930b8262` ([training PR](https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction/pull/3)). It records the source commit/path, completion date, model and baseline errors, per-city results and verified examples. No fitted model binaries or training datasets are included in the frontend.
 
-When updating this snapshot, copy the actual report values, retain provenance, and keep the historical label unless a separately validated live inference service is connected. The linked model card includes the split protocol, prior evaluation exposure, numerical refit, limitations and ERA5/Open-Meteo attribution.
+To update the snapshot, run the importer from `frontend`, pointing to the completed report directory and its full Git commit SHA:
+
+```powershell
+node scripts/import-model-evaluation.mjs <report-directory> <source-commit-sha>
+```
+
+The importer checks completed training, validation-based selection, verified model/city coverage, finite scores and historical examples before writing the snapshot. Keep the historical label unless a separately validated live inference service is connected. The linked model card includes the split protocol, prior evaluation exposure, feature precision, limitations and ERA5/Open-Meteo attribution.
 
 UI changes build on the Cesium branch; review this feature against `feat/cesium-earth` so the weather interface diff is separate from the Earth implementation.

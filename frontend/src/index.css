@@ -1148,6 +1148,28 @@ p {
   flex-direction: column;
   gap: 23px;
 }
+.city-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.city-filter input {
+  width: 100%;
+  background: #1b2a3e;
+  color: #e2edf9;
+  border: 1px solid #ffffff1c;
+  border-radius: 8px;
+  min-height: 42px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+.city-filter-count {
+  color: var(--muted);
+  font-size: 10px;
+  margin: 10px 0 18px;
+}
 .city-scores > div {
   display: grid;
   grid-template-columns: 90px minmax(0, 1fr) 43px;

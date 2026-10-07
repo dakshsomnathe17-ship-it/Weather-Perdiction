@@ -9,7 +9,7 @@ A weather workspace for current conditions, daily forecasts, an interactive Eart
 
 ## ✨ Features
 - 🌦️ **Local Weather**: Search for a place and view Open-Meteo conditions, a selectable seven-day forecast and precipitation insights.
-- 🤖 **Model Lab**: Recorded Random Forest, XGBoost and LightGBM evaluation results for eight Indian cities. These historical ERA5 models are not connected to live forecasting.
+- 🤖 **Model Lab**: Recorded Random Forest, XGBoost and LightGBM evaluation results for sixteen Indian cities, with city filtering and historical examples. These ERA5 models are not connected to live forecasting.
 - 📱 **Responsive Interface**: Weather-first mobile layout, bottom navigation, saved unit preferences and clear loading/retry states.
 - 🗺️ **Interactive Earth**: Cesium globe with street detail, location picking, distance measurement and Canvas fallback.
 - ⚡ **High Performance**: Built with FastAPI and React/TypeScript.
@@ -104,7 +104,7 @@ See [API Docs](docs/api.md) for details.
 | `LLM_API_KEY` | Key for Chat functionality (if using external LLM) |
 
 ## 🧠 ML Models
-Model lab displays the completed eight-city, 24-hour ERA5 experiment: 771,456 hourly records spanning 2015–2025, with 2025 evaluation scores and verified historical examples. LightGBM was selected on validation temperature RMSE. The live weather screens use Open-Meteo; there is no live ML inference in this interface. See [snapshot provenance](docs/weather-ui.md#research-snapshot-provenance) and the linked training model card for the full method and limitations.
+Model lab displays the completed sixteen-city, 24-hour ERA5 experiment: 1,542,912 hourly records spanning 2015–2025, with 2025 evaluation scores and verified historical examples. The expanded coverage adds Jaipur, Lucknow, Nagpur, Indore, Patna, Bhubaneswar, Kochi and Guwahati to the original eight cities. Model selection uses validation temperature RMSE. The live weather screens use Open-Meteo; there is no live ML inference in this interface. See [snapshot provenance](docs/weather-ui.md#research-snapshot-provenance) and the linked training model card for the full method and limitations.
 
 ## 🤝 Contributing
 Please read [Development Guide](docs/development.md) for details on our code of conduct, and the process for submitting pull requests.
