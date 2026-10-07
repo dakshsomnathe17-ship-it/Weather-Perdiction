@@ -5,17 +5,19 @@
 ![Python](https://img.shields.io/badge/python-3.12-blue.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 
-An intelligent weather platform combining real-time API integrations, machine learning forecasts, and a natural language chat interface.
+A weather workspace for current conditions, daily forecasts, an interactive Earth and historical weather-model research.
 
 ## ✨ Features
-- 🌦️ **Real-time Weather Data**: Integrated with Open-Meteo and NOAA.
-- 🤖 **ML-Powered Forecasts**: Enhanced predictions using Random Forest, XGBoost, and LightGBM models.
-- 💬 **Natural Language Chat**: Query weather conditions conversational style.
-- 🗺️ **3D Interactive Map**: Visualize global weather patterns dynamically.
+- 🌦️ **Local Weather**: Search for a place and view Open-Meteo conditions, a selectable seven-day forecast and precipitation insights.
+- 🤖 **Model Lab**: Recorded Random Forest, XGBoost and LightGBM evaluation results for sixteen Indian cities, with city filtering and historical examples. These ERA5 models are not connected to live forecasting.
+- 📱 **Responsive Interface**: Weather-first mobile layout, bottom navigation, saved unit preferences and clear loading/retry states.
+- 🗺️ **Interactive Earth**: Cesium globe with street detail, location picking, distance measurement and Canvas fallback.
 - ⚡ **High Performance**: Built with FastAPI and React/TypeScript.
 
 ## 📸 Screenshots
-*(Screenshots coming soon)*
+![Weather overview with test weather fixtures](docs/screenshots/weather-overview.png)
+
+[Mobile forecast](docs/screenshots/weather-forecast-mobile.png) · [Model lab](docs/screenshots/weather-model-lab.png)
 
 ## 🛠️ Tech Stack
 
@@ -60,6 +62,9 @@ For frontend-only setup, Windows-friendly commands, globe controls and tests, se
 `npm run dev`. Natural Earth needs no API key. Optional Esri imagery and labels use your ArcGIS token in `frontend/.env.local` (see `frontend/.env.example`). Weather and submitted Nominatim place searches require the backend;
 global weather overlays display “Awaiting data” while the existing map API returns no points.
 
+See [Weather interface](docs/weather-ui.md) for the redesigned screens, Windows run commands,
+UI verification and the model evaluation snapshot's provenance.
+
 ## 🐳 Docker Deployment
 To deploy using Docker Compose:
 ```bash
@@ -99,7 +104,7 @@ See [API Docs](docs/api.md) for details.
 | `LLM_API_KEY` | Key for Chat functionality (if using external LLM) |
 
 ## 🧠 ML Models
-The platform utilizes historical weather data to train ensembles of predictive models (Random Forest, XGBoost, LightGBM) to refine forecast accuracy in micro-climates. See [ML Workflow](docs/ml-workflow.md).
+Model lab displays the completed sixteen-city, 24-hour ERA5 experiment: 1,542,912 hourly records spanning 2015–2025, with 2025 evaluation scores and verified historical examples. The expanded coverage adds Jaipur, Lucknow, Nagpur, Indore, Patna, Bhubaneswar, Kochi and Guwahati to the original eight cities. Model selection uses validation temperature RMSE. The live weather screens use Open-Meteo; there is no live ML inference in this interface. See [snapshot provenance](docs/weather-ui.md#research-snapshot-provenance) and the linked training model card for the full method and limitations.
 
 ## 🤝 Contributing
 Please read [Development Guide](docs/development.md) for details on our code of conduct, and the process for submitting pull requests.

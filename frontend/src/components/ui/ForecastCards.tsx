@@ -1,31 +1,35 @@
-import React from 'react';
-import { ForecastDay } from '@/types';
-import { formatTemperature, getWeatherIcon, formatDate } from '@/utils/format';
+import { Link } from 'react-router-dom';
+import { Droplets } from 'lucide-react';
+import type { ForecastDay } from '@/types';
+import { formatTemperature } from '@/utils/format';
+import { dayLabel, formatRain } from '@/utils/outlook';
 import { useUiStore } from '@/store/uiStore';
-import { GlassCard } from './GlassCard';
+import { WeatherSymbol } from './WeatherSymbol';
 
-export const ForecastCards: React.FC<{ forecast: ForecastDay[] }> = ({ forecast }) => {
-  const units = useUiStore((state) => state.units);
-
+export function ForecastCards({ forecast }: { forecast: ForecastDay[] }) {
+  const units = useUiStore((s) => s.units);
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-      {forecast.map((day, idx) => (
-        <GlassCard 
-          key={idx} 
-          hover 
-          padding="p-4" 
-          className="snap-start min-w-[120px] flex flex-col items-center justify-between gap-3 shrink-0"
+    <div className="forecast-strip">
+      {forecast.map((day) => (
+        <Link
+          className="forecast-day"
+          key={day.date}
+          to={`/forecast?day=${day.date}`}
+          aria-label={`${dayLabel(day.date, true)}: ${day.weather_description}, high ${formatTemperature(day.temp_max, units)}, low ${formatTemperature(day.temp_min, units)}`}
         >
-          <span className="text-sm text-surface-300 font-medium">
-            {idx === 0 ? 'Today' : formatDate(day.date, 'EEE')}
+          <span className="forecast-date">{dayLabel(day.date)}</span>
+          <WeatherSymbol code={day.weather_code} size={34} />
+          <span className="forecast-temperatures">
+            <strong>{formatTemperature(day.temp_max, units)}</strong>
+            <span>{formatTemperature(day.temp_min, units)}</span>
           </span>
-          <span className="text-4xl my-2">{getWeatherIcon(day.weather_code)}</span>
-          <div className="flex items-center gap-3">
-            <span className="text-white font-bold">{formatTemperature(day.temp_max, units)}</span>
-            <span className="text-surface-400 font-medium">{formatTemperature(day.temp_min, units)}</span>
-          </div>
-        </GlassCard>
+          <span className="forecast-condition">{day.weather_description}</span>
+          <span className="forecast-rain">
+            <Droplets size={12} />
+            {formatRain(day.precipitation_sum, units)}
+          </span>
+        </Link>
       ))}
     </div>
   );
-};
+}

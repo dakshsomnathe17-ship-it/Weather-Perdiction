@@ -1,76 +1,257 @@
-import React from 'react';
-import { GlassCard } from '@/components/ui';
-import { BrainCircuit, Play, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowUpRight, FlaskConical, Check, Database } from 'lucide-react';
+import report from '@/data/model-evaluation.json';
 
-export const MLDashboard: React.FC = () => {
+const modelNames: Record<string, string> = {
+  random_forest: 'Random Forest',
+  xgboost: 'XGBoost',
+  lightgbm: 'LightGBM',
+};
+const targets = [
+  ['temperature', 'Temperature', '°C'],
+  ['humidity', 'Humidity', '%'],
+  ['pressure', 'Pressure', 'hPa'],
+  ['wind_speed', 'Wind speed', 'km/h'],
+  ['cloud_cover', 'Cloud cover', '%'],
+  ['precipitation_24h', 'Next 24h precipitation', 'mm'],
+] as const;
+const modelCard = `https://github.com/dakshsomnathe17-ship-it/Weather-Perdiction/blob/${report.sourceCommit}/${report.sourcePath.replace(/report\.json$/, 'MODEL_CARD.md')}`;
+const exampleTime = (value: string) =>
+  new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+    hour12: false,
+  }).format(new Date(value));
+
+export function MLDashboard() {
+  const [city, setCity] = useState(report.cities[0]);
+  const [cityFilter, setCityFilter] = useState('');
+  const selected = report.models.find((m) => m.id === report.selectedModel)!;
+  const selectedName = modelNames[selected.id];
+  const example = report.examples.find((e) => e.city === city)!;
+  const visibleCities = report.cities.filter((name) =>
+    name.toLowerCase().includes(cityFilter.trim().toLowerCase()),
+  );
+  const scoreScale =
+    Math.max(0.1, ...Object.values(selected.cities).map((scores) => scores.temperature.MAE)) * 1.1;
+  const worseTargets = targets
+    .filter(([key]) => selected.test[key].MAE > report.baseline[key].MAE)
+    .map(([, label]) => label.toLowerCase());
   return (
-    <div className="flex flex-col gap-6 max-w-6xl mx-auto pb-20">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-          <BrainCircuit className="w-8 h-8 text-primary-400" />
-          AI Models
-        </h2>
+    <div className="page-content">
+      <div className="page-heading">
+        <div>
+          <span className="eyebrow">THE SCIENCE BEHIND THE EXPERIMENT</span>
+          <h1>Weather, with a learning curve.</h1>
+          <p>
+            ERA5 research · {report.cities.length} Indian cities · {report.horizon}-hour prediction
+            horizon
+          </p>
+        </div>
+        <span className="pill research-pill">
+          <FlaskConical size={14} />
+          Historical evaluation
+        </span>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {['Random Forest', 'XGBoost', 'LightGBM'].map((model, i) => (
-          <GlassCard key={i} padding="p-6" hover>
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-semibold text-white">{model}</h3>
-              {i === 0 ? (
-                <span className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
-                  <CheckCircle2 className="w-3 h-3" /> Active
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 text-xs font-medium text-surface-400 bg-surface-800 px-2 py-1 rounded-full">
-                  <AlertCircle className="w-3 h-3" /> Standby
+      <div className="research-notice">
+        <FlaskConical size={22} />
+        <div>
+          <strong>Research models, evaluated on the past.</strong>
+          <p>
+            These scores compare predictions with ERA5 reanalysis in 2025. The website’s current
+            weather and forecast come from Open-Meteo; these models are not serving live
+            predictions.
+          </p>
+        </div>
+      </div>
+      <div className="research-facts">
+        <span>
+          <Database size={17} />
+          <strong>{report.rawRows.toLocaleString('en')}</strong> hourly records
+        </span>
+        <span>
+          <strong>2015–2022</strong> initial training
+        </span>
+        <span>
+          <strong>2023–2024</strong> validation
+        </span>
+        <span>
+          <strong>2025</strong> evaluation
+        </span>
+      </div>
+      <div className="model-grid">
+        {report.models.map((model) => (
+          <section
+            key={model.id}
+            className={`panel model-card ${model.id === report.selectedModel ? 'chosen' : ''}`}
+          >
+            <div>
+              <span className="eyebrow">24-HOUR MODEL</span>
+              {model.id === report.selectedModel && (
+                <span className="pill">
+                  <Check size={13} />
+                  Selected
                 </span>
               )}
             </div>
-            
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <h2>{modelNames[model.id]}</h2>
+            <strong className="model-score">
+              {model.test.temperature.MAE.toFixed(3)}
+              <span> °C</span>
+            </strong>
+            <p>Temperature mean absolute error</p>
+            <dl>
               <div>
-                <span className="text-xs text-surface-400 block">MAE</span>
-                <span className="text-lg font-bold text-white">1.24</span>
+                <dt>Test RMSE</dt>
+                <dd>{model.test.temperature.RMSE.toFixed(3)} °C</dd>
               </div>
               <div>
-                <span className="text-xs text-surface-400 block">RMSE</span>
-                <span className="text-lg font-bold text-white">1.56</span>
+                <dt>Validation RMSE</dt>
+                <dd>{model.validationRMSE.toFixed(3)} °C</dd>
               </div>
-              <div>
-                <span className="text-xs text-surface-400 block">R² Score</span>
-                <span className="text-lg font-bold text-white">0.92</span>
-              </div>
-            </div>
-
-            <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary-600 hover:bg-primary-500 text-white font-medium transition-colors">
-              <Play className="w-4 h-4" /> Train Model
-            </button>
-          </GlassCard>
+            </dl>
+          </section>
         ))}
       </div>
-
-      <GlassCard padding="p-6" className="mt-6">
-        <h3 className="text-xl font-semibold text-white mb-6">Prediction Playground</h3>
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 space-y-4">
+      <p className="subtle">
+        Lower error is better. {selectedName} was selected using validation temperature RMSE, then
+        refitted through 2024. Persistence temperature MAE:{' '}
+        {report.baseline.temperature.MAE.toFixed(3)} °C. Research metrics retain their original
+        units.
+      </p>
+      <div className="lab-results-grid">
+        <section className="panel">
+          <div className="section-heading">
             <div>
-              <label className="block text-sm text-surface-300 mb-1">Target Date</label>
-              <input type="date" className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2 text-white outline-none focus:border-primary-500" />
+              <span className="eyebrow">{selectedName.toUpperCase()} · 2025</span>
+              <h2>Error by city</h2>
+              <p>Temperature mean absolute error in °C</p>
             </div>
-            <div>
-              <label className="block text-sm text-surface-300 mb-1">Location Coordinates</label>
-              <input type="text" placeholder="e.g. 37.7749, -122.4194" className="w-full bg-surface-900 border border-surface-700 rounded-lg px-4 py-2 text-white outline-none focus:border-primary-500" />
-            </div>
-            <button className="px-6 py-2 bg-accent-violet hover:bg-violet-400 text-white font-medium rounded-lg transition-colors">
-              Generate Prediction
-            </button>
           </div>
-          <div className="flex-1 bg-surface-900/50 rounded-xl border border-surface-700 p-6 flex items-center justify-center text-surface-500">
-            Results will appear here
+          <label className="city-filter">
+            Find a city
+            <input
+              type="search"
+              aria-label="Filter evaluated cities"
+              placeholder="Search evaluated cities"
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
+            />
+          </label>
+          <p className="city-filter-count" role="status">
+            {visibleCities.length} of {report.cities.length} evaluated cities
+          </p>
+          <div className="city-scores">
+            {visibleCities.map((name) => {
+              const score = selected.cities[name as keyof typeof selected.cities].temperature.MAE;
+              return (
+                <div key={name}>
+                  <span>{name}</span>
+                  <div className="score-track">
+                    <span style={{ width: `${(score / scoreScale) * 100}%` }} />
+                  </div>
+                  <strong>{score.toFixed(3)}°</strong>
+                </div>
+              );
+            })}
+          </div>
+          {!visibleCities.length && (
+            <p className="subtle">No evaluated cities match. Try another city name.</p>
+          )}
+        </section>
+        <section className="panel">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">{selectedName.toUpperCase()} VS PERSISTENCE</span>
+              <h2>Across weather variables</h2>
+              <p>2025 mean absolute error · lower is better</p>
+            </div>
+          </div>
+          <div className="table-scroll">
+            <table className="weather-table">
+              <thead>
+                <tr>
+                  <th scope="col">Variable</th>
+                  <th scope="col">Model</th>
+                  <th scope="col">Baseline</th>
+                </tr>
+              </thead>
+              <tbody>
+                {targets.map(([key, label, unit]) => (
+                  <tr key={key}>
+                    <th scope="row">
+                      {label}
+                      <small>{unit}</small>
+                    </th>
+                    <td>{selected.test[key].MAE.toFixed(2)}</td>
+                    <td>{report.baseline[key].MAE.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="table-note">
+            {worseTargets.length > 0 && (
+              <>Higher MAE than persistence: {worseTargets.join(', ')}. </>
+            )}
+            Performance varies by variable and location.
+          </p>
+        </section>
+      </div>
+      <section className="panel">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">RECORDED EXAMPLE · {selectedName.toUpperCase()}</span>
+            <h2>A past prediction, revisited</h2>
+            <p>
+              Issued {exampleTime(example.issue_time)} UTC · Valid {exampleTime(example.valid_time)}{' '}
+              UTC
+            </p>
+          </div>
+          <div className="city-select">
+            <label htmlFor="research-city">City</label>
+            <select id="research-city" value={city} onChange={(e) => setCity(e.target.value)}>
+              {report.cities.map((name) => (
+                <option key={name}>{name}</option>
+              ))}
+            </select>
           </div>
         </div>
-      </GlassCard>
+        <div className="example-grid">
+          {targets.map(([key, label, unit]) => (
+            <div key={key}>
+              <span>{label}</span>
+              <strong>
+                {example.predictions[key].toFixed(1)} <small>{unit}</small>
+              </strong>
+              <p>
+                ERA5 actual: {example.actual_at_valid_time[key].toFixed(1)} {unit}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="table-note">
+          Precipitation is the sum over the next 24 hours. Other variables are evaluated at the
+          valid time. This is one historical example, not a live forecast.
+        </p>
+      </section>
+      <div className="research-footer">
+        <p>
+          Contains modified Copernicus Climate Change Service information; ERA5 processed by
+          Open-Meteo.{' '}
+          <a href="https://doi.org/10.24381/cds.adbb2d47" target="_blank" rel="noreferrer">
+            ERA5 dataset
+          </a>{' '}
+          ·{' '}
+          <a href="https://open-meteo.com/en/terms" target="_blank" rel="noreferrer">
+            Attribution & terms
+          </a>
+        </p>
+        <a className="text-link" href={modelCard} target="_blank" rel="noreferrer">
+          Method, limitations & full report <ArrowUpRight size={15} />
+        </a>
+      </div>
     </div>
   );
-};
+}

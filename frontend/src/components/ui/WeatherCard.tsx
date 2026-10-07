@@ -1,68 +1,58 @@
-import React from 'react';
-import { GlassCard } from './GlassCard';
-import { AnimatedNumber } from './AnimatedNumber';
-import { CurrentWeather, Location } from '@/types';
-import { getWeatherIcon, formatDate } from '@/utils/format';
+import type { CurrentWeather, ForecastDay, Location } from '@/types';
+import { formatTemperature } from '@/utils/format';
 import { useUiStore } from '@/store/uiStore';
-import { MapPin, Droplets, Wind } from 'lucide-react';
+import { ArrowDown, ArrowUp, MapPin } from 'lucide-react';
+import { WeatherSymbol } from './WeatherSymbol';
 
-interface WeatherCardProps {
+export function WeatherCard({
+  current,
+  location,
+  today,
+}: {
   current: CurrentWeather;
   location: Location;
-}
-
-export const WeatherCard: React.FC<WeatherCardProps> = ({ current, location }) => {
-  const units = useUiStore((state) => state.units);
-  const isMetric = units === 'metric';
-
+  today?: ForecastDay;
+}) {
+  const units = useUiStore((s) => s.units);
   return (
-    <GlassCard className="relative overflow-hidden group">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-900/40 to-transparent opacity-50 z-0"></div>
-      
-      <div className="relative z-10 flex flex-col h-full gap-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-primary-400" />
-              {location.name}
-            </h2>
-            <p className="text-surface-300 text-sm">{location.country}</p>
-          </div>
-          <p className="text-surface-400 text-xs">{formatDate(new Date())}</p>
-        </div>
-
-        <div className="flex items-center justify-between mt-4">
-          <div className="flex flex-col">
-            <div className="text-6xl font-bold text-white flex items-start">
-              <AnimatedNumber value={isMetric ? current.temperature : current.temperature * 9 / 5 + 32} />
-              <span className="text-3xl mt-1 text-surface-200">{isMetric ? '°C' : '°F'}</span>
-            </div>
-            <p className="text-surface-300 mt-1 capitalize text-lg">
-              {current.weather_description}
-            </p>
-          </div>
-          <div className="text-7xl drop-shadow-2xl filter">
-            {getWeatherIcon(current.weather_code)}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-surface-700/50">
-          <div className="flex items-center gap-2">
-            <Droplets className="w-4 h-4 text-accent-cyan" />
-            <div className="flex flex-col">
-              <span className="text-xs text-surface-400">Humidity</span>
-              <span className="text-sm font-semibold">{current.humidity}%</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Wind className="w-4 h-4 text-accent-emerald" />
-            <div className="flex flex-col">
-              <span className="text-xs text-surface-400">Wind</span>
-              <span className="text-sm font-semibold">{Math.round(isMetric ? current.wind_speed : current.wind_speed / 1.609)} {isMetric ? 'km/h' : 'mph'}</span>
-            </div>
-          </div>
-        </div>
+    <section
+      className={`weather-hero ${current.weather_code >= 51 ? 'rainy' : ''}`}
+      aria-label="Current weather"
+    >
+      <div className="hero-cloud cloud-one" />
+      <div className="hero-cloud cloud-two" />
+      <div className="hero-top">
+        <span className="eyebrow">CURRENT WEATHER</span>
+        <span className="pill">
+          <span className="source-dot" />
+          Current conditions
+        </span>
       </div>
-    </GlassCard>
+      <div className="hero-location">
+        <h2>{location.name}</h2>
+        <p>
+          <MapPin size={13} />
+          {[location.state, location.country].filter(Boolean).join(', ')}
+        </p>
+      </div>
+      <div className="hero-temperature">
+        <strong>{formatTemperature(current.temperature, units)}</strong>
+        <WeatherSymbol code={current.weather_code} size={96} night={current.is_day === false} />
+      </div>
+      <p className="hero-condition">{current.weather_description}</p>
+      <div className="hero-bottom">
+        <span>
+          Feels like <strong>{formatTemperature(current.feels_like, units)}</strong>
+        </span>
+        {today && (
+          <span className="high-low">
+            <ArrowUp size={14} />
+            {formatTemperature(today.temp_max, units)}
+            <ArrowDown size={14} />
+            {formatTemperature(today.temp_min, units)}
+          </span>
+        )}
+      </div>
+    </section>
   );
-};
+}

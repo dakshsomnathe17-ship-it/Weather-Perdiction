@@ -1,61 +1,98 @@
-import React from 'react';
-import { GlassCard } from '@/components/ui';
-import { useUiStore } from '@/store/uiStore';
+import { ExternalLink, Globe2, SlidersHorizontal, Database } from 'lucide-react';
+import { UnitSwitch } from '@/components/layout/Header';
+import report from '@/data/model-evaluation.json';
 
-export const Settings: React.FC = () => {
-  const { units, setUnits } = useUiStore();
-
+export function Settings() {
+  const hasEsri = Boolean(import.meta.env.VITE_ARCGIS_ACCESS_TOKEN);
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-6 pb-20">
-      <h2 className="text-3xl font-bold text-white mb-2">Settings</h2>
-
-      <GlassCard padding="p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Preferences</h3>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="text-white font-medium">Temperature Units</h4>
-              <p className="text-sm text-surface-400">Choose between Celsius and Fahrenheit</p>
-            </div>
-            <div className="flex bg-surface-800 rounded-lg p-1">
-              <button
-                onClick={() => setUnits('metric')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${units === 'metric' ? 'bg-primary-500 text-white' : 'text-surface-300 hover:text-white'}`}
-              >
-                Metric (°C)
-              </button>
-              <button
-                onClick={() => setUnits('imperial')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${units === 'imperial' ? 'bg-primary-500 text-white' : 'text-surface-300 hover:text-white'}`}
-              >
-                Imperial (°F)
-              </button>
-            </div>
+    <div className="page-content settings-page">
+      <div className="page-heading">
+        <div>
+          <span className="eyebrow">MAKE IT YOURS</span>
+          <h1>The details that matter.</h1>
+          <p>Your preferences and the data behind your weather.</p>
+        </div>
+      </div>
+      <section className="panel settings-section">
+        <h2>
+          <SlidersHorizontal size={20} />
+          Display preferences
+        </h2>
+        <div className="setting-row">
+          <div>
+            <h3>Weather units</h3>
+            <p>
+              Celsius, km/h and mm, or Fahrenheit, mph and inches.
+              <br />
+              Your choice is saved on this device.
+            </p>
           </div>
-          
-          <div className="flex items-center justify-between pt-6 border-t border-surface-700/50">
-            <div>
-              <h4 className="text-white font-medium">Theme</h4>
-              <p className="text-sm text-surface-400">Select application theme</p>
-            </div>
-            <select className="bg-surface-800 border border-surface-700 text-white px-4 py-2 rounded-lg outline-none">
-              <option value="dark">Dark Theme (Default)</option>
-              <option value="light">Light Theme</option>
-            </select>
+          <UnitSwitch />
+        </div>
+      </section>
+      <section className="panel settings-section">
+        <h2>
+          <Globe2 size={20} />
+          Your map
+        </h2>
+        <div className="setting-row">
+          <div>
+            <h3>Natural Earth + OpenStreetMap</h3>
+            <p>A global Earth view with streets and place names as you zoom in.</p>
+          </div>
+          <span className="pill">Available</span>
+        </div>
+        <div className="setting-row">
+          <div>
+            <h3>Esri satellite imagery</h3>
+            <p>
+              {hasEsri
+                ? 'Satellite imagery can be enabled in the Earth map controls.'
+                : 'Satellite imagery becomes available after the project’s ArcGIS access token is configured.'}
+            </p>
+          </div>
+          <span className="pill">{hasEsri ? 'Configured' : 'Not configured'}</span>
+        </div>
+      </section>
+      <section className="panel settings-section">
+        <h2>
+          <Database size={20} />
+          Know your sources
+        </h2>
+        <div className="setting-row">
+          <div>
+            <h3>Current weather & daily forecasts</h3>
+            <p>
+              Provided by Open-Meteo. Current conditions refresh on request; forecast data is cached
+              for up to 30 minutes.
+            </p>
+          </div>
+          <a className="text-link" href="https://open-meteo.com/" target="_blank" rel="noreferrer">
+            Open-Meteo <ExternalLink size={14} />
+          </a>
+        </div>
+        <div className="setting-row">
+          <div>
+            <h3>ERA5 model research</h3>
+            <p>
+              Historical experiments covering {report.cities.length} Indian cities. Model lab scores
+              are recorded evaluation results; these models do not power the live weather forecast.
+            </p>
           </div>
         </div>
-      </GlassCard>
-
-      <GlassCard padding="p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">About WeatherAI</h3>
-        <p className="text-surface-300 text-sm leading-relaxed mb-4">
-          WeatherAI combines traditional meteorological data with advanced machine learning models
-          to provide highly accurate, hyper-local weather predictions.
-        </p>
-        <div className="text-xs text-surface-500">
-          Version 1.0.0 • © 2026 WeatherAI Inc.
+        <div className="source-links">
+          <a
+            href="https://www.naturalearthdata.com/about/terms-of-use/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Natural Earth · public domain
+          </a>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+            © OpenStreetMap contributors
+          </a>
         </div>
-      </GlassCard>
+      </section>
     </div>
   );
-};
+}

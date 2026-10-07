@@ -1,19 +1,26 @@
-import React from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { ChatPanel } from '../chat/ChatPanel';
 
-export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function Layout({ children }: { children: ReactNode }) {
+  const main = useRef<HTMLElement>(null);
+  const { pathname } = useLocation();
+  useEffect(() => {
+    main.current?.scrollTo(0, 0);
+  }, [pathname]);
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-surface-950">
+    <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to weather
+      </a>
       <Sidebar />
-      <div className="flex-1 min-w-0 flex flex-col relative overflow-hidden">
+      <div className="app-body">
         <Header />
-        <main className="flex-1 overflow-y-auto overflow-x-hidden relative p-4 md:p-6 lg:p-8">
+        <main id="main-content" ref={main} className="app-main" tabIndex={-1}>
           {children}
         </main>
       </div>
-      <ChatPanel />
     </div>
   );
-};
+}
